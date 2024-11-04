@@ -2,6 +2,8 @@
 #include "Command.h"
 #include "Manager.h"
 #include "Window.h"
+#include "AbstractKeyCode.h"
+#include <iostream>
 
 int main() {
 	ymwm::environment::Environment e;
@@ -16,4 +18,6 @@ int main() {
 	m.add<ymwm::window::Monitor>(0);
 	cmd.emplace<ymwm::commands::Cmd3>(m);
 	e.execute(cmd);
+	int kc = ymwm::AbstractKeyCode::A;
+	std::cout << kc << std::endl;
 }

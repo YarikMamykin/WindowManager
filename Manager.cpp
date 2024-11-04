@@ -19,4 +19,7 @@ namespace ymwm::window {
 	std::vector<std::reference_wrapper<Window>> Manager::windows_in_group(EnvironmentID group_id) const noexcept{
 		return {};
 	}
+
+	void Manager::apply_layout(EnvironmentID group_id, layouts::Layout layout) noexcept{
+	}
 }
