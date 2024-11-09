@@ -1,7 +1,8 @@
 #pragma once
 
-namespace ymwm {
+#include <cstdint>
+namespace ymwm::events {
 	struct AbstractKeyCode {
-		static const int A;
+		static const unsigned int A;
 	};
 }

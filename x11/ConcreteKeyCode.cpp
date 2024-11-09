@@ -1,5 +1,5 @@
 #include "../AbstractKeyCode.h"
 
-namespace ymwm {
-	const int AbstractKeyCode::A {10};
+namespace ymwm::events {
+	const unsigned int AbstractKeyCode::A {10};
 }

@@ -13,33 +13,26 @@ namespace ymwm::window{
 
 namespace ymwm::commands {
 	struct Cmd1 {
-		void execute([[maybe_unused]] environment::Handlers& handlers)const;
+		void execute([[maybe_unused]] environment::Handlers& handlers,[[maybe_unused]]ymwm::window::Manager& manager)const;
 	};
 
 	struct Cmd2 {
-		void execute([[maybe_unused]] environment::Handlers& handlers)const;
+		void execute([[maybe_unused]] environment::Handlers& handlers,[[maybe_unused]]ymwm::window::Manager& manager)const;
 	};
 
 	struct Cmd3 {
-		ymwm::window::Manager& manager;
-		inline Cmd3(ymwm::window::Manager& manager) : manager(manager){}
-		void execute([[maybe_unused]] environment::Handlers& handlers)const;
+		void execute([[maybe_unused]] environment::Handlers& handlers,ymwm::window::Manager& manager)const;
 	};
 
 	struct AddGroup {
-		ymwm::window::Manager& manager;
-		window::layouts::Layout layout;
-		EnvironmentID group_id;
-		inline AddGroup(ymwm::window::Manager& manager, window::layouts::Layout layout) : manager(manager), layout(window::layouts::simple){}
-		void execute([[maybe_unused]] environment::Handlers& handlers)const;
+		void execute([[maybe_unused]] environment::Handlers& handlers,ymwm::window::Manager& manager)const;
 	};
 
 	struct ApplyLayout {
-		ymwm::window::Manager& manager;
-		window::layouts::Layout layout;
-		EnvironmentID group_id;
-		inline ApplyLayout(ymwm::window::Manager& manager, window::layouts::Layout layout) : manager(manager), layout(window::layouts::simple){}
-		void execute([[maybe_unused]] environment::Handlers& handlers)const;
+		window::layouts::Layout m_layout;
+		EnvironmentID m_group_id;
+		inline ApplyLayout(window::layouts::Layout layout,EnvironmentID group_id) : m_layout(layout), m_group_id(group_id){}
+		void execute([[maybe_unused]] environment::Handlers& handlers,ymwm::window::Manager& manager)const;
 	};
 
 	using Command = std::variant<Cmd1, Cmd2, Cmd3, AddGroup, ApplyLayout>;
