@@ -14,5 +14,8 @@ int main() {
 	ymwm::environment::Environment e{events_map, m};
 	e.show_handlers();
 	ymwm::commands::Command cmd;
-	e.execute(events_map.at(e.event()));
+	while(not e.exit_requested())
+	{
+		e.execute(events_map.at(e.event()));
+	}
 }

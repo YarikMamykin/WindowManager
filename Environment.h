@@ -2,10 +2,13 @@
 
 #include <memory>
 #include <variant>
+#include <list>
 #include "Command.h"
 #include "Event.h"
 #include "Handlers.h"
 #include "EventsMap.h"
+#include "Error.h"
+#include "ErrorHandler.h"
 
 namespace ymwm::window {
 	struct Manager;
@@ -22,8 +25,11 @@ namespace ymwm::environment {
 					c.execute(handlers, manager);
 					}, cmd);
 		}
+		bool exit_requested() const noexcept;
 		private:
 			std::unique_ptr<Handlers> m_handlers;
 			ymwm::window::Manager& m_manager;
+			ymwm::errors::Handler m_errors_handler;
+			bool m_exit_requested;
 	};
 }
