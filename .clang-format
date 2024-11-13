@@ -1,0 +1,23 @@
+---
+Language:                                   Cpp
+AccessModifierOffset:                       -2
+AlignAfterOpenBracket:                      Align
+AlignArrayOfStructures:                     Right
+AlwaysBreakAfterReturnType:                 None
+AlwaysBreakTemplateDeclarations:            Yes
+BreakConstructorInitializers:               BeforeComma
+BreakStringLiterals:                        true
+ColumnLimit:                                80
+# EmptyLineAfterAccessModifier:               Always
+EmptyLineBeforeAccessModifier:              Always
+IncludeBlocks:                              Regroup
+IndentWidth:                                2
+LambdaBodyIndentation:                      Signature
+NamespaceIndentation:                       All
+PointerAlignment:                           Left
+SortIncludes:                               true
+BinPackArguments:                           false
+BinPackParameters:                          false
+ExperimentalAutoDetectBinPacking:           false
+AllowAllParametersOfDeclarationOnNextLine:  false
+Cpp11BracedListStyle:                       false

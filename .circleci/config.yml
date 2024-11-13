@@ -1,0 +1,20 @@
+# See: https://circleci.com/docs/configuration-reference
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: archlinux:latest
+    steps:
+      - checkout
+      - run:
+          command: pacman -Syy && pacman -S --noconfirm cmake git make clang gcc
+      - run:
+          command: cmake -S . -B Debug -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=TRUE
+      - run:
+          command: cmake --build Debug --parallel
+
+workflows:
+  windowmanager:
+    jobs:
+      - build
