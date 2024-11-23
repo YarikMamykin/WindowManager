@@ -1,1 +1,6 @@
-int main(int argc, char** argv) { return 0; }
+#include "events/Map.h"
+
+int main(int, char**) {
+  ymwm::events::Map events_map;
+  return 0;
+}

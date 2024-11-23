@@ -1,0 +1,12 @@
+key-bindings:
+  - type: press
+    key: A
+    masks:
+      - Ctrl
+      - Shift
+    cmd: Dummy
+  - type: press
+    key: B
+    masks:
+      - Ctrl
+    cmd: None

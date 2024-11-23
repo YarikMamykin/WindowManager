@@ -3,5 +3,9 @@ if(NOT ${BUILD_TESTS} OR NOT DEFINED BUILD_TESTS)
 	return()
 endif()
 
+set(SRC_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/src)
+
 include(${DEPENDENCIES}/gtest.cmake)
 enable_testing()
+
+add_subdirectory(events)
