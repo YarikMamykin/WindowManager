@@ -2,8 +2,13 @@
 
 namespace ymwm::events {
   struct AbstractKeyCode {
-    static const unsigned int A;
-    static const unsigned int B;
-    static const unsigned int C;
+    using Type = const unsigned int;
+    static Type Unknown{ 0u };
+    static Type a;
+    static Type b;
+    static Type c;
+    static Type A;
+    static Type B;
+    static Type C;
   };
 } // namespace ymwm::events

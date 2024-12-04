@@ -2,9 +2,10 @@
 
 namespace ymwm::events {
   struct AbstractKeyMask {
-    static const unsigned int None{ 0u };
-    static const unsigned int Ctrl;
-    static const unsigned int Alt;
-    static const unsigned int Shift;
+    using Type = const unsigned int;
+    static Type NONE{ 0u };
+    static Type Ctrl;
+    static Type Alt;
+    static Type Shift;
   };
 } // namespace ymwm::events

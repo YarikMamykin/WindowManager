@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(WindowManager VERSION 0.2.0 LANGUAGES CXX)
+project(WindowManager VERSION 0.3.0 LANGUAGES CXX)
 
 set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)
@@ -11,6 +11,7 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 set(DEPENDENCIES ${CMAKE_SOURCE_DIR}/dependencies)
+set(NATIVE_ENVIRONMENT X11)
 
 add_subdirectory(src)
 add_subdirectory(tests)

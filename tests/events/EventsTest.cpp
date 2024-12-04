@@ -1,4 +1,4 @@
-#include "commands/Command.h"
+#include "environment/Command.h"
 #include "events/AbstractKeyCode.h"
 #include "events/AbstractKeyMask.h"
 #include "events/AbstractKeyPress.h"
@@ -13,7 +13,9 @@
 TEST(TestEventMap,
      AddCommandUnderSameEventTwice_HaveOnlyOneRecordInMapButReplacedCommand) {
   ymwm::events::Event event{ ymwm::events::AbstractKeyPress() };
-  ymwm::commands::Command cmd{ ymwm::commands::Dummy() };
+  ymwm::environment::commands::Command cmd{
+    ymwm::environment::commands::Dummy()
+  };
 
   ymwm::events::Map emap{
     { event, cmd }
@@ -21,19 +23,25 @@ TEST(TestEventMap,
 
   ASSERT_EQ(1ul, emap.size());
   ASSERT_TRUE(emap.contains(event));
-  ASSERT_TRUE(std::holds_alternative<ymwm::commands::Dummy>(emap.at(event)));
+  ASSERT_TRUE(std::holds_alternative<ymwm::environment::commands::Dummy>(
+      emap.at(event)));
 
-  auto [_, inserted] =
-      emap.insert(std::make_pair(event, ymwm::commands::None()));
+  auto [_, inserted] = emap.insert(
+      std::make_pair(event, ymwm::environment::commands::ExitRequested()));
   EXPECT_FALSE(inserted);
   EXPECT_EQ(1ul, emap.size());
   EXPECT_TRUE(emap.contains(event));
-  EXPECT_FALSE(std::holds_alternative<ymwm::commands::None>(emap.at(event)));
-  EXPECT_TRUE(std::holds_alternative<ymwm::commands::Dummy>(emap.at(event)));
+  EXPECT_FALSE(
+      std::holds_alternative<ymwm::environment::commands::ExitRequested>(
+          emap.at(event)));
+  EXPECT_TRUE(std::holds_alternative<ymwm::environment::commands::Dummy>(
+      emap.at(event)));
 }
 
 TEST(TestEventMap, CheckSameEventTypeDifferentByContent) {
-  ymwm::commands::Command cmd{ ymwm::commands::Dummy() };
+  ymwm::environment::commands::Command cmd{
+    ymwm::environment::commands::Dummy()
+  };
   ymwm::events::Event event1{
     ymwm::events::AbstractKeyPress{ .code = 1, .mask = 0 }
   };
@@ -70,10 +78,11 @@ TEST(TestEventMap, CreateEventMapFromYamlFile) {
                                           ymwm::events::AbstractKeyMask::Ctrl };
   ASSERT_TRUE(actual_events_map.contains(event1));
   ASSERT_TRUE(actual_events_map.contains(event2));
-  EXPECT_TRUE(std::holds_alternative<ymwm::commands::Dummy>(
+  EXPECT_TRUE(std::holds_alternative<ymwm::environment::commands::Dummy>(
       actual_events_map.at(event1)));
-  EXPECT_TRUE(std::holds_alternative<ymwm::commands::None>(
-      actual_events_map.at(event2)));
+  EXPECT_TRUE(
+      std::holds_alternative<ymwm::environment::commands::ExitRequested>(
+          actual_events_map.at(event2)));
 }
 
 TEST(TestEventMap, CreateEventMapFromYamlFileWithoutMasksSpecified) {
@@ -86,17 +95,18 @@ TEST(TestEventMap, CreateEventMapFromYamlFileWithoutMasksSpecified) {
   auto event1 =
       ymwm::events::AbstractKeyPress{ .code = ymwm::events::AbstractKeyCode::A,
                                       .mask =
-                                          ymwm::events::AbstractKeyMask::None };
+                                          ymwm::events::AbstractKeyMask::NONE };
   auto event2 =
       ymwm::events::AbstractKeyPress{ .code = ymwm::events::AbstractKeyCode::B,
                                       .mask =
-                                          ymwm::events::AbstractKeyMask::None };
+                                          ymwm::events::AbstractKeyMask::NONE };
   ASSERT_TRUE(actual_events_map.contains(event1));
   ASSERT_TRUE(actual_events_map.contains(event2));
-  EXPECT_TRUE(std::holds_alternative<ymwm::commands::Dummy>(
+  EXPECT_TRUE(std::holds_alternative<ymwm::environment::commands::Dummy>(
       actual_events_map.at(event1)));
-  EXPECT_TRUE(std::holds_alternative<ymwm::commands::None>(
-      actual_events_map.at(event2)));
+  EXPECT_TRUE(
+      std::holds_alternative<ymwm::environment::commands::ExitRequested>(
+          actual_events_map.at(event2)));
 }
 
 TEST(TestEventMap, CreateEventMapFromYamlFileWithoutCmdSpecified) {

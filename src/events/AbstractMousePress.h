@@ -7,5 +7,6 @@ namespace ymwm::events {
 
     constexpr bool
     operator==(const AbstractMousePress&) const noexcept = default;
+    static inline constexpr char type[] = "mousepress";
   };
 } // namespace ymwm::events

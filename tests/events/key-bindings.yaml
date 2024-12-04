@@ -9,4 +9,4 @@ key-bindings:
     key: B
     masks:
       - Ctrl
-    cmd: None
+    cmd: ExitRequested

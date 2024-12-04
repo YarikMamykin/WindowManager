@@ -1,6 +1,11 @@
 set(TARGET_INCLUDE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
+if(${NATIVE_ENVIRONMENT} STREQUAL "X11")
+	include(${DEPENDENCIES}/x11.cmake)
+endif()
+
 add_subdirectory(events)
+add_subdirectory(environment)
 
 add_executable(${PROJECT_NAME} main.cpp)
 target_include_directories(${PROJECT_NAME}
@@ -9,10 +14,12 @@ target_include_directories(${PROJECT_NAME}
 )
 add_dependencies(${PROJECT_NAME}
 	events
+	environment
 )
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
 	events
+	environment
 )
 target_compile_options(${PROJECT_NAME}
 	PRIVATE

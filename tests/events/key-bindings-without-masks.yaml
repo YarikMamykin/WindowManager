@@ -4,4 +4,4 @@ key-bindings:
     cmd: Dummy
   - type: press
     key: B
-    cmd: None
+    cmd: ExitRequested

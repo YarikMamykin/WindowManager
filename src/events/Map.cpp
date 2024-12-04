@@ -1,7 +1,7 @@
 #include "Map.h"
 
 #include "YamlModels.h"
-#include "commands/Command.h"
+#include "environment/Command.h"
 #include "events/AbstractKeyPress.h"
 #include "utils.h"
 
@@ -16,7 +16,7 @@ namespace ymwm::events {
     bindings.emplace(AbstractKeyPress{ .code = AbstractKeyCode::A,
                                        .mask = AbstractKeyMask::Ctrl |
                                                AbstractKeyMask::Shift },
-                     commands::Dummy{});
+                     environment::commands::Dummy{});
     return bindings;
   }
 

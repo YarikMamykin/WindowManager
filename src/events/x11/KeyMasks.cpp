@@ -1,7 +1,9 @@
 #include "events/AbstractKeyMask.h"
 
+#include <X11/X.h>
+
 namespace ymwm::events {
-  const unsigned int AbstractKeyMask::Ctrl{ 1u };
-  const unsigned int AbstractKeyMask::Alt{ 2u };
-  const unsigned int AbstractKeyMask::Shift{ 3u };
+  AbstractKeyMask::Type AbstractKeyMask::Ctrl{ ControlMask };
+  AbstractKeyMask::Type AbstractKeyMask::Alt{ Mod1Mask };
+  AbstractKeyMask::Type AbstractKeyMask::Shift{ ShiftMask };
 } // namespace ymwm::events

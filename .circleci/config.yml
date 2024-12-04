@@ -19,7 +19,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: pacman -Syy && pacman -S --noconfirm cmake git make clang gcc
+          command: pacman -Syy && pacman -S --noconfirm cmake git make clang gcc libx11
       - run:
           command: cmake -S . -B Debug -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=TRUE
       - run:
@@ -30,7 +30,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: pacman -Syy && pacman -S --noconfirm cmake git make clang gcc
+          command: pacman -Syy && pacman -S --noconfirm cmake git make clang gcc libx11
       - run:
           command: cmake -S . -B Debug -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=TRUE
       - run:

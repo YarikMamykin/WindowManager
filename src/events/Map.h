@@ -2,14 +2,15 @@
 
 #include "Event.h"
 #include "Hash.h"
-#include "commands/Command.h"
+#include "environment/Command.h"
 
 #include <filesystem>
 #include <unordered_map>
 #include <variant>
 
 namespace ymwm::events {
-  using Map = std::unordered_map<Event, ymwm::commands::Command, Hasher>;
+  using Map =
+      std::unordered_map<Event, ymwm::environment::commands::Command, Hasher>;
 
   Map default_event_map() noexcept;
 

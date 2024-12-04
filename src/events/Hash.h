@@ -15,6 +15,10 @@ namespace ymwm::events {
       std::size_t hash{ static_cast<std::size_t>(e.mask) };
       return (hash << sizeof(e.mask)) | static_cast<std::size_t>(e.mcode);
     }
+
+    inline std::size_t operator()(const AbstractUnknownEvent&) const noexcept {
+      return 0u;
+    }
   };
 
   struct Hasher {
