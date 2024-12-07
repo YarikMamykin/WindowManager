@@ -1,40 +1,43 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
+executors:
+  archexecutor:
+    docker:
+      - image: ym07/windowmanagerbase:latest
+        auth:
+          username: ym07
+          password: $DOCKERHUB_TOKEN
+    working_directory: /workspace
+
 jobs:
   lint:
-    docker:
-      - image: archlinux:latest
+    executor: archexecutor
     steps:
       - checkout
-      - run:
-          command: pacman -Syy && pacman -S --noconfirm cmake git make clang gcc findutils
       - run:
           command: find ./src/ -iname "*.h" -o -iname "*.cpp" | xargs clang-format --dry-run -Werror
       - run:
           command: find ./tests/ -iname "*.h" -o -iname "*.cpp" | xargs clang-format --dry-run -Werror
   build:
-    docker:
-      - image: archlinux:latest
+    executor: archexecutor
     steps:
       - checkout
       - run:
-          command: pacman -Syy && pacman -S --noconfirm cmake git make clang gcc libx11
-      - run:
-          command: cmake -S . -B Debug -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=TRUE
+          command: cmake -S . -B Debug -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=TRUE -DCMAKE_INSTALL_PREFIX=Debug
       - run:
           command: cmake --build Debug --parallel
+
+      - persist_to_workspace:
+          root: /workspace
+          paths:
+            - Debug/*
   tests:
-    docker:
-      - image: archlinux:latest
+    executor: archexecutor
     steps:
       - checkout
-      - run:
-          command: pacman -Syy && pacman -S --noconfirm cmake git make clang gcc libx11
-      - run:
-          command: cmake -S . -B Debug -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=TRUE
-      - run:
-          command: cmake --build Debug --parallel
+      - attach_workspace:
+          at: /workspace
       - run:
           command: ctest --test-dir Debug/tests --verbose
 

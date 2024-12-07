@@ -1,0 +1,5 @@
+services:
+  windowmanagerbase:
+    image: ym07/windowmanagerbase:latest
+    build:
+      dockerfile: ./Dockerfile
