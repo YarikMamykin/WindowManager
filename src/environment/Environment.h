@@ -3,6 +3,7 @@
 #include "Command.h"
 #include "events/Event.h"
 #include "events/Map.h"
+#include "window/Manager.h"
 
 #include <memory>
 
@@ -24,5 +25,6 @@ namespace ymwm::environment {
   private:
     std::unique_ptr<Handlers> m_handlers;
     bool m_exit_requested;
+    mutable ymwm::window::Manager m_manager;
   };
 } // namespace ymwm::environment
