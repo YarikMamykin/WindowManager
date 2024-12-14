@@ -7,6 +7,7 @@
 #include "events/Map.h"
 
 #include <array>
+#include <format>
 #include <iostream>
 #include <memory>
 #include <variant>
@@ -115,6 +116,50 @@ namespace ymwm::environment {
         .mask =
             static_cast<ymwm::events::AbstractKeyCode::Type>(event.xkey.state)
       };
+    case MapRequest: {
+      XWindowAttributes wa;
+      auto w = event.xmaprequest.window;
+      if (XGetWindowAttributes(m_handlers->display, w, &wa)) {
+        // XWindowChanges wc;
+        // XConfigureWindow(m_handlers->display, w, CWBorderWidth, &wc);
+        // XSetWindowBorder(m_handlers->display, w,
+        // scheme[SchemeNorm][ColBorder].pixel);
+
+        XSelectInput(m_handlers->display,
+                     w,
+                     EnterWindowMask | FocusChangeMask | PropertyChangeMask |
+                         StructureNotifyMask);
+        XRaiseWindow(m_handlers->display, w);
+        XMapWindow(m_handlers->display, w);
+        XSetInputFocus(
+            m_handlers->display, w, RevertToPointerRoot, CurrentTime);
+        m_manager.add_window(
+            { .id = w, .x = wa.x, .y = wa.y, .w = wa.width, .h = wa.height });
+      }
+
+      break;
+    }
+    case UnmapNotify: {
+      if (1ul < m_manager.windows().size()) {
+        auto id = std::prev(m_manager.windows().end(), 2)->id;
+
+        XRaiseWindow(m_handlers->display, id);
+        XMapWindow(m_handlers->display, id);
+        XSetInputFocus(
+            m_handlers->display, id, RevertToPointerRoot, CurrentTime);
+      } else {
+        XSetInputFocus(m_handlers->display,
+                       m_handlers->root_window,
+                       RevertToPointerRoot,
+                       CurrentTime);
+      }
+      break;
+    }
+    case DestroyNotify: {
+      auto destroyed_window = event.xdestroywindow.window;
+      m_manager.remove_window(destroyed_window);
+      break;
+    }
     }
 
     return ymwm::events::AbstractKeyPress{
