@@ -1,6 +1,7 @@
 #include "environment/Environment.h"
 
 #include "Handlers.h"
+#include "environment/ColorID.h"
 #include "events/AbstractKeyCode.h"
 #include "events/AbstractKeyMask.h"
 #include "events/AbstractKeyPress.h"
@@ -46,8 +47,12 @@ namespace {
 
 namespace ymwm::environment {
   Environment::Environment(const events::Map& events_map)
-      : m_exit_requested(false) {
-
+      : m_exit_requested(false)
+      , m_manager(
+            std::bind(&Environment::update_window, this, std::placeholders::_1),
+            std::bind(&Environment::focus_window,
+                      this,
+                      std::placeholders::_1)) {
     // Bind error handler
     XSetErrorHandler(handleXError);
     XSetIOErrorHandler(handleXIOError);
@@ -59,13 +64,13 @@ namespace ymwm::environment {
     }
 
     m_handlers->colors.insert({
-        ColorID::WindowBorder,
+        ColorID::Red,
         { .red = 0xddff,
-                        .green = 0,
-                        .blue = 0,
-                        .flags = DoRed | DoGreen | DoBlue }
+               .green = 0,
+               .blue = 0,
+               .flags = DoRed | DoGreen | DoBlue }
     });
-    auto& border_color = m_handlers->colors.at(ColorID::WindowBorder);
+    auto& border_color = m_handlers->colors.at(ColorID::Red);
 
     if (not XAllocColor(
             m_handlers->display, m_handlers->colormap, &border_color)) {
@@ -139,24 +144,13 @@ namespace ymwm::environment {
       XWindowAttributes wa;
       auto w = event.xmaprequest.window;
       if (XGetWindowAttributes(m_handlers->display, w, &wa)) {
-        // XWindowChanges wc;
-        // XConfigureWindow(m_handlers->display, w, CWBorderWidth, &wc);
-        // XSetWindowBorder(m_handlers->display, w,
-        // scheme[SchemeNorm][ColBorder].pixel);
-        XSetWindowBorder(m_handlers->display,
-                         w,
-                         m_handlers->colors.at(ColorID::WindowBorder).pixel);
-
-        XSelectInput(m_handlers->display,
-                     w,
-                     EnterWindowMask | FocusChangeMask | PropertyChangeMask |
-                         StructureNotifyMask);
-        XRaiseWindow(m_handlers->display, w);
-        XMapWindow(m_handlers->display, w);
-        XSetInputFocus(
-            m_handlers->display, w, RevertToPointerRoot, CurrentTime);
-        m_manager.add_window(
-            { .id = w, .x = wa.x, .y = wa.y, .w = wa.width, .h = wa.height });
+        m_manager.add_window({ .id = w,
+                               .x = wa.x,
+                               .y = wa.y,
+                               .w = wa.width,
+                               .h = wa.height,
+                               .border_width = 5,
+                               .border_color = ColorID::Red });
       }
 
       break;
@@ -191,4 +185,22 @@ namespace ymwm::environment {
   }
 
   Handlers& Environment::handlers() noexcept { return *m_handlers; }
+
+  void Environment::update_window(const window::Window& w) noexcept {
+    XResizeWindow(m_handlers->display, w.id, w.w, w.h);
+    XSetWindowBorderWidth(m_handlers->display, w.id, w.border_width);
+    XSetWindowBorder(
+        m_handlers->display, w.id, m_handlers->colors.at(w.border_color).pixel);
+  }
+
+  void Environment::focus_window(const window::Window& w) noexcept {
+    // XSelectInput(m_handlers->display,
+    // w,
+    // EnterWindowMask | FocusChangeMask | PropertyChangeMask |
+    // StructureNotifyMask);
+    XRaiseWindow(m_handlers->display, w.id);
+    XMapWindow(m_handlers->display, w.id);
+    XSetInputFocus(m_handlers->display, w.id, RevertToPointerRoot, CurrentTime);
+  }
+
 } // namespace ymwm::environment

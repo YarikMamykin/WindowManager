@@ -21,6 +21,8 @@ namespace ymwm::environment {
     bool exit_requested() const noexcept;
     void request_exit() noexcept;
     Handlers& handlers() noexcept;
+    void update_window(const window::Window& w) noexcept;
+    void focus_window(const window::Window& w) noexcept;
 
   private:
     std::unique_ptr<Handlers> m_handlers;
