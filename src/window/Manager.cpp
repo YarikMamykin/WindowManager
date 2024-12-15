@@ -5,11 +5,20 @@
 
 namespace ymwm::window {
 
-  Manager::Manager() { m_windows.reserve(5); }
+  Manager::Manager(UpdateWindowHandlerType&& update_window,
+                   FocusWindowHandlerType&& focus_window)
+      : m_update_window(update_window)
+      , m_focus_window(focus_window) {
+    m_windows.reserve(5);
+  }
 
   void Manager::add_window(const Window& w) noexcept {
     std::cout << std::format("{} {} {} {} {}\n", w.id, w.x, w.y, w.h, w.w);
     m_windows.push_back(w);
+    m_windows.back().w = 200;
+    m_windows.back().h = 200;
+    m_update_window(m_windows.back());
+    m_focus_window(m_windows.back());
   }
 
   void Manager::remove_window(environment::ID id) noexcept {
