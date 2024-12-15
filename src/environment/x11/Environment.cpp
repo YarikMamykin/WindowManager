@@ -143,6 +143,9 @@ namespace ymwm::environment {
         // XConfigureWindow(m_handlers->display, w, CWBorderWidth, &wc);
         // XSetWindowBorder(m_handlers->display, w,
         // scheme[SchemeNorm][ColBorder].pixel);
+        XSetWindowBorder(m_handlers->display,
+                         w,
+                         m_handlers->colors.at(ColorID::WindowBorder).pixel);
 
         XSelectInput(m_handlers->display,
                      w,
