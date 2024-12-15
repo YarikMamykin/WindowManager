@@ -1,5 +1,6 @@
 #pragma once
 
+#include "environment/ColorID.h"
 #include "environment/ID.h"
 
 namespace ymwm::window {
@@ -9,5 +10,7 @@ namespace ymwm::window {
     int y;
     int w;
     int h;
+    int border_width;
+    environment::ColorID border_color;
   };
 } // namespace ymwm::window
