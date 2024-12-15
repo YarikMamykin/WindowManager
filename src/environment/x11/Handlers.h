@@ -6,11 +6,10 @@
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
 #include <unordered_map>
+#include "environment/ColorID.h"
 // clang-format on
 
 namespace ymwm::environment {
-  enum class ColorID { WindowBorder = 1 };
-
   struct Handlers {
     Display* display;
     int screen;
