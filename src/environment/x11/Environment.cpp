@@ -58,6 +58,25 @@ namespace ymwm::environment {
       return;
     }
 
+    m_handlers->colors.insert({
+        ColorID::WindowBorder,
+        { .red = 0xddff,
+                        .green = 0,
+                        .blue = 0,
+                        .flags = DoRed | DoGreen | DoBlue }
+    });
+    auto& border_color = m_handlers->colors.at(ColorID::WindowBorder);
+
+    if (not XAllocColor(
+            m_handlers->display, m_handlers->colormap, &border_color)) {
+      std::cerr << std::format("Failed to allocate color: {} {} {}\n",
+                               border_color.red,
+                               border_color.green,
+                               border_color.blue);
+      m_exit_requested = true;
+      return;
+    }
+
     // Grab keys by events
     XUngrabKey(
         m_handlers->display, AnyKey, AnyModifier, m_handlers->root_window);
