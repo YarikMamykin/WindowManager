@@ -51,7 +51,10 @@ namespace ymwm::environment {
       , m_manager(
             std::bind(&Environment::update_window, this, std::placeholders::_1),
             std::bind(&Environment::focus_window, this, std::placeholders::_1),
-            std::bind(&Environment::reset_focus, this)) {
+            std::bind(&Environment::reset_focus, this),
+            std::bind(&Environment::focus_window,
+                      this,
+                      std::placeholders::_1)) {
     // Bind error handler
     XSetErrorHandler(handleXError);
     XSetIOErrorHandler(handleXIOError);
@@ -69,16 +72,32 @@ namespace ymwm::environment {
                .blue = 0,
                .flags = DoRed | DoGreen | DoBlue }
     });
-    auto& border_color = m_handlers->colors.at(ColorID::Red);
+    m_handlers->colors.insert({
+        ColorID::Green,
+        { .red = 0,
+                 .green = 0xddff,
+                 .blue = 0,
+                 .flags = DoRed | DoGreen | DoBlue }
+    });
+    m_handlers->colors.insert({
+        ColorID::Blue,
+        { .red = 0,
+                .green = 0,
+                .blue = 0xddff,
+                .flags = DoRed | DoGreen | DoBlue }
+    });
 
-    if (not XAllocColor(
-            m_handlers->display, m_handlers->colormap, &border_color)) {
-      std::cerr << std::format("Failed to allocate color: {} {} {}\n",
-                               border_color.red,
-                               border_color.green,
-                               border_color.blue);
-      m_exit_requested = true;
-      return;
+    for (ColorID c : { ColorID::Red, ColorID::Green, ColorID::Blue }) {
+      if (not XAllocColor(m_handlers->display,
+                          m_handlers->colormap,
+                          &m_handlers->colors.at(c))) {
+        std::cerr << std::format("Failed to allocate color: {} {} {}\n",
+                                 m_handlers->colors.at(c).red,
+                                 m_handlers->colors.at(c).green,
+                                 m_handlers->colors.at(c).blue);
+        m_exit_requested = true;
+        return;
+      }
     }
 
     // Grab keys by events
@@ -190,5 +209,17 @@ namespace ymwm::environment {
                    m_handlers->root_window,
                    RevertToPointerRoot,
                    CurrentTime);
+  }
+
+  void Environment::change_border_color(const window::Window& w) noexcept {
+    XSetWindowBorder(
+        m_handlers->display, w.id, m_handlers->colors.at(w.border_color).pixel);
+
+    // Sending expose event is required for redraw!
+    XEvent expose_event;
+    expose_event.type = Expose;
+    expose_event.xexpose.window = w.id;
+    expose_event.xexpose.count = 0;
+    XSendEvent(m_handlers->display, w.id, False, ExposureMask, &expose_event);
   }
 } // namespace ymwm::environment

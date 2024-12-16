@@ -7,10 +7,12 @@ namespace ymwm::window {
 
   Manager::Manager(UpdateWindowHandlerType&& update_window,
                    FocusWindowHandlerType&& focus_window,
-                   ResetFocusHandlerType&& reset_focus)
+                   ResetFocusHandlerType&& reset_focus,
+                   ChangeWindowBorderColorHandlerType&& change_border_color)
       : m_update_window(update_window)
       , m_focus_window(focus_window)
-      , m_reset_focus(reset_focus) {
+      , m_reset_focus(reset_focus)
+      , m_change_border_color(change_border_color) {
     m_windows.reserve(5);
   }
 
@@ -47,5 +49,12 @@ namespace ymwm::window {
            std::find_if(m_windows.begin(),
                         m_windows.end(),
                         [id](const auto& w) -> bool { return id == w.id; });
+  }
+
+  void Manager::change_border_color(environment::ColorID color) noexcept {
+    if (not m_windows.empty()) {
+      m_windows.back().border_color = color;
+      m_update_window(m_windows.back());
+    }
   }
 } // namespace ymwm::window
