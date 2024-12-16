@@ -50,9 +50,8 @@ namespace ymwm::environment {
       : m_exit_requested(false)
       , m_manager(
             std::bind(&Environment::update_window, this, std::placeholders::_1),
-            std::bind(&Environment::focus_window,
-                      this,
-                      std::placeholders::_1)) {
+            std::bind(&Environment::focus_window, this, std::placeholders::_1),
+            std::bind(&Environment::reset_focus, this)) {
     // Bind error handler
     XSetErrorHandler(handleXError);
     XSetIOErrorHandler(handleXIOError);
@@ -156,24 +155,11 @@ namespace ymwm::environment {
       break;
     }
     case UnmapNotify: {
-      if (1ul < m_manager.windows().size()) {
-        auto id = std::prev(m_manager.windows().end(), 2)->id;
-
-        XRaiseWindow(m_handlers->display, id);
-        XMapWindow(m_handlers->display, id);
-        XSetInputFocus(
-            m_handlers->display, id, RevertToPointerRoot, CurrentTime);
-      } else {
-        XSetInputFocus(m_handlers->display,
-                       m_handlers->root_window,
-                       RevertToPointerRoot,
-                       CurrentTime);
-      }
+      auto unmapped_window = event.xunmap.window;
+      m_manager.remove_window(unmapped_window);
       break;
     }
     case DestroyNotify: {
-      auto destroyed_window = event.xdestroywindow.window;
-      m_manager.remove_window(destroyed_window);
       break;
     }
     }
@@ -194,13 +180,15 @@ namespace ymwm::environment {
   }
 
   void Environment::focus_window(const window::Window& w) noexcept {
-    // XSelectInput(m_handlers->display,
-    // w,
-    // EnterWindowMask | FocusChangeMask | PropertyChangeMask |
-    // StructureNotifyMask);
     XRaiseWindow(m_handlers->display, w.id);
     XMapWindow(m_handlers->display, w.id);
     XSetInputFocus(m_handlers->display, w.id, RevertToPointerRoot, CurrentTime);
   }
 
+  void Environment::reset_focus() noexcept {
+    XSetInputFocus(m_handlers->display,
+                   m_handlers->root_window,
+                   RevertToPointerRoot,
+                   CurrentTime);
+  }
 } // namespace ymwm::environment

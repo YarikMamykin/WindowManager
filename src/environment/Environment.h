@@ -23,6 +23,7 @@ namespace ymwm::environment {
     Handlers& handlers() noexcept;
     void update_window(const window::Window& w) noexcept;
     void focus_window(const window::Window& w) noexcept;
+    void reset_focus() noexcept;
 
   private:
     std::unique_ptr<Handlers> m_handlers;
