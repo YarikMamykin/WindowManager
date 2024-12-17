@@ -8,11 +8,13 @@ namespace ymwm::window {
   Manager::Manager(UpdateWindowHandlerType&& update_window,
                    FocusWindowHandlerType&& focus_window,
                    ResetFocusHandlerType&& reset_focus,
-                   ChangeWindowBorderColorHandlerType&& change_border_color)
+                   ChangeWindowBorderColorHandlerType&& change_border_color,
+                   MoveAndResizeWindowHandlerType&& move_and_resize)
       : m_update_window(update_window)
       , m_focus_window(focus_window)
       , m_reset_focus(reset_focus)
-      , m_change_border_color(change_border_color) {
+      , m_change_border_color(change_border_color)
+      , m_move_and_resize(move_and_resize) {
     m_windows.reserve(5);
   }
 
