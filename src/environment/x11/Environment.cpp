@@ -52,7 +52,8 @@ namespace ymwm::environment {
             std::bind(&Environment::update_window, this, std::placeholders::_1),
             std::bind(&Environment::focus_window, this, std::placeholders::_1),
             std::bind(&Environment::reset_focus, this),
-            std::bind(&Environment::focus_window,
+            std::bind(&Environment::focus_window, this, std::placeholders::_1),
+            std::bind(&Environment::move_and_resize,
                       this,
                       std::placeholders::_1)) {
     // Bind error handler
@@ -196,6 +197,10 @@ namespace ymwm::environment {
     XSetWindowBorderWidth(m_handlers->display, w.id, w.border_width);
     XSetWindowBorder(
         m_handlers->display, w.id, m_handlers->colors.at(w.border_color).pixel);
+  }
+
+  void Environment::move_and_resize(const window::Window& w) noexcept {
+    XMoveResizeWindow(m_handlers->display, w.id, w.x, w.y, w.w, w.h);
   }
 
   void Environment::focus_window(const window::Window& w) noexcept {

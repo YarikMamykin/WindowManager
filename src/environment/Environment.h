@@ -25,6 +25,7 @@ namespace ymwm::environment {
     void focus_window(const window::Window& w) noexcept;
     void reset_focus() noexcept;
     void change_border_color(const window::Window& w) noexcept;
+    void move_and_resize(const window::Window& w) noexcept;
     ymwm::window::Manager& manager() noexcept;
 
   private:
