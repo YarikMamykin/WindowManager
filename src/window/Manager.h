@@ -24,6 +24,7 @@ namespace ymwm::window {
     const std::vector<Window>& windows() const noexcept;
     bool has_window(environment::ID id) const noexcept;
     void change_border_color(environment::ColorID color) noexcept;
+    void move_focused_window_to(int x, int y) noexcept;
 
   private:
     std::vector<Window> m_windows;

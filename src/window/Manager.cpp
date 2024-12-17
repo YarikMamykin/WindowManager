@@ -27,6 +27,15 @@ namespace ymwm::window {
     m_focus_window(m_windows.back());
   }
 
+  void Manager::move_focused_window_to(int x, int y) noexcept {
+    if (m_windows.empty()) {
+      return;
+    }
+    m_windows.back().x = x;
+    m_windows.back().y = y;
+    m_move_and_resize(m_windows.back());
+  }
+
   void Manager::remove_window(environment::ID id) noexcept {
     auto erased_successfully = std::erase_if(
         m_windows, [id](const Window& w) -> bool { return id == w.id; });
