@@ -55,6 +55,9 @@ namespace ymwm::environment {
             std::bind(&Environment::focus_window, this, std::placeholders::_1),
             std::bind(&Environment::move_and_resize,
                       this,
+                      std::placeholders::_1),
+            std::bind(&Environment::close_window,
+                      this,
                       std::placeholders::_1)) {
     // Bind error handler
     XSetErrorHandler(handleXError);
@@ -226,5 +229,11 @@ namespace ymwm::environment {
     expose_event.xexpose.window = w.id;
     expose_event.xexpose.count = 0;
     XSendEvent(m_handlers->display, w.id, False, ExposureMask, &expose_event);
+  }
+
+  void Environment::close_window(ID id) noexcept {
+    XUnmapWindow(m_handlers->display, id);
+    XDestroyWindow(m_handlers->display, id);
+    // XKillClient(m_handlers->display, id);
   }
 } // namespace ymwm::environment

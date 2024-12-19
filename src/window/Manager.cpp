@@ -9,12 +9,14 @@ namespace ymwm::window {
                    FocusWindowHandlerType&& focus_window,
                    ResetFocusHandlerType&& reset_focus,
                    ChangeWindowBorderColorHandlerType&& change_border_color,
-                   MoveAndResizeWindowHandlerType&& move_and_resize)
+                   MoveAndResizeWindowHandlerType&& move_and_resize,
+                   CloseWindowHandlerType&& close_window)
       : m_update_window(update_window)
       , m_focus_window(focus_window)
       , m_reset_focus(reset_focus)
       , m_change_border_color(change_border_color)
-      , m_move_and_resize(move_and_resize) {
+      , m_move_and_resize(move_and_resize)
+      , m_close_window(close_window) {
     m_windows.reserve(5);
   }
 
@@ -67,5 +69,16 @@ namespace ymwm::window {
       m_windows.back().border_color = color;
       m_update_window(m_windows.back());
     }
+  }
+
+  void Manager::close_window(environment::ID id) noexcept {
+    if (1ul < m_windows.size()) {
+      m_focus_window(*std::prev(m_windows.end(), 2));
+      m_close_window(id);
+      return;
+    }
+
+    m_reset_focus();
+    m_close_window(id);
   }
 } // namespace ymwm::window
