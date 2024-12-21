@@ -5,13 +5,17 @@
 
 #include <format>
 #include <iostream>
+#include <optional>
 #include <vector>
 
 namespace ymwm::window {
   template <typename Environment>
   struct Manager {
+    using FocusedWindowType = std::optional<std::reference_wrapper<Window>>;
+
     Manager(Environment* env)
-        : m_env(env) {
+        : m_env(env)
+        , m_focused_window_index(0ul) {
       m_windows.reserve(5);
     }
 
@@ -20,8 +24,24 @@ namespace ymwm::window {
       m_windows.push_back(w);
       m_windows.back().w = 200;
       m_windows.back().h = 200;
-      m_env->update_window(m_windows.back());
-      m_env->focus_window(m_windows.back());
+      update_focus();
+      m_env->update_window(focused_window()->get());
+    }
+
+    inline void update_focused_window_index() noexcept {
+      // Identifies the window to focus
+      m_focused_window_index = m_windows.size() - 1ul;
+    }
+
+    inline void update_focus() noexcept {
+      update_focused_window_index();
+
+      if (auto fw = focused_window()) {
+        m_env->focus_window(fw->get());
+        return;
+      }
+
+      m_env->reset_focus();
     }
 
     inline void remove_window(environment::ID id) noexcept {
@@ -32,15 +52,17 @@ namespace ymwm::window {
         std::cout << std::format("Erased {} \n", id);
       }
 
-      if (not m_windows.empty()) {
-        m_env->focus_window(m_windows.back());
-      } else {
-        m_env->reset_focus();
-      }
+      update_focus();
     }
 
     inline const std::vector<Window>& windows() const noexcept {
       return m_windows;
+    }
+
+    inline FocusedWindowType focused_window() noexcept {
+      return m_windows.empty()
+                 ? FocusedWindowType{ std::nullopt }
+                 : FocusedWindowType{ m_windows.at(m_focused_window_index) };
     }
 
     inline bool has_window(environment::ID id) const noexcept {
@@ -51,34 +73,29 @@ namespace ymwm::window {
     }
 
     inline void change_border_color(environment::ColorID color) noexcept {
-      if (not m_windows.empty()) {
-        m_windows.back().border_color = color;
-        m_env->update_window(m_windows.back());
+      if (auto fw = focused_window()) {
+        fw->get().border_color = color;
+        m_env->update_window(fw->get());
       }
     }
 
     inline void move_focused_window_to(int x, int y) noexcept {
-      if (m_windows.empty()) {
-        return;
+      if (auto fw = focused_window()) {
+        fw->get().x = x;
+        fw->get().y = y;
+        m_env->move_and_resize(fw->get());
       }
-      m_windows.back().x = x;
-      m_windows.back().y = y;
-      m_env->move_and_resize(m_windows.back());
     }
 
-    inline void close_window(environment::ID id) noexcept {
-      if (1ul < m_windows.size()) {
-        m_env->focus_window(*std::prev(m_windows.end(), 2));
-        m_env->close_window(id);
-        return;
+    inline void close_focused_window() noexcept {
+      if (auto fw = focused_window()) {
+        m_env->close_window(fw->get().id);
       }
-
-      m_env->reset_focus();
-      m_env->close_window(id);
     }
 
   private:
     std::vector<Window> m_windows;
+    std::size_t m_focused_window_index;
     Environment* const m_env;
   };
 } // namespace ymwm::window
