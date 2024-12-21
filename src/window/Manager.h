@@ -5,13 +5,10 @@
 
 #include <vector>
 
-namespace ymwm::environment {
-  struct Environment;
-}
-
 namespace ymwm::window {
+  template <typename Environment>
   struct Manager {
-    Manager(environment::Environment* env);
+    Manager(Environment* env);
 
     void add_window(const Window& w) noexcept;
     void remove_window(environment::ID id) noexcept;
@@ -23,6 +20,6 @@ namespace ymwm::window {
 
   private:
     std::vector<Window> m_windows;
-    environment::Environment* const m_env;
+    Environment* const m_env;
   };
 } // namespace ymwm::window

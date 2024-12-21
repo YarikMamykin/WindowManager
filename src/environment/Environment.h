@@ -27,11 +27,11 @@ namespace ymwm::environment {
     void change_border_color(const window::Window& w) noexcept;
     void move_and_resize(const window::Window& w) noexcept;
     void close_window(ID id) noexcept;
-    ymwm::window::Manager& manager() noexcept;
+    ymwm::window::Manager<Environment>& manager() noexcept;
 
   private:
     std::unique_ptr<Handlers> m_handlers;
     bool m_exit_requested;
-    mutable ymwm::window::Manager m_manager;
+    mutable ymwm::window::Manager<Environment> m_manager;
   };
 } // namespace ymwm::environment

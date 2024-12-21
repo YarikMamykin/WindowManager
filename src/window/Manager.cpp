@@ -7,12 +7,14 @@
 
 namespace ymwm::window {
 
-  Manager::Manager(environment::Environment* env)
+  template <>
+  Manager<environment::Environment>::Manager(environment::Environment* env)
       : m_env(env) {
     m_windows.reserve(5);
   }
 
-  void Manager::add_window(const Window& w) noexcept {
+  template <>
+  void Manager<environment::Environment>::add_window(const Window& w) noexcept {
     std::cout << std::format("{} {} {} {} {}\n", w.id, w.x, w.y, w.h, w.w);
     m_windows.push_back(w);
     m_windows.back().w = 200;
@@ -21,7 +23,10 @@ namespace ymwm::window {
     m_env->focus_window(m_windows.back());
   }
 
-  void Manager::move_focused_window_to(int x, int y) noexcept {
+  template <>
+  void
+  Manager<environment::Environment>::move_focused_window_to(int x,
+                                                            int y) noexcept {
     if (m_windows.empty()) {
       return;
     }
@@ -30,7 +35,9 @@ namespace ymwm::window {
     m_env->move_and_resize(m_windows.back());
   }
 
-  void Manager::remove_window(environment::ID id) noexcept {
+  template <>
+  void Manager<environment::Environment>::remove_window(
+      environment::ID id) noexcept {
     auto erased_successfully = std::erase_if(
         m_windows, [id](const Window& w) -> bool { return id == w.id; });
 
@@ -45,25 +52,33 @@ namespace ymwm::window {
     }
   }
 
-  const std::vector<Window>& Manager::windows() const noexcept {
+  template <>
+  const std::vector<Window>&
+  Manager<environment::Environment>::windows() const noexcept {
     return m_windows;
   }
 
-  bool Manager::has_window(environment::ID id) const noexcept {
+  template <>
+  bool Manager<environment::Environment>::has_window(
+      environment::ID id) const noexcept {
     return m_windows.end() !=
            std::find_if(m_windows.begin(),
                         m_windows.end(),
                         [id](const auto& w) -> bool { return id == w.id; });
   }
 
-  void Manager::change_border_color(environment::ColorID color) noexcept {
+  template <>
+  void Manager<environment::Environment>::change_border_color(
+      environment::ColorID color) noexcept {
     if (not m_windows.empty()) {
       m_windows.back().border_color = color;
       m_env->update_window(m_windows.back());
     }
   }
 
-  void Manager::close_window(environment::ID id) noexcept {
+  template <>
+  void
+  Manager<environment::Environment>::close_window(environment::ID id) noexcept {
     if (1ul < m_windows.size()) {
       m_env->focus_window(*std::prev(m_windows.end(), 2));
       m_env->close_window(id);
