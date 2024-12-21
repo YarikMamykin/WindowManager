@@ -48,17 +48,8 @@ namespace {
 namespace ymwm::environment {
   Environment::Environment(const events::Map& events_map)
       : m_exit_requested(false)
-      , m_manager(
-            std::bind(&Environment::update_window, this, std::placeholders::_1),
-            std::bind(&Environment::focus_window, this, std::placeholders::_1),
-            std::bind(&Environment::reset_focus, this),
-            std::bind(&Environment::focus_window, this, std::placeholders::_1),
-            std::bind(&Environment::move_and_resize,
-                      this,
-                      std::placeholders::_1),
-            std::bind(&Environment::close_window,
-                      this,
-                      std::placeholders::_1)) {
+      , m_manager(this) {
+
     // Bind error handler
     XSetErrorHandler(handleXError);
     XSetIOErrorHandler(handleXIOError);

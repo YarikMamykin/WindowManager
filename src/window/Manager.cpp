@@ -1,22 +1,14 @@
 #include "Manager.h"
 
+#include "environment/Environment.h"
+
 #include <format>
 #include <iostream>
 
 namespace ymwm::window {
 
-  Manager::Manager(UpdateWindowHandlerType&& update_window,
-                   FocusWindowHandlerType&& focus_window,
-                   ResetFocusHandlerType&& reset_focus,
-                   ChangeWindowBorderColorHandlerType&& change_border_color,
-                   MoveAndResizeWindowHandlerType&& move_and_resize,
-                   CloseWindowHandlerType&& close_window)
-      : m_update_window(update_window)
-      , m_focus_window(focus_window)
-      , m_reset_focus(reset_focus)
-      , m_change_border_color(change_border_color)
-      , m_move_and_resize(move_and_resize)
-      , m_close_window(close_window) {
+  Manager::Manager(environment::Environment* env)
+      : m_env(env) {
     m_windows.reserve(5);
   }
 
@@ -25,8 +17,8 @@ namespace ymwm::window {
     m_windows.push_back(w);
     m_windows.back().w = 200;
     m_windows.back().h = 200;
-    m_update_window(m_windows.back());
-    m_focus_window(m_windows.back());
+    m_env->update_window(m_windows.back());
+    m_env->focus_window(m_windows.back());
   }
 
   void Manager::move_focused_window_to(int x, int y) noexcept {
@@ -35,7 +27,7 @@ namespace ymwm::window {
     }
     m_windows.back().x = x;
     m_windows.back().y = y;
-    m_move_and_resize(m_windows.back());
+    m_env->move_and_resize(m_windows.back());
   }
 
   void Manager::remove_window(environment::ID id) noexcept {
@@ -47,9 +39,9 @@ namespace ymwm::window {
     }
 
     if (not m_windows.empty()) {
-      m_focus_window(m_windows.back());
+      m_env->focus_window(m_windows.back());
     } else {
-      m_reset_focus();
+      m_env->reset_focus();
     }
   }
 
@@ -67,18 +59,18 @@ namespace ymwm::window {
   void Manager::change_border_color(environment::ColorID color) noexcept {
     if (not m_windows.empty()) {
       m_windows.back().border_color = color;
-      m_update_window(m_windows.back());
+      m_env->update_window(m_windows.back());
     }
   }
 
   void Manager::close_window(environment::ID id) noexcept {
     if (1ul < m_windows.size()) {
-      m_focus_window(*std::prev(m_windows.end(), 2));
-      m_close_window(id);
+      m_env->focus_window(*std::prev(m_windows.end(), 2));
+      m_env->close_window(id);
       return;
     }
 
-    m_reset_focus();
-    m_close_window(id);
+    m_env->reset_focus();
+    m_env->close_window(id);
   }
 } // namespace ymwm::window

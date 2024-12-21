@@ -3,24 +3,15 @@
 #include "environment/ColorID.h"
 #include "environment/ID.h"
 
-#include <functional>
 #include <vector>
 
-namespace ymwm::window {
-  using UpdateWindowHandlerType = std::function<void(Window&)>;
-  using FocusWindowHandlerType = std::function<void(Window&)>;
-  using ResetFocusHandlerType = std::function<void(void)>;
-  using ChangeWindowBorderColorHandlerType = std::function<void(Window&)>;
-  using MoveAndResizeWindowHandlerType = std::function<void(Window&)>;
-  using CloseWindowHandlerType = std::function<void(environment::ID)>;
+namespace ymwm::environment {
+  struct Environment;
+}
 
+namespace ymwm::window {
   struct Manager {
-    Manager(UpdateWindowHandlerType&& update_window,
-            FocusWindowHandlerType&& focus_window,
-            ResetFocusHandlerType&& reset_focus,
-            ChangeWindowBorderColorHandlerType&& change_border_color,
-            MoveAndResizeWindowHandlerType&& move_and_resize,
-            CloseWindowHandlerType&& close_window);
+    Manager(environment::Environment* env);
 
     void add_window(const Window& w) noexcept;
     void remove_window(environment::ID id) noexcept;
@@ -32,11 +23,6 @@ namespace ymwm::window {
 
   private:
     std::vector<Window> m_windows;
-    UpdateWindowHandlerType m_update_window;
-    FocusWindowHandlerType m_focus_window;
-    ResetFocusHandlerType m_reset_focus;
-    ChangeWindowBorderColorHandlerType m_change_border_color;
-    MoveAndResizeWindowHandlerType m_move_and_resize;
-    CloseWindowHandlerType m_close_window;
+    environment::Environment* const m_env;
   };
 } // namespace ymwm::window
