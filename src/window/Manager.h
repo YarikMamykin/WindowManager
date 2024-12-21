@@ -24,18 +24,12 @@ namespace ymwm::window {
       m_windows.push_back(w);
       m_windows.back().w = 200;
       m_windows.back().h = 200;
+      focus_next_window();
       update_focus();
       m_env->update_window(focused_window()->get());
     }
 
-    inline void update_focused_window_index() noexcept {
-      // Identifies the window to focus
-      m_focused_window_index = m_windows.size() - 1ul;
-    }
-
     inline void update_focus() noexcept {
-      update_focused_window_index();
-
       if (auto fw = focused_window()) {
         m_env->focus_window(fw->get());
         return;
@@ -85,6 +79,29 @@ namespace ymwm::window {
         fw->get().y = y;
         m_env->move_and_resize(fw->get());
       }
+    }
+
+    inline void focus_next_window() noexcept {
+      if (m_windows.empty()) {
+        return;
+      }
+
+      m_focused_window_index =
+          m_focused_window_index == (m_windows.size() - 1ul)
+              ? 0ul
+              : m_focused_window_index + 1ul;
+      update_focus();
+    }
+
+    inline void focus_prev_window() noexcept {
+      if (m_windows.empty()) {
+        return;
+      }
+
+      m_focused_window_index = m_focused_window_index == 0ul
+                                   ? m_windows.size() - 1ul
+                                   : m_focused_window_index - 1ul;
+      update_focus();
     }
 
     inline void close_focused_window() noexcept {
