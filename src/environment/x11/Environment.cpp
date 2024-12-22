@@ -210,6 +210,17 @@ namespace ymwm::environment {
         m_handlers->display, w.id, m_handlers->colors.at(w.border_color).pixel);
   }
 
+  void Environment::update_window_border(const window::Window& w) noexcept {
+    XSetWindowBorderWidth(m_handlers->display, w.id, w.border_width);
+    XSetWindowBorder(
+        m_handlers->display, w.id, m_handlers->colors.at(w.border_color).pixel);
+    XEvent expose_event;
+    expose_event.type = Expose;
+    expose_event.xexpose.window = w.id;
+    expose_event.xexpose.count = 0;
+    XSendEvent(m_handlers->display, w.id, False, ExposureMask, &expose_event);
+  }
+
   void Environment::move_and_resize(const window::Window& w) noexcept {
     XMoveResizeWindow(m_handlers->display, w.id, w.x, w.y, w.w, w.h);
   }
