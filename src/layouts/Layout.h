@@ -37,6 +37,7 @@ namespace ymwm::layouts {
     operator()(const auto& parameters) {
       return [&parameters, layout = this](window::Window& w) -> void {
         layout->apply(parameters, w);
+        ++layout->iteration;
       };
     }
   };
