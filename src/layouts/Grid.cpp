@@ -13,21 +13,20 @@ namespace ymwm::layouts {
 
     auto& [margins, grid_size, number_of_margins] = parameters;
 
-    int width = (screen_width - screen_margins.left - screen_margins.right -
-                 (margins.horizontal * number_of_margins)) /
-                parameters.grid_size;
+    w.w = (screen_width - screen_margins.left - screen_margins.right -
+           (margins.horizontal * number_of_margins)) /
+          parameters.grid_size;
 
-    int height =
-        (screen_height - screen_margins.top - screen_margins.bottom -
-         (parameters.margins.vertical * parameters.number_of_margins)) /
-        parameters.grid_size;
+    w.h = (screen_height - screen_margins.top - screen_margins.bottom -
+           (parameters.margins.vertical * parameters.number_of_margins)) /
+          parameters.grid_size;
 
     auto row_index = iteration % parameters.grid_size;
-    int x = screen_margins.left +
-            ((width + parameters.margins.horizontal) * row_index);
+    w.x = screen_margins.left +
+          ((w.w + parameters.margins.horizontal) * row_index);
 
     auto col_index = iteration / parameters.grid_size;
-    int y = screen_margins.top +
-            ((height + parameters.margins.vertical) * col_index);
+    w.y =
+        screen_margins.top + ((w.h + parameters.margins.vertical) * col_index);
   }
 } // namespace ymwm::layouts
