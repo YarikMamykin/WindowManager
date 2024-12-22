@@ -30,10 +30,14 @@ namespace ymwm::layouts {
 
     [[maybe_unused]] std::size_t iteration{ 0ul };
 
+    inline void apply(window::Window& w) noexcept {
+      std::invoke(std::visit(*this, this->parameters), w);
+    }
+
     template <typename ParametersType>
     void apply(const ParametersType& parameters, window::Window& w) noexcept;
 
-    [[nodiscard]] std::function<void(window::Window&)>
+    [[nodiscard]] inline std::function<void(window::Window&)>
     operator()(const auto& parameters) {
       return [&parameters, layout = this](window::Window& w) -> void {
         layout->apply(parameters, w);
