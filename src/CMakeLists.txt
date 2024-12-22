@@ -5,6 +5,7 @@ if(${NATIVE_ENVIRONMENT} STREQUAL "X11")
 endif()
 
 add_subdirectory(events)
+add_subdirectory(layouts)
 add_subdirectory(environment)
 
 add_executable(${PROJECT_NAME} main.cpp)
@@ -15,11 +16,13 @@ target_include_directories(${PROJECT_NAME}
 add_dependencies(${PROJECT_NAME}
 	events
 	environment
+	layouts
 )
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
 	events
 	environment
+	layouts
 )
 target_compile_options(${PROJECT_NAME}
 	PRIVATE
