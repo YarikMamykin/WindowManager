@@ -46,7 +46,7 @@ namespace ymwm::window {
         std::cout << std::format("Erased {} \n", id);
       }
 
-      update_focus();
+      focus_next_window();
     }
 
     inline const std::vector<Window>& windows() const noexcept {
@@ -87,7 +87,7 @@ namespace ymwm::window {
       }
 
       m_focused_window_index =
-          m_focused_window_index == (m_windows.size() - 1ul)
+          m_focused_window_index >= (m_windows.size() - 1ul)
               ? 0ul
               : m_focused_window_index + 1ul;
       update_focus();
