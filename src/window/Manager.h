@@ -8,6 +8,7 @@
 #include <format>
 #include <iostream>
 #include <optional>
+#include <variant>
 #include <vector>
 
 namespace ymwm::window {
@@ -30,6 +31,17 @@ namespace ymwm::window {
       layouts::Layout l(m_layout);
       l.basic_parameters.focused_window_index = m_focused_window_index;
       l.basic_parameters.number_of_windows = m_windows.size();
+
+      // Needs to be a better way to update grid parameters or any other
+      // parameters dependent on e.g. number of windows. Seems like a good place
+      // for functors or signals implementation.
+      if (std::holds_alternative<layouts::GridParameters>(l.parameters)) {
+        const auto& grid_parameters =
+            std::get<layouts::GridParameters>(l.parameters);
+
+        l.parameters =
+            layouts::GridParameters(grid_parameters.margins, m_windows.size());
+      };
 
       for (Window& w : m_windows) {
         l.apply(w);
