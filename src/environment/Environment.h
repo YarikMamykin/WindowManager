@@ -6,6 +6,7 @@
 #include "window/Manager.h"
 
 #include <memory>
+#include <tuple>
 
 namespace ymwm::environment {
   struct Handlers;
@@ -28,6 +29,7 @@ namespace ymwm::environment {
     void move_and_resize(const window::Window& w) noexcept;
     void close_window(ID id) noexcept;
     ymwm::window::Manager<Environment>& manager() noexcept;
+    std::tuple<int, int> screen_width_and_height() noexcept;
 
   private:
     std::unique_ptr<Handlers> m_handlers;

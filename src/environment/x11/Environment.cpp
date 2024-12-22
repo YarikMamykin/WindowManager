@@ -60,6 +60,9 @@ namespace ymwm::environment {
       return;
     }
 
+    auto [sw, sh] = screen_width_and_height();
+    std::cout << std::format("SCREEN SIZE: {} {}\n", sw, sh);
+
     m_handlers->colors.insert({
         ColorID::Red,
         { .red = 0xddff,
@@ -226,5 +229,10 @@ namespace ymwm::environment {
     XUnmapWindow(m_handlers->display, id);
     XDestroyWindow(m_handlers->display, id);
     // XKillClient(m_handlers->display, id);
+  }
+
+  std::tuple<int, int> Environment::screen_width_and_height() noexcept {
+    return { XDisplayWidth(m_handlers->display, m_handlers->screen),
+             XDisplayHeight(m_handlers->display, m_handlers->screen) };
   }
 } // namespace ymwm::environment
