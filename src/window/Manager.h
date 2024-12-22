@@ -23,6 +23,7 @@ namespace ymwm::window {
 
     inline void set_layout(const layouts::Layout& new_layout) noexcept {
       m_layout = new_layout;
+      update_layout();
     }
 
     inline void update_layout() noexcept {
