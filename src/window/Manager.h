@@ -2,6 +2,8 @@
 #include "Window.h"
 #include "environment/ColorID.h"
 #include "environment/ID.h"
+#include "layouts/Layout.h"
+#include "layouts/Parameters.h"
 
 #include <format>
 #include <iostream>
@@ -19,14 +21,28 @@ namespace ymwm::window {
       m_windows.reserve(5);
     }
 
+    inline void set_layout(const layouts::Layout& new_layout) noexcept {
+      m_layout = new_layout;
+    }
+
+    inline void update_layout() noexcept {
+      layouts::Layout l(m_layout);
+      l.basic_parameters.focused_window_index = m_focused_window_index;
+      l.basic_parameters.number_of_windows = m_windows.size();
+
+      for (Window& w : m_windows) {
+        l.apply(w);
+        m_env->move_and_resize(w);
+      }
+    }
+
     inline void add_window(const Window& w) noexcept {
       std::cout << std::format("{} {} {} {} {}\n", w.id, w.x, w.y, w.h, w.w);
       m_windows.push_back(w);
-      m_windows.back().w = 200;
-      m_windows.back().h = 200;
       focus_next_window();
       update_focus();
       m_env->update_window(focused_window()->get());
+      update_layout();
     }
 
     inline void update_focus() noexcept {
@@ -114,5 +130,6 @@ namespace ymwm::window {
     std::vector<Window> m_windows;
     std::size_t m_focused_window_index;
     Environment* const m_env;
+    layouts::Layout m_layout;
   };
 } // namespace ymwm::window

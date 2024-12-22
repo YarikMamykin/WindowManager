@@ -6,6 +6,7 @@
 #include "events/AbstractKeyMask.h"
 #include "events/AbstractKeyPress.h"
 #include "events/Map.h"
+#include "layouts/Parameters.h"
 
 #include <array>
 #include <format>
@@ -137,6 +138,19 @@ namespace ymwm::environment {
                    m_handlers->root_window,
                    RevertToPointerRoot,
                    CurrentTime);
+
+    layouts::Layout l;
+    auto [screen_width, screen_height] = screen_width_and_height();
+    l.basic_parameters.screen_width = screen_width;
+    l.basic_parameters.screen_height = screen_height;
+    l.basic_parameters.screen_margins.left = 0u;
+    l.basic_parameters.screen_margins.right = 0u;
+    l.basic_parameters.screen_margins.top = 0u;
+    l.basic_parameters.screen_margins.bottom = 0u;
+    l.parameters = layouts::GridParameters(
+        layouts::GridParameters::Margins{ .horizontal = 0u, .vertical = 0u },
+        4ul);
+    m_manager.set_layout(l);
   }
 
   Environment::~Environment() {
