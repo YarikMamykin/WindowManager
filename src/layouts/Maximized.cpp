@@ -1,4 +1,5 @@
 #include "Layout.h"
+#include "layouts/Parameters.h"
 #include "window/Window.h"
 
 namespace ymwm::layouts {
@@ -15,5 +16,10 @@ namespace ymwm::layouts {
     w.h = screen_height - screen_margins.top - screen_margins.bottom;
     w.x = screen_margins.left;
     w.y = screen_margins.top;
+  }
+
+  template <>
+  void Layout::update(const MaximisedParameters& parameters) noexcept {
+    this->parameters = parameters;
   }
 } // namespace ymwm::layouts

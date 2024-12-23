@@ -29,4 +29,10 @@ namespace ymwm::layouts {
     w.y =
         screen_margins.top + ((w.h + parameters.margins.vertical) * col_index);
   }
+
+  template <>
+  void Layout::update(const GridParameters& parameters) noexcept {
+    this->parameters = layouts::GridParameters(
+        parameters.margins, this->basic_parameters.number_of_windows);
+  }
 } // namespace ymwm::layouts
