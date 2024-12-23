@@ -3,12 +3,10 @@
 #include "environment/ColorID.h"
 #include "environment/ID.h"
 #include "layouts/Layout.h"
-#include "layouts/Parameters.h"
 
 #include <format>
 #include <iostream>
 #include <optional>
-#include <variant>
 #include <vector>
 
 namespace ymwm::window {
@@ -28,25 +26,23 @@ namespace ymwm::window {
     }
 
     inline void update_layout() noexcept {
-      layouts::Layout l(m_layout);
-      l.basic_parameters.focused_window_index = m_focused_window_index;
-      l.basic_parameters.number_of_windows = m_windows.size();
-
-      // Needs to be a better way to update grid parameters or any other
-      // parameters dependent on e.g. number of windows. Seems like a good place
-      // for functors or signals implementation.
-      if (std::holds_alternative<layouts::GridParameters>(l.parameters)) {
-        const auto& grid_parameters =
-            std::get<layouts::GridParameters>(l.parameters);
-
-        l.parameters =
-            layouts::GridParameters(grid_parameters.margins, m_windows.size());
-      };
-
+      update_layout_parameters();
       for (Window& w : m_windows) {
-        l.apply(w);
+        m_layout.apply(w);
         m_env->move_and_resize(w);
       }
+    }
+
+    inline void update_layout_parameters() noexcept {
+      auto [screen_width, screen_height] = m_env->screen_width_and_height();
+      layouts::Layout::BasicParameters basic_parameters{
+        .screen_width = screen_width,
+        .screen_height = screen_height,
+        .screen_margins = m_layout.basic_parameters.screen_margins,
+        .focused_window_index = m_focused_window_index,
+        .number_of_windows = m_windows.size()
+      };
+      m_layout.update(basic_parameters, m_layout.parameters);
     }
 
     inline void add_window(const Window& w) noexcept {
@@ -76,6 +72,7 @@ namespace ymwm::window {
       }
 
       focus_next_window();
+      update_layout();
     }
 
     inline const std::vector<Window>& windows() const noexcept {
