@@ -12,8 +12,10 @@ namespace ymwm::layouts {
            focused_window_index,
            number_of_windows] = basic_parameters;
 
-    w.w = screen_width - screen_margins.left - screen_margins.right;
-    w.h = screen_height - screen_margins.top - screen_margins.bottom;
+    w.w = screen_width - screen_margins.left - screen_margins.right -
+          (2 * w.border_width);
+    w.h = screen_height - screen_margins.top - screen_margins.bottom -
+          (2 * w.border_width);
     w.x = screen_margins.left;
     w.y = screen_margins.top;
   }

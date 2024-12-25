@@ -15,19 +15,23 @@ namespace ymwm::layouts {
 
     w.w = (screen_width - screen_margins.left - screen_margins.right -
            (margins.horizontal * number_of_margins)) /
-          parameters.grid_size;
+              parameters.grid_size -
+          (2 * w.border_width);
 
     w.h = (screen_height - screen_margins.top - screen_margins.bottom -
            (parameters.margins.vertical * parameters.number_of_margins)) /
-          parameters.grid_size;
+              parameters.grid_size -
+          (2 * w.border_width);
 
     auto row_index = iteration % parameters.grid_size;
     w.x = screen_margins.left +
-          ((w.w + parameters.margins.horizontal) * row_index);
+          ((w.w + parameters.margins.horizontal + (2 * w.border_width)) *
+           row_index);
 
     auto col_index = iteration / parameters.grid_size;
-    w.y =
-        screen_margins.top + ((w.h + parameters.margins.vertical) * col_index);
+    w.y = screen_margins.top +
+          ((w.h + parameters.margins.vertical + (2 * w.border_width)) *
+           col_index);
   }
 
   template <>
