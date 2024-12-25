@@ -1,6 +1,5 @@
 #pragma once
 #include "Parameters.h"
-#include "common/GenericVisitor.h"
 
 #include <cstddef>
 #include <functional>
