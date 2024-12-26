@@ -1,0 +1,18 @@
+add_executable(WindowManagerTest
+	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/WindowManagerTest.cpp
+)
+target_include_directories(WindowManagerTest
+	PUBLIC
+	${SRC_INCLUDE_DIR}
+	${GTEST_INCLUDE_DIRS}
+)
+target_link_libraries(WindowManagerTest
+	${GTEST_LIBRARIES}
+	layouts
+)
+add_dependencies(WindowManagerTest
+	googletestlib
+	layouts
+)
+add_test(NAME WindowManagerTest COMMAND WindowManagerTest WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
