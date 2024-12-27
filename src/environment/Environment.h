@@ -28,7 +28,7 @@ namespace ymwm::environment {
     void update_window_border(const window::Window& w) noexcept;
     void change_border_color(const window::Window& w) noexcept;
     void move_and_resize(const window::Window& w) noexcept;
-    void close_window(ID id) noexcept;
+    void close_window(const window::Window& w) noexcept;
     ymwm::window::Manager<Environment>& manager() noexcept;
     std::tuple<int, int> screen_width_and_height() noexcept;
 

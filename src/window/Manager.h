@@ -132,7 +132,7 @@ namespace ymwm::window {
 
     inline void close_focused_window() noexcept {
       if (auto fw = focused_window()) {
-        m_env->close_window(fw->get().id);
+        m_env->close_window(fw->get());
       }
     }
 

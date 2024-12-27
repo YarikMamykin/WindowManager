@@ -143,12 +143,12 @@ namespace ymwm::environment {
     auto [screen_width, screen_height] = screen_width_and_height();
     l.basic_parameters.screen_width = screen_width;
     l.basic_parameters.screen_height = screen_height;
-    l.basic_parameters.screen_margins.left = 0u;
-    l.basic_parameters.screen_margins.right = 0u;
-    l.basic_parameters.screen_margins.top = 0u;
-    l.basic_parameters.screen_margins.bottom = 0u;
+    l.basic_parameters.screen_margins.left = 10u;
+    l.basic_parameters.screen_margins.right = 10u;
+    l.basic_parameters.screen_margins.top = 10u;
+    l.basic_parameters.screen_margins.bottom = 10u;
     l.parameters = layouts::GridParameters(
-        layouts::GridParameters::Margins{ .horizontal = 0u, .vertical = 0u },
+        layouts::GridParameters::Margins{ .horizontal = 10u, .vertical = 20u },
         4ul);
     m_manager.set_layout(l);
   }
@@ -250,7 +250,8 @@ namespace ymwm::environment {
     XSendEvent(m_handlers->display, w.id, False, ExposureMask, &expose_event);
   }
 
-  void Environment::close_window(ID id) noexcept {
+  void Environment::close_window(const window::Window& w) noexcept {
+    auto id = w.id;
     XUnmapWindow(m_handlers->display, id);
     XDestroyWindow(m_handlers->display, id);
     // XKillClient(m_handlers->display, id);
