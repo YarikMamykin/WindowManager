@@ -50,7 +50,6 @@ namespace ymwm::window {
       m_windows.push_back(w);
       m_env->update_window_border(w);
       focus_next_window();
-      update_focus();
       update_layout();
     }
 
