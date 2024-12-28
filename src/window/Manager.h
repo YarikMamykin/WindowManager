@@ -108,6 +108,7 @@ namespace ymwm::window {
 
     inline void focus_next_window() noexcept {
       if (m_windows.empty()) {
+        m_env->reset_focus();
         return;
       }
 
@@ -120,6 +121,7 @@ namespace ymwm::window {
 
     inline void focus_prev_window() noexcept {
       if (m_windows.empty()) {
+        m_env->reset_focus();
         return;
       }
 
