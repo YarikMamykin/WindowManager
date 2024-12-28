@@ -106,6 +106,36 @@ namespace ymwm::window {
       }
     }
 
+    inline void move_focused_window_forward() noexcept {
+      if (auto fw = focused_window(); fw and not m_windows.empty()) {
+        if (m_focused_window_index == m_windows.size() - 1ul) {
+          std::swap(m_windows.back(), m_windows.front());
+          m_focused_window_index = 0ul;
+        } else {
+          std::swap(m_windows.at(m_focused_window_index),
+                    m_windows.at(m_focused_window_index + 1ul));
+          m_focused_window_index += 1ul;
+        }
+        update_layout();
+        update_focus();
+      }
+    }
+
+    inline void move_focused_window_backward() noexcept {
+      if (auto fw = focused_window(); fw and not m_windows.empty()) {
+        if (m_focused_window_index == 0ul) {
+          std::swap(m_windows.front(), m_windows.back());
+          m_focused_window_index = m_windows.size() - 1ul;
+        } else {
+          std::swap(m_windows.at(m_focused_window_index),
+                    m_windows.at(m_focused_window_index - 1ul));
+          m_focused_window_index -= 1ul;
+        }
+        update_layout();
+        update_focus();
+      }
+    }
+
     inline void focus_next_window() noexcept {
       if (m_windows.empty()) {
         m_env->reset_focus();
