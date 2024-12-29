@@ -219,10 +219,25 @@ namespace ymwm::environment {
         .mask =
             static_cast<ymwm::events::AbstractKeyCode::Type>(event.xkey.state)
       };
+    case PropertyNotify: {
+      const auto property_atom_changed = event.xproperty.atom;
+      Window w = event.xproperty.window;
+      if ((XA_WM_NAME == property_atom_changed or
+           m_handlers->atoms.at(AtomID::NetWMName) == property_atom_changed) and
+          event.xproperty.state != PropertyDelete) {
+        m_manager.update_window_name(w, get_window_name(*m_handlers, w));
+      }
+      break;
+    }
     case MapRequest: {
       XWindowAttributes wa;
       auto w = event.xmaprequest.window;
       if (XGetWindowAttributes(m_handlers->display, w, &wa)) {
+        // Add input mask to track property changes.
+        XSelectInput(m_handlers->display,
+                     w,
+                     EnterWindowMask | FocusChangeMask | PropertyChangeMask |
+                         StructureNotifyMask);
         m_manager.add_window({ .id = w,
                                .x = wa.x,
                                .y = wa.y,
