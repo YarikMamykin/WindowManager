@@ -181,6 +181,17 @@ namespace ymwm::window {
       }
     }
 
+    inline void update_window_name(environment::ID wid,
+                                   std::u8string&& new_name) noexcept {
+      auto wit =
+          std::find_if(m_windows.begin(),
+                       m_windows.end(),
+                       [wid](const auto& w) -> bool { return wid == w.id; });
+      if (m_windows.end() != wit) {
+        wit->name = std::move(new_name);
+      }
+    }
+
   private:
     std::vector<Window> m_windows;
     std::size_t m_focused_window_index;
