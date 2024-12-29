@@ -252,9 +252,9 @@ namespace ymwm::environment {
 
   void Environment::close_window(const window::Window& w) noexcept {
     auto id = w.id;
-    XUnmapWindow(m_handlers->display, id);
-    XDestroyWindow(m_handlers->display, id);
-    // XKillClient(m_handlers->display, id);
+    // XUnmapWindow(m_handlers->display, id);
+    // XDestroyWindow(m_handlers->display, id);
+    XKillClient(m_handlers->display, id);
   }
 
   std::tuple<int, int> Environment::screen_width_and_height() noexcept {
