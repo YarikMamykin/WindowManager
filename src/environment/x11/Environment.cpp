@@ -44,6 +44,55 @@ namespace {
   };
   template <class... Ts>
   combined_visitor(Ts...) -> combined_visitor<Ts...>;
+
+  std::u8string get_window_name(ymwm::environment::Handlers& handlers,
+                                Window w) noexcept {
+    Atom actual_type;
+    int actual_format;
+    unsigned long nitems;
+    unsigned long bytes_after;
+    unsigned char* data_raw = nullptr;
+    // RAII guard on data_raw allocated memory
+    std::unique_ptr<unsigned char> data_safe_wrapper{ data_raw };
+    std::u8string wname;
+
+    // Try getting name through UTF8 atom
+    int status = XGetWindowProperty(handlers.display,
+                                    w,
+                                    handlers.atoms.front(),
+                                    0,
+                                    (~0L),
+                                    False,
+                                    handlers.atoms.back(),
+                                    &actual_type,
+                                    &actual_format,
+                                    &nitems,
+                                    &bytes_after,
+                                    &data_raw);
+    if (Success == status and data_raw) {
+      wname = std::u8string(reinterpret_cast<char8_t*>(data_raw));
+    } else {
+      // Try getting name through XA_WM_NAME atom
+      status = XGetWindowProperty(handlers.display,
+                                  w,
+                                  XA_WM_NAME,
+                                  0,
+                                  (~0L),
+                                  False,
+                                  XA_STRING,
+                                  &actual_type,
+                                  &actual_format,
+                                  &nitems,
+                                  &bytes_after,
+                                  &data_raw);
+
+      if (status == Success and data_raw) {
+        wname = std::u8string(reinterpret_cast<char8_t*>(data_raw));
+      }
+    }
+
+    return wname;
+  }
 } // namespace
 
 namespace ymwm::environment {
@@ -180,7 +229,8 @@ namespace ymwm::environment {
                                .w = wa.width,
                                .h = wa.height,
                                .border_width = 5,
-                               .border_color = ColorID::Red });
+                               .border_color = ColorID::Red,
+                               .name = get_window_name(*m_handlers, w) });
       }
 
       break;
