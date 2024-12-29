@@ -49,7 +49,7 @@ namespace ymwm::window {
       std::cout << std::format("{} {} {} {} {}\n", w.id, w.x, w.y, w.h, w.w);
       m_windows.push_back(w);
       m_env->update_window_border(w);
-      focus_next_window();
+      focus_last_window();
       update_layout();
     }
 
@@ -60,6 +60,14 @@ namespace ymwm::window {
       }
 
       m_env->reset_focus();
+    }
+
+    inline void focus_last_window() noexcept {
+      if (m_windows.empty()) {
+        return;
+      }
+      m_focused_window_index = m_windows.size() - 1ul;
+      update_focus();
     }
 
     inline void remove_window(environment::ID id) noexcept {
