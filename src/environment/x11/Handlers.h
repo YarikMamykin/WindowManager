@@ -5,8 +5,11 @@
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
+#include <X11/Xatom.h>
+#include <array>
 #include <unordered_map>
 #include "environment/ColorID.h"
+#include "environment/x11/AtomID.h"
 // clang-format on
 
 namespace ymwm::environment {
@@ -17,6 +20,7 @@ namespace ymwm::environment {
     Cursor cursor;
     Colormap colormap;
     std::unordered_map<ColorID, XColor> colors;
+    std::array<Atom, 2ul> atoms;
 
     inline Handlers() {
       display = XOpenDisplay(nullptr);
@@ -29,6 +33,8 @@ namespace ymwm::environment {
       colormap = XCreateColormap(
           display, root_window, DefaultVisual(display, screen), AllocNone);
       colors.reserve(1);
+      atoms.at(AtomID::NetWMName) = XInternAtom(display, "_NET_WM_NAME", False);
+      atoms.at(AtomID::Utf8String) = XInternAtom(display, "UTF8_STRING", False);
     }
 
     inline ~Handlers() {
