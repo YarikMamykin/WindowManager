@@ -46,7 +46,13 @@ namespace ymwm::window {
     }
 
     inline void add_window(const Window& w) noexcept {
-      std::cout << std::format("{} {} {} {} {}\n", w.id, w.x, w.y, w.h, w.w);
+      std::cout << std::format("{} {} {} {} {} {}\n",
+                               w.id,
+                               w.x,
+                               w.y,
+                               w.h,
+                               w.w,
+                               reinterpret_cast<const char*>(w.name.data()));
       m_windows.push_back(w);
       m_env->update_window_border(w);
       focus_last_window();
