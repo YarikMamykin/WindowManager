@@ -29,6 +29,7 @@ target_compile_options(${PROJECT_NAME}
 	$<$<CONFIG:DEBUG>:-g>
 	$<$<CONFIG:RELEASE>:-O3>
 	-fPIC
+	-fno-rtti
 	-Wall
 	-Werror
 	-Wextra
