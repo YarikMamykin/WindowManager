@@ -1,10 +1,12 @@
-#include "environment/ColorID.h"
+#include "environment/Color.h"
 #include "layouts/Layout.h"
 #include "layouts/Parameters.h"
 #include "window/Window.h"
 
 #include <format>
 #include <gtest/gtest.h>
+
+static inline const ymwm::environment::Color color(0xff, 0x0, 0x0);
 
 TEST(TestLayouts, MaximisedLayout) {
   ymwm::layouts::Layout::BasicParameters basic_parameters;
@@ -24,7 +26,7 @@ TEST(TestLayouts, MaximisedLayout) {
                             .w = 200,
                             .h = 200,
                             .border_width = 1,
-                            .border_color = ymwm::environment::ColorID::Red });
+                            .border_color = color });
   ASSERT_EQ(4ul, test_windows.size());
 
   std::vector<ymwm::window::Window> expected_windows(
@@ -34,7 +36,7 @@ TEST(TestLayouts, MaximisedLayout) {
                             .w = 998,
                             .h = 998,
                             .border_width = 1,
-                            .border_color = ymwm::environment::ColorID::Red });
+                            .border_color = color });
   ASSERT_EQ(4ul, expected_windows.size());
 
   auto layout = ymwm::layouts::Layout(basic_parameters, parameters);
@@ -71,7 +73,7 @@ TEST(TestLayouts, MaximisedLayoutWithScreenMargins) {
                             .w = 200,
                             .h = 200,
                             .border_width = 1,
-                            .border_color = ymwm::environment::ColorID::Red });
+                            .border_color = color });
   ASSERT_EQ(4ul, test_windows.size());
 
   std::vector<ymwm::window::Window> expected_windows(
@@ -81,7 +83,7 @@ TEST(TestLayouts, MaximisedLayoutWithScreenMargins) {
                             .w = 996,
                             .h = 996,
                             .border_width = 1,
-                            .border_color = ymwm::environment::ColorID::Red });
+                            .border_color = color });
   ASSERT_EQ(4ul, expected_windows.size());
 
   auto layout = ymwm::layouts::Layout(basic_parameters, parameters);
@@ -118,7 +120,7 @@ TEST(TestLayouts, GridLayout) {
                             .w = 200,
                             .h = 200,
                             .border_width = 1,
-                            .border_color = ymwm::environment::ColorID::Red });
+                            .border_color = color });
   ASSERT_EQ(4ul, test_windows.size());
 
   std::vector<ymwm::window::Window> expected_windows({
@@ -127,26 +129,25 @@ TEST(TestLayouts, GridLayout) {
                            .w = 498,
                            .h = 498,
                            .border_width = 1,
-                           .border_color = ymwm::environment::ColorID::Red },
+                           .border_color = color },
       ymwm::window::Window{ .x = 500,
                            .y = 0,
                            .w = 498,
                            .h = 498,
                            .border_width = 1,
-                           .border_color = ymwm::environment::ColorID::Red },
+                           .border_color = color },
       ymwm::window::Window{   .x = 0,
                            .y = 500,
                            .w = 498,
                            .h = 498,
                            .border_width = 1,
-                           .border_color = ymwm::environment::ColorID::Red },
+                           .border_color = color },
       ymwm::window::Window{ .x = 500,
                            .y = 500,
                            .w = 498,
                            .h = 498,
                            .border_width = 1,
-                           .border_color =
-                           ymwm::environment::ColorID::Red                }
+                           .border_color = color }
   });
   ASSERT_EQ(4ul, expected_windows.size());
 
@@ -189,7 +190,7 @@ TEST(TestLayouts, GridLayout_WithScreenMargins) {
                             .w = 200,
                             .h = 200,
                             .border_width = 1,
-                            .border_color = ymwm::environment::ColorID::Red });
+                            .border_color = color });
   ASSERT_EQ(4ul, test_windows.size());
 
   std::vector<ymwm::window::Window> expected_windows({
@@ -198,26 +199,25 @@ TEST(TestLayouts, GridLayout_WithScreenMargins) {
                            .w = 493,
                            .h = 493,
                            .border_width = 1,
-                           .border_color = ymwm::environment::ColorID::Red },
+                           .border_color = color },
       ymwm::window::Window{ .x = 500,
                            .y = 5,
                            .w = 493,
                            .h = 493,
                            .border_width = 1,
-                           .border_color = ymwm::environment::ColorID::Red },
+                           .border_color = color },
       ymwm::window::Window{   .x = 5,
                            .y = 500,
                            .w = 493,
                            .h = 493,
                            .border_width = 1,
-                           .border_color = ymwm::environment::ColorID::Red },
+                           .border_color = color },
       ymwm::window::Window{ .x = 500,
                            .y = 500,
                            .w = 493,
                            .h = 493,
                            .border_width = 1,
-                           .border_color =
-                           ymwm::environment::ColorID::Red                }
+                           .border_color = color }
   });
   ASSERT_EQ(4ul, expected_windows.size());
 
@@ -260,7 +260,7 @@ TEST(TestLayouts, GridLayout_WithScreenMargins_AndGridMargins) {
                             .w = 200,
                             .h = 200,
                             .border_width = 1,
-                            .border_color = ymwm::environment::ColorID::Red });
+                            .border_color = color });
   ASSERT_EQ(4ul, test_windows.size());
 
   std::vector<ymwm::window::Window> expected_windows({
@@ -269,26 +269,25 @@ TEST(TestLayouts, GridLayout_WithScreenMargins_AndGridMargins) {
                            .w = 488,
                            .h = 483,
                            .border_width = 1,
-                           .border_color = ymwm::environment::ColorID::Red },
+                           .border_color = color },
       ymwm::window::Window{ .x = 505,
                            .y = 5,
                            .w = 488,
                            .h = 483,
                            .border_width = 1,
-                           .border_color = ymwm::environment::ColorID::Red },
+                           .border_color = color },
       ymwm::window::Window{   .x = 5,
                            .y = 510,
                            .w = 488,
                            .h = 483,
                            .border_width = 1,
-                           .border_color = ymwm::environment::ColorID::Red },
+                           .border_color = color },
       ymwm::window::Window{ .x = 505,
                            .y = 510,
                            .w = 488,
                            .h = 483,
                            .border_width = 1,
-                           .border_color =
-                           ymwm::environment::ColorID::Red                }
+                           .border_color = color }
   });
   ASSERT_EQ(4ul, expected_windows.size());
 
