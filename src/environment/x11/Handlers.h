@@ -8,7 +8,7 @@
 #include <X11/Xatom.h>
 #include <array>
 #include <unordered_map>
-#include "environment/ColorID.h"
+#include "environment/Color.h"
 #include "environment/x11/AtomID.h"
 // clang-format on
 
@@ -19,7 +19,7 @@ namespace ymwm::environment {
     Window root_window;
     Cursor cursor;
     Colormap colormap;
-    std::unordered_map<ColorID, XColor> colors;
+    std::unordered_map<Color, XColor, ColorHash> colors;
     std::array<Atom, 2ul> atoms;
 
     inline Handlers() {
