@@ -10,11 +10,11 @@ target_include_directories(LayoutsTest
 target_link_libraries(LayoutsTest
 	${GTEST_LIBRARIES}
 	layouts
-	environment
+	common
 )
 add_dependencies(LayoutsTest
 	googletestlib
 	layouts
-	environment
+	common
 )
 add_test(NAME LayoutsTest COMMAND LayoutsTest WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})

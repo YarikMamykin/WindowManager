@@ -1,4 +1,4 @@
-#include "environment/Color.h"
+#include "common/Color.h"
 #include "layouts/Layout.h"
 #include "layouts/Parameters.h"
 #include "window/Window.h"
@@ -6,7 +6,7 @@
 #include <format>
 #include <gtest/gtest.h>
 
-static inline const ymwm::environment::Color color(0xff, 0x0, 0x0);
+static inline const ymwm::common::Color color(0xff, 0x0, 0x0);
 
 TEST(TestLayouts, MaximisedLayout) {
   ymwm::layouts::Layout::BasicParameters basic_parameters;

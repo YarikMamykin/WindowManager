@@ -2,7 +2,7 @@
 
 #include <charconv>
 
-namespace ymwm::environment {
+namespace ymwm::common {
 
   Color::Color(unsigned short r, unsigned short g, unsigned short b) noexcept
       : red(r)
@@ -42,4 +42,4 @@ namespace ymwm::environment {
 
     return rgb;
   }
-} // namespace ymwm::environment
+} // namespace ymwm::common

@@ -1,12 +1,12 @@
 #include "Handlers.h"
-#include "environment/Color.h"
+#include "common/Color.h"
 
 #include <memory>
 #include <string>
 
 namespace ymwm::environment {
 
-  XColor xcolor_from_color(const Color& color) noexcept {
+  XColor xcolor_from_color(const common::Color& color) noexcept {
     static constinit char flags = DoRed | DoGreen | DoBlue;
     static constinit auto byte = sizeof(unsigned char) * 8;
     // Bit shift required for XColor specifically in case values are in

@@ -2,7 +2,7 @@
 
 #include "Handlers.h"
 #include "XClientKeyGrabber.h"
-#include "environment/Color.h"
+#include "common/Color.h"
 #include "events/AbstractKeyCode.h"
 #include "events/AbstractKeyMask.h"
 #include "events/AbstractKeyPress.h"
@@ -17,7 +17,7 @@ namespace ymwm::environment {
 } // namespace ymwm::environment
 
 namespace ymwm::environment {
-  XColor xcolor_from_color(const Color& c) noexcept;
+  XColor xcolor_from_color(const common::Color& c) noexcept;
   std::u8string get_window_name(ymwm::environment::Handlers& handlers,
                                 Window w) noexcept;
 } // namespace ymwm::environment
@@ -41,9 +41,9 @@ namespace ymwm::environment {
     std::cout << std::format("SCREEN SIZE: {} {}\n", sw, sh);
 
     for (const auto& c : {
-             Color{ 0xff,  0x0,  0x0 },
-             Color{  0x0, 0xff,  0x0 },
-             Color{  0x0,  0x0, 0xff }
+             common::Color{ 0xff,  0x0,  0x0 },
+             common::Color{  0x0, 0xff,  0x0 },
+             common::Color{  0x0,  0x0, 0xff }
     }) {
       m_handlers->colors.insert({ c, xcolor_from_color(c) });
       if (not XAllocColor(m_handlers->display,
@@ -139,7 +139,7 @@ namespace ymwm::environment {
             .w = wa.width,
             .h = wa.height,
             .border_width = 5,
-            .border_color = Color{ 0xff, 0x0, 0x0 },
+            .border_color = common::Color{ 0xff, 0x0, 0x0 },
             .name = get_window_name(*m_handlers, w)
         });
       }

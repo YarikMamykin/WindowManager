@@ -13,7 +13,6 @@ endif()
 
 add_library(environment OBJECT
 	${CMAKE_CURRENT_SOURCE_DIR}/Environment.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Color.cpp
 	${NATIVE_ENVIRONMENT_SRC}
 )
 target_include_directories(environment PRIVATE
@@ -21,7 +20,9 @@ target_include_directories(environment PRIVATE
 )
 target_link_libraries(environment PRIVATE
 	${SHARED_LIBS}
+	common
 )
 add_dependencies(environment
 	events
+	common
 )

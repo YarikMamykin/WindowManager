@@ -1,7 +1,7 @@
 #pragma once
 #include <string_view>
 
-namespace ymwm::environment {
+namespace ymwm::common {
   struct Color {
     static constinit inline auto size_of_component{ sizeof(unsigned short) *
                                                     8 };
@@ -23,4 +23,4 @@ namespace ymwm::environment {
       return static_cast<std::size_t>(c);
     }
   };
-} // namespace ymwm::environment
+} // namespace ymwm::common
