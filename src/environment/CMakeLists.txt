@@ -5,12 +5,15 @@ set(SHARED_LIBS events)
 if(${NATIVE_ENVIRONMENT} STREQUAL "X11")
 	list(APPEND NATIVE_ENVIRONMENT_SRC x11/Environment.cpp)
 	list(APPEND NATIVE_ENVIRONMENT_SRC x11/Commands.cpp)
+	list(APPEND NATIVE_ENVIRONMENT_SRC x11/ErrorHandling.cpp)
+	list(APPEND NATIVE_ENVIRONMENT_SRC x11/XHelpers.cpp)
 	list(APPEND INCUDE_DIRS ${X11_INCLUDE_DIR})
 	list(APPEND SHARED_LIBS ${X11_LIBRARIES})
 endif()
 
 add_library(environment OBJECT
 	${CMAKE_CURRENT_SOURCE_DIR}/Environment.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Color.cpp
 	${NATIVE_ENVIRONMENT_SRC}
 )
 target_include_directories(environment PRIVATE
