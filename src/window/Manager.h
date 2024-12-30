@@ -1,6 +1,6 @@
 #pragma once
 #include "Window.h"
-#include "environment/ColorID.h"
+#include "environment/Color.h"
 #include "environment/ID.h"
 #include "layouts/Layout.h"
 
@@ -105,7 +105,7 @@ namespace ymwm::window {
                           [id](const auto& w) -> bool { return id == w.id; });
     }
 
-    inline void change_border_color(environment::ColorID color) noexcept {
+    inline void change_border_color(const environment::Color& color) noexcept {
       if (auto fw = focused_window()) {
         fw->get().border_color = color;
         m_env->update_window(fw->get());
