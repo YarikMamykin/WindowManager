@@ -1,6 +1,6 @@
 #pragma once
 
-#include "environment/ColorID.h"
+#include "environment/Color.h"
 #include "environment/ID.h"
 
 #include <string>
@@ -13,7 +13,7 @@ namespace ymwm::window {
     int w{ 0 };
     int h{ 0 };
     int border_width{ 0 };
-    environment::ColorID border_color{ environment::ColorID::Red };
+    environment::Color border_color{ 0xff, 0x0, 0x0 };
     std::u8string name{};
 
     inline constexpr bool
