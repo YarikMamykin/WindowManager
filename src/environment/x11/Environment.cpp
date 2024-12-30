@@ -1,99 +1,26 @@
 #include "environment/Environment.h"
 
 #include "Handlers.h"
-#include "environment/ColorID.h"
+#include "XClientKeyGrabber.h"
+#include "environment/Color.h"
 #include "events/AbstractKeyCode.h"
 #include "events/AbstractKeyMask.h"
 #include "events/AbstractKeyPress.h"
-#include "events/Map.h"
 #include "layouts/Parameters.h"
 
-#include <array>
 #include <format>
 #include <iostream>
-#include <memory>
-#include <variant>
 
-namespace {
-  // Custom error handler function
-  int handleXError(Display* display, XErrorEvent* error) {
-    std::array<char, 256> errorText;
+namespace ymwm::environment {
+  int handle_x_error(Display* display, XErrorEvent* error);
+  int handle_x_io_error(Display* display);
+} // namespace ymwm::environment
 
-    // Get the error message
-    XGetErrorText(
-        display, error->error_code, errorText.data(), errorText.size());
-
-    std::cerr << "X Error: " << errorText.data() << '\n'
-              << "  Major opcode: " << error->request_code << '\n'
-              << "  Minor opcode: " << error->minor_code << '\n'
-              << "  Resource ID: " << error->resourceid << '\n';
-
-    // Return 0 to prevent the default error handler from being called
-    return 0;
-  }
-
-  // Custom IO error handler
-  int handleXIOError(Display* display) {
-    std::cerr << "Fatal X11 IO Error: Connection to X server lost\n";
-    exit(1);
-  }
-
-  template <class... Ts>
-  struct combined_visitor : Ts... {
-    using Ts::operator()...;
-  };
-  template <class... Ts>
-  combined_visitor(Ts...) -> combined_visitor<Ts...>;
-
+namespace ymwm::environment {
+  XColor xcolor_from_color(const Color& c) noexcept;
   std::u8string get_window_name(ymwm::environment::Handlers& handlers,
-                                Window w) noexcept {
-    Atom actual_type;
-    int actual_format;
-    unsigned long nitems;
-    unsigned long bytes_after;
-    unsigned char* data_raw = nullptr;
-    // RAII guard on data_raw allocated memory
-    std::unique_ptr<unsigned char> data_safe_wrapper{ data_raw };
-    std::u8string wname;
-
-    // Try getting name through UTF8 atom
-    int status = XGetWindowProperty(handlers.display,
-                                    w,
-                                    handlers.atoms.front(),
-                                    0,
-                                    (~0L),
-                                    False,
-                                    handlers.atoms.back(),
-                                    &actual_type,
-                                    &actual_format,
-                                    &nitems,
-                                    &bytes_after,
-                                    &data_raw);
-    if (Success == status and data_raw) {
-      wname = std::u8string(reinterpret_cast<char8_t*>(data_raw));
-    } else {
-      // Try getting name through XA_WM_NAME atom
-      status = XGetWindowProperty(handlers.display,
-                                  w,
-                                  XA_WM_NAME,
-                                  0,
-                                  (~0L),
-                                  False,
-                                  XA_STRING,
-                                  &actual_type,
-                                  &actual_format,
-                                  &nitems,
-                                  &bytes_after,
-                                  &data_raw);
-
-      if (status == Success and data_raw) {
-        wname = std::u8string(reinterpret_cast<char8_t*>(data_raw));
-      }
-    }
-
-    return wname;
-  }
-} // namespace
+                                Window w) noexcept;
+} // namespace ymwm::environment
 
 namespace ymwm::environment {
   Environment::Environment(const events::Map& events_map)
@@ -101,8 +28,8 @@ namespace ymwm::environment {
       , m_manager(this) {
 
     // Bind error handler
-    XSetErrorHandler(handleXError);
-    XSetIOErrorHandler(handleXIOError);
+    XSetErrorHandler(handle_x_error);
+    XSetIOErrorHandler(handle_x_io_error);
 
     m_handlers = std::make_unique<Handlers>();
     m_exit_requested = not m_handlers->valid();
@@ -113,29 +40,12 @@ namespace ymwm::environment {
     auto [sw, sh] = screen_width_and_height();
     std::cout << std::format("SCREEN SIZE: {} {}\n", sw, sh);
 
-    m_handlers->colors.insert({
-        ColorID::Red,
-        { .red = 0xddff,
-               .green = 0,
-               .blue = 0,
-               .flags = DoRed | DoGreen | DoBlue }
-    });
-    m_handlers->colors.insert({
-        ColorID::Green,
-        { .red = 0,
-                 .green = 0xddff,
-                 .blue = 0,
-                 .flags = DoRed | DoGreen | DoBlue }
-    });
-    m_handlers->colors.insert({
-        ColorID::Blue,
-        { .red = 0,
-                .green = 0,
-                .blue = 0xddff,
-                .flags = DoRed | DoGreen | DoBlue }
-    });
-
-    for (ColorID c : { ColorID::Red, ColorID::Green, ColorID::Blue }) {
+    for (const auto& c : {
+             Color{ 0xff,  0x0,  0x0 },
+             Color{  0x0, 0xff,  0x0 },
+             Color{  0x0,  0x0, 0xff }
+    }) {
+      m_handlers->colors.insert({ c, xcolor_from_color(c) });
       if (not XAllocColor(m_handlers->display,
                           m_handlers->colormap,
                           &m_handlers->colors.at(c))) {
@@ -151,23 +61,7 @@ namespace ymwm::environment {
     // Grab keys by events
     XUngrabKey(
         m_handlers->display, AnyKey, AnyModifier, m_handlers->root_window);
-    auto visitor = combined_visitor{
-      [handlers =
-           m_handlers.get()](const events::AbstractKeyPress& event) -> void {
-        std::cout << "Grabbing keys: " << std::hex << event.code << " "
-                  << event.mask << "\n";
-        XGrabKey(handlers->display,
-                 XKeysymToKeycode(handlers->display, event.code),
-                 event.mask,
-                 handlers->root_window,
-                 true,
-                 GrabModeAsync,
-                 GrabModeAsync);
-      },
-      [](const auto& event) {
-        std::cerr << "Unexpected event type: " << event.type << "\n";
-      },
-    };
+    XClientKeyGrabber visitor{ .handlers = m_handlers.get() };
     for (const auto& [event, _] : events_map) {
       std::visit(visitor, event);
     }
@@ -238,14 +132,16 @@ namespace ymwm::environment {
                      w,
                      EnterWindowMask | FocusChangeMask | PropertyChangeMask |
                          StructureNotifyMask);
-        m_manager.add_window({ .id = w,
-                               .x = wa.x,
-                               .y = wa.y,
-                               .w = wa.width,
-                               .h = wa.height,
-                               .border_width = 5,
-                               .border_color = ColorID::Red,
-                               .name = get_window_name(*m_handlers, w) });
+        m_manager.add_window({
+            .id = w,
+            .x = wa.x,
+            .y = wa.y,
+            .w = wa.width,
+            .h = wa.height,
+            .border_width = 5,
+            .border_color = Color{ 0xff, 0x0, 0x0 },
+            .name = get_window_name(*m_handlers, w)
+        });
       }
 
       break;
