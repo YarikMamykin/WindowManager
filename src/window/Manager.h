@@ -75,13 +75,6 @@ namespace ymwm::window {
       return m_windows;
     }
 
-    inline bool has_window(environment::ID id) const noexcept {
-      return m_windows.end() !=
-             std::find_if(m_windows.begin(),
-                          m_windows.end(),
-                          [id](const auto& w) -> bool { return id == w.id; });
-    }
-
     inline void change_border_color(const common::Color& color) noexcept {
       if (auto fw = m_focus_manager.focused_window()) {
         fw->get().border_color = color;
