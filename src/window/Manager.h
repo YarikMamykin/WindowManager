@@ -66,10 +66,9 @@ namespace ymwm::window {
 
       if (erased_successfully) {
         std::cout << std::format("Erased {} \n", id);
+        m_focus_manager.focus_next_window();
+        update_layout();
       }
-
-      m_focus_manager.focus_next_window();
-      update_layout();
     }
 
     inline const std::vector<Window>& windows() const noexcept {
