@@ -1,9 +1,9 @@
 #pragma once
 #include "FocusManager.h"
+#include "LayoutManager.h"
 #include "Window.h"
 #include "common/Color.h"
 #include "environment/ID.h"
-#include "layouts/Layout.h"
 
 #include <format>
 #include <iostream>
@@ -17,33 +17,9 @@ namespace ymwm::window {
 
     Manager(Environment* env)
         : m_env(env)
-        , m_focus_manager(m_windows, env) {
+        , m_focus_manager(m_windows, env)
+        , m_layout_manager(m_windows, env) {
       m_windows.reserve(5);
-    }
-
-    inline void set_layout(const layouts::Layout& new_layout) noexcept {
-      m_layout = new_layout;
-      update_layout();
-    }
-
-    inline void update_layout() noexcept {
-      update_layout_parameters();
-      for (Window& w : m_windows) {
-        m_layout.apply(w);
-        m_env->move_and_resize(w);
-      }
-    }
-
-    inline void update_layout_parameters() noexcept {
-      auto [screen_width, screen_height] = m_env->screen_width_and_height();
-      layouts::Layout::BasicParameters basic_parameters{
-        .screen_width = screen_width,
-        .screen_height = screen_height,
-        .screen_margins = m_layout.basic_parameters.screen_margins,
-        .focused_window_index = 0ul,
-        .number_of_windows = m_windows.size()
-      };
-      m_layout.update(basic_parameters, m_layout.parameters);
     }
 
     inline void add_window(const Window& w) noexcept {
@@ -57,7 +33,7 @@ namespace ymwm::window {
       m_windows.push_back(w);
       m_env->update_window_border(w);
       m_focus_manager.focus_last_window();
-      update_layout();
+      layout().update();
     }
 
     inline void remove_window(environment::ID id) noexcept {
@@ -67,7 +43,7 @@ namespace ymwm::window {
       if (erased_successfully) {
         std::cout << std::format("Erased {} \n", id);
         m_focus_manager.focus_next_window();
-        update_layout();
+        layout().update();
       }
     }
 
@@ -98,8 +74,8 @@ namespace ymwm::window {
           std::swap(m_windows.at(m_focus_manager.focused_window_index()),
                     m_windows.at(m_focus_manager.focused_window_index() + 1ul));
         }
-        update_layout();
         m_focus_manager.focus_next_window();
+        layout().update();
       }
     }
 
@@ -111,8 +87,8 @@ namespace ymwm::window {
           std::swap(m_windows.at(m_focus_manager.focused_window_index()),
                     m_windows.at(m_focus_manager.focused_window_index() - 1ul));
         }
-        update_layout();
         m_focus_manager.focus_prev_window();
+        layout().update();
       }
     }
 
@@ -150,5 +126,6 @@ namespace ymwm::window {
     Environment* const m_env;
     layouts::Layout m_layout;
     FocusManager<Environment> m_focus_manager;
+    LayoutManager<Environment> m_layout_manager;
   };
 } // namespace ymwm::window
