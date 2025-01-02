@@ -37,8 +37,13 @@ namespace ymwm::window {
       m_basic_layout_parameters.focused_window_index = 0ul;
       m_basic_layout_parameters.number_of_windows = m_windows.size();
 
-      return layouts::Layout{ .basic_parameters = m_basic_layout_parameters,
-                              .parameters = m_layout_parameters };
+      auto layout =
+          layouts::Layout{ .basic_parameters = m_basic_layout_parameters,
+                           .parameters = m_layout_parameters };
+
+      // Do any specific layout paramters update
+      layout.update(m_basic_layout_parameters, m_layout_parameters);
+      return layout;
     }
 
   private:
