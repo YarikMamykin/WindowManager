@@ -17,7 +17,7 @@ TEST(TestWindowManager, SetLayoutNoWindows_NoWindowResizeCalled) {
 
   EXPECT_CALL(tenv, screen_width_and_height).Times(1);
   EXPECT_CALL(tenv, move_and_resize).Times(0);
-  m.set_layout(ymwm::layouts::Layout{});
+  m.layout().update();
 }
 
 TEST(TestWindowManager, SetLayoutSeveralWindows_WindowResizeCalled) {
@@ -29,7 +29,7 @@ TEST(TestWindowManager, SetLayoutSeveralWindows_WindowResizeCalled) {
 
   EXPECT_CALL(tenv, screen_width_and_height).Times(1);
   EXPECT_CALL(tenv, move_and_resize).Times(0);
-  m.set_layout(ymwm::layouts::Layout{});
+  m.layout().update();
 
   std::array<ymwm::window::Window, 3ul> windows_in_params;
 
@@ -73,9 +73,7 @@ TEST(TestWindowManager, AddRemoveWindows_LayoutAppliedAfterEachAction) {
 
   ymwm::window::Manager m{ &tenv };
 
-  EXPECT_CALL(tenv, screen_width_and_height);
-  m.set_layout(ymwm::layouts::Layout{
-      .parameters = ymwm::layouts::MaximisedParameters{} });
+  m.layout().update(ymwm::layouts::MaximisedParameters{});
 
   EXPECT_CALL(tenv, screen_width_and_height);
   EXPECT_CALL(tenv, move_and_resize);
@@ -85,8 +83,8 @@ TEST(TestWindowManager, AddRemoveWindows_LayoutAppliedAfterEachAction) {
   EXPECT_THAT(m.windows(),
               testing::ElementsAre(
                   ymwm::window::Window{ .id = 1, .w = 1000, .h = 1000 }));
-  ASSERT_TRUE(m.focused_window());
-  EXPECT_EQ(m.focused_window()->get().id, 1);
+  ASSERT_TRUE(m.focus().window());
+  EXPECT_EQ(m.focus().window()->get().id, 1);
 
   EXPECT_CALL(tenv, screen_width_and_height);
   EXPECT_CALL(tenv, move_and_resize).Times(2);
@@ -98,8 +96,8 @@ TEST(TestWindowManager, AddRemoveWindows_LayoutAppliedAfterEachAction) {
               testing::ElementsAre(
                   ymwm::window::Window{ .id = 1, .w = 1000, .h = 1000 },
                   ymwm::window::Window{ .id = 2, .w = 1000, .h = 1000 }));
-  ASSERT_TRUE(m.focused_window());
-  EXPECT_EQ(m.focused_window()->get().id, 2);
+  ASSERT_TRUE(m.focus().window());
+  EXPECT_EQ(m.focus().window()->get().id, 2);
 
   EXPECT_CALL(tenv, screen_width_and_height);
   EXPECT_CALL(tenv, move_and_resize);
@@ -108,14 +106,14 @@ TEST(TestWindowManager, AddRemoveWindows_LayoutAppliedAfterEachAction) {
   EXPECT_THAT(m.windows(),
               testing::ElementsAre(
                   ymwm::window::Window{ .id = 1, .w = 1000, .h = 1000 }));
-  ASSERT_TRUE(m.focused_window());
-  EXPECT_EQ(m.focused_window()->get().id, 1);
+  ASSERT_TRUE(m.focus().window());
+  EXPECT_EQ(m.focus().window()->get().id, 1);
 
   EXPECT_CALL(tenv, screen_width_and_height);
   EXPECT_CALL(tenv, move_and_resize).Times(0);
   EXPECT_CALL(tenv, focus_window).Times(0);
   m.remove_window(1);
-  EXPECT_FALSE(m.focused_window());
+  EXPECT_FALSE(m.focus().window());
 }
 
 TEST(TestWindowManager, MoveFocusedWindowToCoords) {
@@ -124,8 +122,7 @@ TEST(TestWindowManager, MoveFocusedWindowToCoords) {
       .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
 
   ymwm::window::Manager m{ &tenv };
-  m.set_layout(ymwm::layouts::Layout{
-      .parameters = ymwm::layouts::MaximisedParameters{} });
+  m.layout().update(ymwm::layouts::MaximisedParameters{});
 
   m.add_window(ymwm::window::Window{ .id = 1 });
   EXPECT_THAT(m.windows(),
@@ -152,8 +149,7 @@ TEST(TestWindowManager, ResetFocusIfWindowsAreRemoved) {
       .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
 
   ymwm::window::Manager m{ &tenv };
-  m.set_layout(ymwm::layouts::Layout{
-      .parameters = ymwm::layouts::MaximisedParameters{} });
+  m.layout().update(ymwm::layouts::MaximisedParameters{});
 
   EXPECT_CALL(tenv, update_window_border);
   EXPECT_CALL(tenv, move_and_resize);
@@ -161,14 +157,14 @@ TEST(TestWindowManager, ResetFocusIfWindowsAreRemoved) {
   EXPECT_THAT(m.windows(),
               testing::ElementsAre(ymwm::window::Window{
                   .id = 1, .x = 0, .y = 0, .w = 1000, .h = 1000 }));
-  ASSERT_TRUE(m.focused_window());
-  EXPECT_EQ(1, m.focused_window()->get().id);
+  ASSERT_TRUE(m.focus().window());
+  EXPECT_EQ(1, m.focus().window()->get().id);
 
   EXPECT_CALL(tenv, update_window_border).Times(0);
   EXPECT_CALL(tenv, move_and_resize).Times(0);
   EXPECT_CALL(tenv, reset_focus).Times(1);
   m.remove_window(1);
-  ASSERT_FALSE(m.focused_window());
+  ASSERT_FALSE(m.focus().window());
   ASSERT_TRUE(m.windows().empty());
 }
 
@@ -185,18 +181,18 @@ TEST(TestWindowManager, CloseFocusedWindow) {
   EXPECT_THAT(m.windows(),
               testing::ElementsAre(ymwm::window::Window{
                   .id = 1, .x = 0, .y = 0, .w = 1000, .h = 1000 }));
-  ASSERT_TRUE(m.focused_window());
-  EXPECT_EQ(1, m.focused_window()->get().id);
+  ASSERT_TRUE(m.focus().window());
+  EXPECT_EQ(1, m.focus().window()->get().id);
 
   ymwm::window::Window passed_window;
   EXPECT_CALL(tenv, close_window).WillOnce(testing::SaveArg<0>(&passed_window));
   m.close_focused_window();
 
-  ASSERT_TRUE(m.focused_window());
+  ASSERT_TRUE(m.focus().window());
   ASSERT_THAT(m.windows(),
               testing::ElementsAre(ymwm::window::Window{
                   .id = 1, .x = 0, .y = 0, .w = 1000, .h = 1000 }));
-  EXPECT_EQ(passed_window, m.focused_window()->get());
+  EXPECT_EQ(passed_window, m.focus().window()->get());
 }
 
 TEST(TestWindowManager, MoveFocusedWindowForward) {
@@ -214,14 +210,14 @@ TEST(TestWindowManager, MoveFocusedWindowForward) {
           ymwm::window::Window{ .id = 1, .x = 0, .y = 0, .w = 1000, .h = 1000 },
           ymwm::window::Window{
               .id = 2, .x = 0, .y = 0, .w = 1000, .h = 1000 }));
-  ASSERT_TRUE(m.focused_window());
-  EXPECT_EQ(2, m.focused_window()->get().id);
+  ASSERT_TRUE(m.focus().window());
+  EXPECT_EQ(2, m.focus().window()->get().id);
 
   EXPECT_CALL(tenv, screen_width_and_height);
   EXPECT_CALL(tenv, focus_window);
   m.move_focused_window_forward();
-  ASSERT_TRUE(m.focused_window());
-  EXPECT_EQ(2, m.focused_window()->get().id);
+  ASSERT_TRUE(m.focus().window());
+  EXPECT_EQ(2, m.focus().window()->get().id);
   EXPECT_THAT(
       m.windows(),
       testing::ElementsAre(
@@ -245,14 +241,14 @@ TEST(TestWindowManager, MoveFocusedWindowBackward) {
           ymwm::window::Window{ .id = 1, .x = 0, .y = 0, .w = 1000, .h = 1000 },
           ymwm::window::Window{
               .id = 2, .x = 0, .y = 0, .w = 1000, .h = 1000 }));
-  ASSERT_TRUE(m.focused_window());
-  EXPECT_EQ(2, m.focused_window()->get().id);
+  ASSERT_TRUE(m.focus().window());
+  EXPECT_EQ(2, m.focus().window()->get().id);
 
   EXPECT_CALL(tenv, screen_width_and_height);
   EXPECT_CALL(tenv, focus_window);
   m.move_focused_window_backward();
-  ASSERT_TRUE(m.focused_window());
-  EXPECT_EQ(2, m.focused_window()->get().id);
+  ASSERT_TRUE(m.focus().window());
+  EXPECT_EQ(2, m.focus().window()->get().id);
   EXPECT_THAT(
       m.windows(),
       testing::ElementsAre(
@@ -268,25 +264,25 @@ TEST(TestWindowManager, AddWindow_LastWindowIsFocusedEachTime) {
 
   ymwm::window::Manager m{ &tenv };
 
-  ASSERT_FALSE(m.focused_window());
+  ASSERT_FALSE(m.focus().window());
 
   m.add_window(ymwm::window::Window{ .id = 1 });
-  ASSERT_TRUE(m.focused_window());
-  EXPECT_EQ(1, m.focused_window()->get().id);
+  ASSERT_TRUE(m.focus().window());
+  EXPECT_EQ(1, m.focus().window()->get().id);
 
   m.add_window(ymwm::window::Window{ .id = 2 });
-  ASSERT_TRUE(m.focused_window());
-  EXPECT_EQ(2, m.focused_window()->get().id);
+  ASSERT_TRUE(m.focus().window());
+  EXPECT_EQ(2, m.focus().window()->get().id);
 
   m.add_window(ymwm::window::Window{ .id = 3 });
-  ASSERT_TRUE(m.focused_window());
-  EXPECT_EQ(3, m.focused_window()->get().id);
+  ASSERT_TRUE(m.focus().window());
+  EXPECT_EQ(3, m.focus().window()->get().id);
 
-  m.focus_prev_window();
-  ASSERT_TRUE(m.focused_window());
-  EXPECT_EQ(2, m.focused_window()->get().id);
+  m.focus().prev_window();
+  ASSERT_TRUE(m.focus().window());
+  EXPECT_EQ(2, m.focus().window()->get().id);
 
   m.add_window(ymwm::window::Window{ .id = 4 });
-  ASSERT_TRUE(m.focused_window());
-  EXPECT_EQ(4, m.focused_window()->get().id);
+  ASSERT_TRUE(m.focus().window());
+  EXPECT_EQ(4, m.focus().window()->get().id);
 }
