@@ -15,12 +15,12 @@ namespace ymwm::window {
         , m_env(env)
         , m_focused_window_index(0ul) {}
 
-    inline std::size_t focused_window_index() const noexcept {
+    inline std::size_t window_index() const noexcept {
       return m_focused_window_index;
     }
 
-    inline void update_focus() const noexcept {
-      if (auto fw = focused_window()) {
+    inline void update() const noexcept {
+      if (auto fw = window()) {
         m_env->focus_window(fw->get());
         return;
       }
@@ -28,21 +28,21 @@ namespace ymwm::window {
       m_env->reset_focus();
     }
 
-    inline void focus_last_window() noexcept {
+    inline void last_window() noexcept {
       if (m_windows.empty()) {
         return;
       }
       m_focused_window_index = m_windows.size() - 1ul;
-      update_focus();
+      update();
     }
 
-    inline FocusedWindow focused_window() const noexcept {
+    inline FocusedWindow window() const noexcept {
       return m_windows.empty() ? FocusedWindow{ std::nullopt }
                                : FocusedWindow{ const_cast<Window&>(
                                      m_windows.at(m_focused_window_index)) };
     }
 
-    inline void focus_next_window() noexcept {
+    inline void next_window() noexcept {
       if (m_windows.empty()) {
         m_env->reset_focus();
         return;
@@ -52,10 +52,10 @@ namespace ymwm::window {
           m_focused_window_index >= (m_windows.size() - 1ul)
               ? 0ul
               : m_focused_window_index + 1ul;
-      update_focus();
+      update();
     }
 
-    inline void focus_prev_window() noexcept {
+    inline void prev_window() noexcept {
       if (m_windows.empty()) {
         m_env->reset_focus();
         return;
@@ -64,15 +64,15 @@ namespace ymwm::window {
       m_focused_window_index = m_focused_window_index == 0ul
                                    ? m_windows.size() - 1ul
                                    : m_focused_window_index - 1ul;
-      update_focus();
+      update();
     }
 
-    inline bool last_window_focused() const noexcept {
+    inline bool is_last_window() const noexcept {
       return not m_windows.empty() and
              m_focused_window_index == m_windows.size() - 1ul;
     }
 
-    inline bool first_window_focused() const noexcept {
+    inline bool is_first_window() const noexcept {
       return not m_windows.empty() and m_focused_window_index == 0ul;
     }
 
