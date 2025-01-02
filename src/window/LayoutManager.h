@@ -21,6 +21,10 @@ namespace ymwm::window {
     }
 
     inline void update() noexcept {
+      if (m_windows.empty()) {
+        return;
+      }
+
       auto layout = with_layout();
       for (Window& w : m_windows) {
         layout.apply(w);
