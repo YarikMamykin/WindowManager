@@ -82,18 +82,11 @@ namespace ymwm::environment {
                    RevertToPointerRoot,
                    CurrentTime);
 
-    layouts::Layout l;
-    auto [screen_width, screen_height] = screen_width_and_height();
-    l.basic_parameters.screen_width = screen_width;
-    l.basic_parameters.screen_height = screen_height;
-    l.basic_parameters.screen_margins.left = 10u;
-    l.basic_parameters.screen_margins.right = 10u;
-    l.basic_parameters.screen_margins.top = 10u;
-    l.basic_parameters.screen_margins.bottom = 10u;
-    l.parameters = layouts::GridParameters(
+    m_manager.layout().update(layouts::Margin{
+        .left = 10u, .right = 10u, .top = 10u, .bottom = 10u });
+    m_manager.layout().update(layouts::GridParameters(
         layouts::GridParameters::Margins{ .horizontal = 10u, .vertical = 20u },
-        4ul);
-    m_manager.set_layout(l);
+        4ul));
   }
 
   Environment::~Environment() {
