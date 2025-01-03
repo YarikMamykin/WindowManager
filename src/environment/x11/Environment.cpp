@@ -3,6 +3,7 @@
 #include "Handlers.h"
 #include "XClientKeyGrabber.h"
 #include "common/Color.h"
+#include "config/Window.h"
 #include "events/AbstractKeyCode.h"
 #include "events/AbstractKeyMask.h"
 #include "events/AbstractKeyPress.h"
@@ -41,9 +42,9 @@ namespace ymwm::environment {
     std::cout << std::format("SCREEN SIZE: {} {}\n", sw, sh);
 
     for (const auto& c : {
-             common::Color{ 0xff,  0x0,  0x0 },
-             common::Color{  0x0, 0xff,  0x0 },
-             common::Color{  0x0,  0x0, 0xff }
+             ymwm::config::windows::regular_border_color,
+             ymwm::config::windows::focused_border_color,
+             common::Color{ 0x0, 0x0, 0xff }
     }) {
       m_handlers->colors.insert({ c, xcolor_from_color(c) });
       if (not XAllocColor(m_handlers->display,
