@@ -32,7 +32,7 @@ namespace ymwm::window {
                                reinterpret_cast<const char*>(w.name.data()));
       m_windows.push_back(w);
       m_env->update_window_border(w);
-      focus().last_window();
+      focus_next_window();
       layout().update();
     }
 
@@ -42,7 +42,8 @@ namespace ymwm::window {
 
       if (erased_successfully) {
         std::cout << std::format("Erased {} \n", id);
-        focus().next_window();
+        focus().update_index();
+        focus_prev_window();
         layout().update();
       }
     }
@@ -75,7 +76,7 @@ namespace ymwm::window {
                     m_windows.at(focus().window_index() + 1ul));
         }
         layout().update();
-        focus().next_window();
+        focus_next_window();
       }
     }
 
@@ -88,7 +89,7 @@ namespace ymwm::window {
                     m_windows.at(focus().window_index() - 1ul));
         }
         layout().update();
-        focus().prev_window();
+        focus_prev_window();
       }
     }
 
@@ -106,6 +107,30 @@ namespace ymwm::window {
                        [wid](const auto& w) -> bool { return wid == w.id; });
       if (m_windows.end() != wit) {
         wit->name = std::move(new_name);
+      }
+    }
+
+    inline void focus_next_window() noexcept {
+      if (auto fw = focus().window()) {
+        const common::Color regular_window_border_color{ 0xff, 0x0, 0x0 };
+        change_border_color(regular_window_border_color);
+
+        focus().next_window();
+
+        const common::Color focused_window_border_color{ 0x0, 0xff, 0x0 };
+        change_border_color(focused_window_border_color);
+      }
+    }
+
+    inline void focus_prev_window() noexcept {
+      if (auto fw = focus().window()) {
+        const common::Color regular_window_border_color{ 0xff, 0x0, 0x0 };
+        change_border_color(regular_window_border_color);
+
+        focus().prev_window();
+
+        const common::Color focused_window_border_color{ 0x0, 0xff, 0x0 };
+        change_border_color(focused_window_border_color);
       }
     }
 

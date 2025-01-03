@@ -28,6 +28,13 @@ namespace ymwm::window {
       m_env->reset_focus();
     }
 
+    inline void update_index() noexcept {
+      if (m_focused_window_index >= m_windows.size() and
+          not m_windows.empty()) {
+        m_focused_window_index = m_windows.size() - 1ul;
+      }
+    }
+
     inline void last_window() noexcept {
       if (m_windows.empty()) {
         return;
