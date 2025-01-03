@@ -32,7 +32,7 @@ namespace ymwm::window {
                                reinterpret_cast<const char*>(w.name.data()));
       m_windows.push_back(w);
       m_env->update_window_border(w);
-      focus_next_window();
+      focus_last_window();
       layout().update();
     }
 
@@ -123,15 +123,23 @@ namespace ymwm::window {
     }
 
     inline void focus_prev_window() noexcept {
-      if (auto fw = focus().window()) {
-        const common::Color regular_window_border_color{ 0xff, 0x0, 0x0 };
-        change_border_color(regular_window_border_color);
+      const common::Color regular_window_border_color{ 0xff, 0x0, 0x0 };
+      change_border_color(regular_window_border_color);
 
-        focus().prev_window();
+      focus().prev_window();
 
-        const common::Color focused_window_border_color{ 0x0, 0xff, 0x0 };
-        change_border_color(focused_window_border_color);
-      }
+      const common::Color focused_window_border_color{ 0x0, 0xff, 0x0 };
+      change_border_color(focused_window_border_color);
+    }
+
+    inline void focus_last_window() noexcept {
+      const common::Color regular_window_border_color{ 0xff, 0x0, 0x0 };
+      change_border_color(regular_window_border_color);
+
+      focus().last_window();
+
+      const common::Color focused_window_border_color{ 0x0, 0xff, 0x0 };
+      change_border_color(focused_window_border_color);
     }
 
     inline FocusManager<Environment>& focus() noexcept {
