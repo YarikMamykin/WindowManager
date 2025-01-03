@@ -9,3 +9,5 @@ include(${DEPENDENCIES}/gtest.cmake)
 enable_testing()
 
 add_subdirectory(events)
+add_subdirectory(layouts)
+add_subdirectory(window)

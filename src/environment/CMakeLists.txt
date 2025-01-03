@@ -5,6 +5,8 @@ set(SHARED_LIBS events)
 if(${NATIVE_ENVIRONMENT} STREQUAL "X11")
 	list(APPEND NATIVE_ENVIRONMENT_SRC x11/Environment.cpp)
 	list(APPEND NATIVE_ENVIRONMENT_SRC x11/Commands.cpp)
+	list(APPEND NATIVE_ENVIRONMENT_SRC x11/ErrorHandling.cpp)
+	list(APPEND NATIVE_ENVIRONMENT_SRC x11/XHelpers.cpp)
 	list(APPEND INCUDE_DIRS ${X11_INCLUDE_DIR})
 	list(APPEND SHARED_LIBS ${X11_LIBRARIES})
 endif()
@@ -18,7 +20,9 @@ target_include_directories(environment PRIVATE
 )
 target_link_libraries(environment PRIVATE
 	${SHARED_LIBS}
+	common
 )
 add_dependencies(environment
 	events
+	common
 )

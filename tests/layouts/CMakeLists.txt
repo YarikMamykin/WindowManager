@@ -1,0 +1,20 @@
+add_executable(LayoutsTest
+	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/LayoutsTest.cpp
+)
+target_include_directories(LayoutsTest
+	PUBLIC
+	${SRC_INCLUDE_DIR}
+	${GTEST_INCLUDE_DIRS}
+)
+target_link_libraries(LayoutsTest
+	${GTEST_LIBRARIES}
+	layouts
+	common
+)
+add_dependencies(LayoutsTest
+	googletestlib
+	layouts
+	common
+)
+add_test(NAME LayoutsTest COMMAND LayoutsTest WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
