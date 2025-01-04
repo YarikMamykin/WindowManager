@@ -13,10 +13,52 @@
 namespace ymwm::events {
   Map default_event_map() noexcept {
     Map bindings;
-    bindings.emplace(AbstractKeyPress{ .code = AbstractKeyCode::A,
-                                       .mask = AbstractKeyMask::Ctrl |
-                                               AbstractKeyMask::Shift },
-                     environment::commands::Dummy{});
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::e,
+            .mask = ymwm::events::AbstractKeyMask::Ctrl },
+        ymwm::environment::commands::ExitRequested{});
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::t,
+            .mask = ymwm::events::AbstractKeyMask::Ctrl },
+        ymwm::environment::commands::RunTerminal{});
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::c,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Shift },
+        ymwm::environment::commands::CloseWindow{});
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::j,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::FocusNextWindow{});
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::k,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::FocusPrevWindow{});
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::j,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Shift },
+        ymwm::environment::commands::MoveFocusedWindowForward{});
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::k,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Shift },
+        ymwm::environment::commands::MoveFocusedWindowBackward{});
+
     return bindings;
   }
 
