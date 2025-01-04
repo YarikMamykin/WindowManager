@@ -126,16 +126,15 @@ namespace ymwm::environment {
                      w,
                      EnterWindowMask | FocusChangeMask | PropertyChangeMask |
                          StructureNotifyMask);
-        m_manager.add_window({
-            .id = w,
-            .x = wa.x,
-            .y = wa.y,
-            .w = wa.width,
-            .h = wa.height,
-            .border_width = 5,
-            .border_color = common::Color{ 0xff, 0x0, 0x0 },
-            .name = get_window_name(*m_handlers, w)
-        });
+        m_manager.add_window(
+            { .id = w,
+              .x = wa.x,
+              .y = wa.y,
+              .w = wa.width,
+              .h = wa.height,
+              .border_width = ymwm::config::windows::regular_border_width,
+              .border_color = ymwm::config::windows::regular_border_color,
+              .name = get_window_name(*m_handlers, w) });
       }
 
       break;
