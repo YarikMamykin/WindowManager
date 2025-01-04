@@ -10,18 +10,11 @@ namespace ymwm::window {
 
 namespace ymwm::layouts {
 
-  struct Margin {
-    unsigned int left{ 0u };
-    unsigned int right{ 0u };
-    unsigned int top{ 0u };
-    unsigned int bottom{ 0u };
-  };
-
   struct Layout {
     struct BasicParameters {
       int screen_width;
       int screen_height;
-      Margin screen_margins;
+      config::layouts::Margin screen_margins;
       std::size_t focused_window_index;
       std::size_t number_of_windows;
     } basic_parameters;

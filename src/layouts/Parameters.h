@@ -1,4 +1,6 @@
 #pragma once
+#include "config/Layout.h"
+
 #include <ranges>
 #include <variant>
 
@@ -7,14 +9,12 @@ namespace ymwm::layouts {
   struct MaximisedParameters {};
 
   struct GridParameters {
-    struct Margins {
-      unsigned int horizontal{ 0u };
-      unsigned int vertical{ 0u };
-    } margins;
+    config::layouts::grid::Margins margins;
     unsigned int grid_size;
     unsigned int number_of_margins;
 
-    inline GridParameters(Margins margins, std::size_t number_of_windows)
+    inline GridParameters(config::layouts::grid::Margins margins,
+                          std::size_t number_of_windows)
         : margins(margins) {
       // For now Grid layout uses symmetric grid,
       // meaning 2x2, 3x3 and so on.
