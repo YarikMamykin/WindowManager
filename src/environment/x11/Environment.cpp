@@ -83,10 +83,10 @@ namespace ymwm::environment {
                    RevertToPointerRoot,
                    CurrentTime);
 
-    m_manager.layout().update(layouts::Margin{
+    m_manager.layout().update(config::layouts::Margin{
         .left = 10u, .right = 10u, .top = 10u, .bottom = 10u });
     m_manager.layout().update(layouts::GridParameters(
-        layouts::GridParameters::Margins{ .horizontal = 10u, .vertical = 20u },
+        config::layouts::grid::Margins{ .horizontal = 10u, .vertical = 20u },
         4ul));
   }
 
