@@ -3,6 +3,7 @@
 #include "Handlers.h"
 #include "XClientKeyGrabber.h"
 #include "common/Color.h"
+#include "config/Window.h"
 #include "events/AbstractKeyCode.h"
 #include "events/AbstractKeyMask.h"
 #include "events/AbstractKeyPress.h"
@@ -41,9 +42,9 @@ namespace ymwm::environment {
     std::cout << std::format("SCREEN SIZE: {} {}\n", sw, sh);
 
     for (const auto& c : {
-             common::Color{ 0xff,  0x0,  0x0 },
-             common::Color{  0x0, 0xff,  0x0 },
-             common::Color{  0x0,  0x0, 0xff }
+             ymwm::config::windows::regular_border_color,
+             ymwm::config::windows::focused_border_color,
+             common::Color{ 0x0, 0x0, 0xff }
     }) {
       m_handlers->colors.insert({ c, xcolor_from_color(c) });
       if (not XAllocColor(m_handlers->display,
@@ -82,10 +83,10 @@ namespace ymwm::environment {
                    RevertToPointerRoot,
                    CurrentTime);
 
-    m_manager.layout().update(layouts::Margin{
+    m_manager.layout().update(config::layouts::Margin{
         .left = 10u, .right = 10u, .top = 10u, .bottom = 10u });
     m_manager.layout().update(layouts::GridParameters(
-        layouts::GridParameters::Margins{ .horizontal = 10u, .vertical = 20u },
+        config::layouts::grid::Margins{ .horizontal = 10u, .vertical = 20u },
         4ul));
   }
 
@@ -125,16 +126,15 @@ namespace ymwm::environment {
                      w,
                      EnterWindowMask | FocusChangeMask | PropertyChangeMask |
                          StructureNotifyMask);
-        m_manager.add_window({
-            .id = w,
-            .x = wa.x,
-            .y = wa.y,
-            .w = wa.width,
-            .h = wa.height,
-            .border_width = 5,
-            .border_color = common::Color{ 0xff, 0x0, 0x0 },
-            .name = get_window_name(*m_handlers, w)
-        });
+        m_manager.add_window(
+            { .id = w,
+              .x = wa.x,
+              .y = wa.y,
+              .w = wa.width,
+              .h = wa.height,
+              .border_width = ymwm::config::windows::regular_border_width,
+              .border_color = ymwm::config::windows::regular_border_color,
+              .name = get_window_name(*m_handlers, w) });
       }
 
       break;

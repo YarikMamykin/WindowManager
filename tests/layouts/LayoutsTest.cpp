@@ -152,8 +152,7 @@ TEST(TestLayouts, GridLayout) {
   ASSERT_EQ(4ul, expected_windows.size());
 
   auto parameters = ymwm::layouts::GridParameters(
-      ymwm::layouts::GridParameters::Margins{ .horizontal = 0u,
-                                              .vertical = 0u },
+      ymwm::config::layouts::grid::Margins{ .horizontal = 0u, .vertical = 0u },
       test_windows.size());
 
   auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
@@ -222,8 +221,7 @@ TEST(TestLayouts, GridLayout_WithScreenMargins) {
   ASSERT_EQ(4ul, expected_windows.size());
 
   auto parameters = ymwm::layouts::GridParameters(
-      ymwm::layouts::GridParameters::Margins{ .horizontal = 0u,
-                                              .vertical = 0u },
+      ymwm::config::layouts::grid::Margins{ .horizontal = 0u, .vertical = 0u },
       test_windows.size());
 
   auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
@@ -292,8 +290,8 @@ TEST(TestLayouts, GridLayout_WithScreenMargins_AndGridMargins) {
   ASSERT_EQ(4ul, expected_windows.size());
 
   auto parameters = ymwm::layouts::GridParameters(
-      ymwm::layouts::GridParameters::Margins{ .horizontal = 10u,
-                                              .vertical = 20u },
+      ymwm::config::layouts::grid::Margins{ .horizontal = 10u,
+                                            .vertical = 20u },
       test_windows.size());
 
   auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);

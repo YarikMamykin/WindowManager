@@ -16,7 +16,9 @@ namespace ymwm::environment::commands {
   }
 
   void ChangeBorderColor::execute(Environment& e) const {
-    e.manager().change_border_color(color);
+    if (auto fw = e.manager().focus().window()) {
+      e.manager().update_focused_window_border(fw->get().border_width, color);
+    }
   }
 
   void MoveWindowRight::execute(Environment& e) const {

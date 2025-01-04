@@ -3,6 +3,7 @@
 #include "LayoutManager.h"
 #include "Window.h"
 #include "common/Color.h"
+#include "config/Window.h"
 #include "environment/ID.h"
 
 #include <format>
@@ -52,9 +53,12 @@ namespace ymwm::window {
       return m_windows;
     }
 
-    inline void change_border_color(const common::Color& color) noexcept {
+    inline void
+    update_focused_window_border(int width,
+                                 const common::Color& color) noexcept {
       if (auto fw = focus().window()) {
         fw->get().border_color = color;
+        fw->get().border_width = width;
         m_env->update_window(fw->get());
       }
     }
@@ -111,35 +115,31 @@ namespace ymwm::window {
     }
 
     inline void focus_next_window() noexcept {
-      if (auto fw = focus().window()) {
-        const common::Color regular_window_border_color{ 0xff, 0x0, 0x0 };
-        change_border_color(regular_window_border_color);
-
-        focus().next_window();
-
-        const common::Color focused_window_border_color{ 0x0, 0xff, 0x0 };
-        change_border_color(focused_window_border_color);
-      }
+      update_focused_window_border(config::windows::regular_border_width,
+                                   config::windows::regular_border_color);
+      focus().next_window();
+      update_focused_window_border(config::windows::focused_border_width,
+                                   config::windows::focused_border_color);
     }
 
     inline void focus_prev_window() noexcept {
-      const common::Color regular_window_border_color{ 0xff, 0x0, 0x0 };
-      change_border_color(regular_window_border_color);
+      update_focused_window_border(config::windows::regular_border_width,
+                                   config::windows::regular_border_color);
 
       focus().prev_window();
 
-      const common::Color focused_window_border_color{ 0x0, 0xff, 0x0 };
-      change_border_color(focused_window_border_color);
+      update_focused_window_border(config::windows::focused_border_width,
+                                   config::windows::focused_border_color);
     }
 
     inline void focus_last_window() noexcept {
-      const common::Color regular_window_border_color{ 0xff, 0x0, 0x0 };
-      change_border_color(regular_window_border_color);
+      update_focused_window_border(config::windows::regular_border_width,
+                                   config::windows::regular_border_color);
 
       focus().last_window();
 
-      const common::Color focused_window_border_color{ 0x0, 0xff, 0x0 };
-      change_border_color(focused_window_border_color);
+      update_focused_window_border(config::windows::focused_border_width,
+                                   config::windows::focused_border_color);
     }
 
     inline FocusManager<Environment>& focus() noexcept {
