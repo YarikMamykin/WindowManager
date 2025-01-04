@@ -12,7 +12,7 @@ namespace ymwm::window {
         : m_windows(windows)
         , m_env(env) {}
 
-    inline void update(const layouts::Margin& screen_margins) {
+    inline void update(const config::layouts::Margin& screen_margins) {
       m_basic_layout_parameters.screen_margins = screen_margins;
     }
 
