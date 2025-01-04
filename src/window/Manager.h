@@ -53,15 +53,11 @@ namespace ymwm::window {
       return m_windows;
     }
 
-    inline void change_border_color(const common::Color& color) noexcept {
+    inline void
+    update_focused_window_border(int width,
+                                 const common::Color& color) noexcept {
       if (auto fw = focus().window()) {
         fw->get().border_color = color;
-        m_env->update_window(fw->get());
-      }
-    }
-
-    inline void change_border_width(int width) noexcept {
-      if (auto fw = focus().window()) {
         fw->get().border_width = width;
         m_env->update_window(fw->get());
       }
@@ -119,33 +115,31 @@ namespace ymwm::window {
     }
 
     inline void focus_next_window() noexcept {
-      change_border_color(config::windows::regular_border_color);
-      change_border_width(config::windows::regular_border_width);
-
+      update_focused_window_border(config::windows::regular_border_width,
+                                   config::windows::regular_border_color);
       focus().next_window();
-
-      change_border_color(config::windows::focused_border_color);
-      change_border_width(config::windows::focused_border_width);
+      update_focused_window_border(config::windows::focused_border_width,
+                                   config::windows::focused_border_color);
     }
 
     inline void focus_prev_window() noexcept {
-      change_border_color(config::windows::regular_border_color);
-      change_border_width(config::windows::regular_border_width);
+      update_focused_window_border(config::windows::regular_border_width,
+                                   config::windows::regular_border_color);
 
       focus().prev_window();
 
-      change_border_color(config::windows::focused_border_color);
-      change_border_width(config::windows::focused_border_width);
+      update_focused_window_border(config::windows::focused_border_width,
+                                   config::windows::focused_border_color);
     }
 
     inline void focus_last_window() noexcept {
-      change_border_color(config::windows::regular_border_color);
-      change_border_width(config::windows::regular_border_width);
+      update_focused_window_border(config::windows::regular_border_width,
+                                   config::windows::regular_border_color);
 
       focus().last_window();
 
-      change_border_color(config::windows::focused_border_color);
-      change_border_width(config::windows::focused_border_width);
+      update_focused_window_border(config::windows::focused_border_width,
+                                   config::windows::focused_border_color);
     }
 
     inline FocusManager<Environment>& focus() noexcept {
