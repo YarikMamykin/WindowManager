@@ -111,7 +111,6 @@ TEST(TestLayouts, GridLayout) {
   basic_parameters.screen_margins.top = 0u;
   basic_parameters.screen_margins.bottom = 0u;
   basic_parameters.number_of_windows = 4ul;
-  basic_parameters.focused_window_index = 0ul;
 
   std::vector<ymwm::window::Window> test_windows(
       4,
@@ -180,7 +179,6 @@ TEST(TestLayouts, GridLayout_WithScreenMargins) {
   basic_parameters.screen_margins.top = 5u;
   basic_parameters.screen_margins.bottom = 5u;
   basic_parameters.number_of_windows = 4ul;
-  basic_parameters.focused_window_index = 0ul;
 
   std::vector<ymwm::window::Window> test_windows(
       4,
@@ -249,7 +247,6 @@ TEST(TestLayouts, GridLayout_WithScreenMargins_AndGridMargins) {
   basic_parameters.screen_margins.top = 5u;
   basic_parameters.screen_margins.bottom = 5u;
   basic_parameters.number_of_windows = 4ul;
-  basic_parameters.focused_window_index = 0ul;
 
   std::vector<ymwm::window::Window> test_windows(
       4,
