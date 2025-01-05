@@ -1,8 +1,8 @@
 #pragma once
 
+#include "CommandMacro.h"
 #include "common/Color.h"
 
-#include <string_view>
 #include <variant>
 
 namespace ymwm::environment {
@@ -10,54 +10,15 @@ namespace ymwm::environment {
 }
 
 namespace ymwm::environment::commands {
-  struct ExitRequested {
-    static inline constexpr std::string_view type{ "ExitRequested" };
-    void execute([[maybe_unused]] Environment&) const;
-  };
-
-  struct RunTerminal {
-    static inline constexpr std::string_view type{ "RunTerminal" };
-    void execute([[maybe_unused]] Environment&) const;
-  };
-
-  struct ChangeBorderColor {
-    static inline constexpr std::string_view type{ "ChangeBorderColor" };
-    void execute([[maybe_unused]] Environment&) const;
-    common::Color color;
-  };
-
-  struct MoveWindowRight {
-    static inline constexpr std::string_view type{ "MoveWindowRight" };
-    void execute([[maybe_unused]] Environment&) const;
-    int dx;
-  };
-
-  struct CloseWindow {
-    static inline constexpr std::string_view type{ "CloseWindow" };
-    void execute([[maybe_unused]] Environment&) const;
-  };
-
-  struct FocusNextWindow {
-    static inline constexpr std::string_view type{ "FocusNextWindow" };
-    void execute([[maybe_unused]] Environment&) const;
-  };
-
-  struct FocusPrevWindow {
-    static inline constexpr std::string_view type{ "FocusPrevWindow" };
-    void execute([[maybe_unused]] Environment&) const;
-  };
-
-  struct MoveFocusedWindowForward {
-    static inline constexpr std::string_view type{ "MoveFocusedWindowForward" };
-    void execute([[maybe_unused]] Environment&) const;
-  };
-
-  struct MoveFocusedWindowBackward {
-    static inline constexpr std::string_view type{
-      "MoveFocusedWindowBackward"
-    };
-    void execute([[maybe_unused]] Environment&) const;
-  };
+  DEFINE_COMMAND(ExitRequested)
+  DEFINE_COMMAND(RunTerminal)
+  DEFINE_COMMAND_WITH_PARAMS_1(ChangeBorderColor, common::Color color);
+  DEFINE_COMMAND_WITH_PARAMS_1(MoveWindowRight, int dx);
+  DEFINE_COMMAND(CloseWindow)
+  DEFINE_COMMAND(FocusNextWindow)
+  DEFINE_COMMAND(FocusPrevWindow)
+  DEFINE_COMMAND(MoveFocusedWindowForward)
+  DEFINE_COMMAND(MoveFocusedWindowBackward)
 
   using Command = std::variant<ExitRequested,
                                RunTerminal,
