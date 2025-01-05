@@ -6,7 +6,6 @@
 
 namespace ymwm::environment::commands {
 
-  void Dummy::execute([[maybe_unused]] Environment&) const {}
   void ExitRequested::execute(Environment& e) const { e.request_exit(); }
   void RunTerminal::execute(Environment& e) const {
     std::thread([]() -> void {

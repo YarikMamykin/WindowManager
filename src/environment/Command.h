@@ -10,11 +10,6 @@ namespace ymwm::environment {
 }
 
 namespace ymwm::environment::commands {
-  struct Dummy {
-    static inline constexpr std::string_view type{ "Dummy" };
-    void execute([[maybe_unused]] Environment&) const;
-  };
-
   struct ExitRequested {
     static inline constexpr std::string_view type{ "ExitRequested" };
     void execute([[maybe_unused]] Environment&) const;
@@ -64,8 +59,7 @@ namespace ymwm::environment::commands {
     void execute([[maybe_unused]] Environment&) const;
   };
 
-  using Command = std::variant<Dummy,
-                               ExitRequested,
+  using Command = std::variant<ExitRequested,
                                RunTerminal,
                                ChangeBorderColor,
                                MoveWindowRight,
