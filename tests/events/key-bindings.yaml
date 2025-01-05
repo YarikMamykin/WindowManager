@@ -4,7 +4,7 @@ key-bindings:
     masks:
       - Ctrl
       - Shift
-    cmd: Dummy
+    cmd: RunTerminal
   - type: press
     key: B
     masks:

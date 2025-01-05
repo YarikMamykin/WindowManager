@@ -27,8 +27,8 @@ namespace ymwm::events::utils {
     static const std::unordered_map<std::string_view,
                                     environment::commands::Command>
         type_to_cmd_table{
-          {         environment::commands::Dummy::type,
-           environment::commands::Dummy{}        },
+          {   environment::commands::RunTerminal::type,
+           environment::commands::RunTerminal{}  },
           { environment::commands::ExitRequested::type,
            environment::commands::ExitRequested{} }
     };
