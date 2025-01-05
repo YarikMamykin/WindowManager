@@ -14,7 +14,7 @@ TEST(TestEventMap,
      AddCommandUnderSameEventTwice_HaveOnlyOneRecordInMapButReplacedCommand) {
   ymwm::events::Event event{ ymwm::events::AbstractKeyPress() };
   ymwm::environment::commands::Command cmd{
-    ymwm::environment::commands::Dummy()
+    ymwm::environment::commands::RunTerminal()
   };
 
   ymwm::events::Map emap{
@@ -23,7 +23,7 @@ TEST(TestEventMap,
 
   ASSERT_EQ(1ul, emap.size());
   ASSERT_TRUE(emap.contains(event));
-  ASSERT_TRUE(std::holds_alternative<ymwm::environment::commands::Dummy>(
+  ASSERT_TRUE(std::holds_alternative<ymwm::environment::commands::RunTerminal>(
       emap.at(event)));
 
   auto [_, inserted] = emap.insert(
@@ -34,13 +34,13 @@ TEST(TestEventMap,
   EXPECT_FALSE(
       std::holds_alternative<ymwm::environment::commands::ExitRequested>(
           emap.at(event)));
-  EXPECT_TRUE(std::holds_alternative<ymwm::environment::commands::Dummy>(
+  EXPECT_TRUE(std::holds_alternative<ymwm::environment::commands::RunTerminal>(
       emap.at(event)));
 }
 
 TEST(TestEventMap, CheckSameEventTypeDifferentByContent) {
   ymwm::environment::commands::Command cmd{
-    ymwm::environment::commands::Dummy()
+    ymwm::environment::commands::RunTerminal()
   };
   ymwm::events::Event event1{
     ymwm::events::AbstractKeyPress{ .code = 1, .mask = 0 }
@@ -78,7 +78,7 @@ TEST(TestEventMap, CreateEventMapFromYamlFile) {
                                           ymwm::events::AbstractKeyMask::Ctrl };
   ASSERT_TRUE(actual_events_map.contains(event1));
   ASSERT_TRUE(actual_events_map.contains(event2));
-  EXPECT_TRUE(std::holds_alternative<ymwm::environment::commands::Dummy>(
+  EXPECT_TRUE(std::holds_alternative<ymwm::environment::commands::RunTerminal>(
       actual_events_map.at(event1)));
   EXPECT_TRUE(
       std::holds_alternative<ymwm::environment::commands::ExitRequested>(
@@ -102,7 +102,7 @@ TEST(TestEventMap, CreateEventMapFromYamlFileWithoutMasksSpecified) {
                                           ymwm::events::AbstractKeyMask::NONE };
   ASSERT_TRUE(actual_events_map.contains(event1));
   ASSERT_TRUE(actual_events_map.contains(event2));
-  EXPECT_TRUE(std::holds_alternative<ymwm::environment::commands::Dummy>(
+  EXPECT_TRUE(std::holds_alternative<ymwm::environment::commands::RunTerminal>(
       actual_events_map.at(event1)));
   EXPECT_TRUE(
       std::holds_alternative<ymwm::environment::commands::ExitRequested>(
