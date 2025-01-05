@@ -15,7 +15,6 @@ namespace ymwm::layouts {
       int screen_width;
       int screen_height;
       config::layouts::Margin screen_margins;
-      std::size_t focused_window_index;
       std::size_t number_of_windows;
     } basic_parameters;
 
