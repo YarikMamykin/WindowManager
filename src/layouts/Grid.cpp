@@ -5,11 +5,8 @@ namespace ymwm::layouts {
   template <>
   void Layout::apply(const GridParameters& parameters,
                      window::Window& w) noexcept {
-    auto& [screen_width,
-           screen_height,
-           screen_margins,
-           focused_window_index,
-           number_of_windows] = basic_parameters;
+    auto& [screen_width, screen_height, screen_margins, number_of_windows] =
+        basic_parameters;
 
     auto& [margins, grid_size, number_of_margins] = parameters;
 

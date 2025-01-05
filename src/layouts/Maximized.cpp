@@ -6,11 +6,8 @@ namespace ymwm::layouts {
   template <>
   void Layout::apply(const MaximisedParameters& parameters,
                      window::Window& w) noexcept {
-    auto& [screen_width,
-           screen_height,
-           screen_margins,
-           focused_window_index,
-           number_of_windows] = basic_parameters;
+    auto& [screen_width, screen_height, screen_margins, number_of_windows] =
+        basic_parameters;
 
     w.w = screen_width - screen_margins.left - screen_margins.right -
           (2 * w.border_width);

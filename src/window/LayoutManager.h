@@ -38,7 +38,6 @@ namespace ymwm::window {
 
       m_basic_layout_parameters.screen_width = screen_width;
       m_basic_layout_parameters.screen_height = screen_height;
-      m_basic_layout_parameters.focused_window_index = 0ul;
       m_basic_layout_parameters.number_of_windows = m_windows.size();
 
       auto layout =
