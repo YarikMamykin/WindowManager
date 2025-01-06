@@ -18,7 +18,16 @@ namespace ymwm::window {
 
     Manager(Environment* env)
         : m_env(env)
-        , m_focus_manager(m_windows, env)
+        , m_focus_manager(m_windows,
+                          env,
+                          std::bind(&Manager::update_focused_window_border,
+                                    this,
+                                    config::windows::regular_border_width,
+                                    config::windows::regular_border_color),
+                          std::bind(&Manager::update_focused_window_border,
+                                    this,
+                                    config::windows::focused_border_width,
+                                    config::windows::focused_border_color))
         , m_layout_manager(m_windows, env) {
       m_windows.reserve(5);
     }
@@ -32,8 +41,7 @@ namespace ymwm::window {
                                w.w,
                                reinterpret_cast<const char*>(w.name.data()));
       m_windows.push_back(w);
-      m_env->update_window_border(w);
-      focus_last_window();
+      focus().last_window();
       layout().update();
     }
 
@@ -44,7 +52,7 @@ namespace ymwm::window {
       if (erased_successfully) {
         std::cout << std::format("Erased {} \n", id);
         focus().update_index();
-        focus_prev_window();
+        focus().prev_window();
         layout().update();
       }
     }
@@ -59,7 +67,7 @@ namespace ymwm::window {
       if (auto fw = focus().window()) {
         fw->get().border_color = color;
         fw->get().border_width = width;
-        m_env->update_window(fw->get());
+        m_env->update_window_border(fw->get());
       }
     }
 
@@ -80,7 +88,7 @@ namespace ymwm::window {
                     m_windows.at(focus().window_index() + 1ul));
         }
         layout().update();
-        focus_next_window();
+        focus().next_window();
       }
     }
 
@@ -93,7 +101,7 @@ namespace ymwm::window {
                     m_windows.at(focus().window_index() - 1ul));
         }
         layout().update();
-        focus_prev_window();
+        focus().prev_window();
       }
     }
 
@@ -112,34 +120,6 @@ namespace ymwm::window {
       if (m_windows.end() != wit) {
         wit->name = std::move(new_name);
       }
-    }
-
-    inline void focus_next_window() noexcept {
-      update_focused_window_border(config::windows::regular_border_width,
-                                   config::windows::regular_border_color);
-      focus().next_window();
-      update_focused_window_border(config::windows::focused_border_width,
-                                   config::windows::focused_border_color);
-    }
-
-    inline void focus_prev_window() noexcept {
-      update_focused_window_border(config::windows::regular_border_width,
-                                   config::windows::regular_border_color);
-
-      focus().prev_window();
-
-      update_focused_window_border(config::windows::focused_border_width,
-                                   config::windows::focused_border_color);
-    }
-
-    inline void focus_last_window() noexcept {
-      update_focused_window_border(config::windows::regular_border_width,
-                                   config::windows::regular_border_color);
-
-      focus().last_window();
-
-      update_focused_window_border(config::windows::focused_border_width,
-                                   config::windows::focused_border_color);
     }
 
     inline FocusManager<Environment>& focus() noexcept {
