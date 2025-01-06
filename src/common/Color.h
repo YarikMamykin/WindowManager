@@ -9,6 +9,7 @@ namespace ymwm::common {
     unsigned short green;
     unsigned short blue;
 
+    Color() noexcept;
     Color(unsigned short r, unsigned short g, unsigned short b) noexcept;
     Color(unsigned long color) noexcept;
     Color(const std::string_view color) noexcept;
