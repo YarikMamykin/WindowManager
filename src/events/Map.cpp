@@ -85,9 +85,18 @@ namespace ymwm::events {
 
           auto key_press_event = binding.as<AbstractKeyPress>();
 
-          auto cmd = utils::command_from_type(binding["cmd"].as<std::string>());
+          if (not binding["cmd"]) {
+            return "Command is not specified for key binding";
+          }
+
+          auto cmd = utils::command_from_type(
+              binding["cmd"]["name"].as<std::string>());
           if (not cmd) {
             return "Unknown command specified";
+          }
+
+          if (auto cmd_args = binding["cmd"]["args"]) {
+            utils::fill_cmd_args(*cmd, cmd_args);
           }
 
           event_map.insert(std::make_pair(key_press_event, *cmd));

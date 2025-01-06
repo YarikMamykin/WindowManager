@@ -78,8 +78,12 @@ TEST(TestEventMap, CreateEventMapFromYamlFile) {
                                           ymwm::events::AbstractKeyMask::Ctrl };
   ASSERT_TRUE(actual_events_map.contains(event1));
   ASSERT_TRUE(actual_events_map.contains(event2));
-  EXPECT_TRUE(std::holds_alternative<ymwm::environment::commands::RunTerminal>(
+  ASSERT_TRUE(std::holds_alternative<ymwm::environment::commands::RunTerminal>(
       actual_events_map.at(event1)));
+  EXPECT_EQ("/bin/sh",
+            std::get<ymwm::environment::commands::RunTerminal>(
+                actual_events_map.at(event1))
+                .path);
   EXPECT_TRUE(
       std::holds_alternative<ymwm::environment::commands::ExitRequested>(
           actual_events_map.at(event2)));
@@ -112,16 +116,7 @@ TEST(TestEventMap, CreateEventMapFromYamlFileWithoutMasksSpecified) {
 TEST(TestEventMap, CreateEventMapFromYamlFileWithoutCmdSpecified) {
   auto events_map = ymwm::events::event_map_from_yaml(
       "key-bindings-without-cmd-specified.yaml");
-  ASSERT_FALSE(std::holds_alternative<std::string>(events_map))
-      << std::get<std::string>(events_map);
-  const auto& actual_events_map = std::get<ymwm::events::Map>(events_map);
-  const auto& default_event_map = ymwm::events::default_event_map();
-  ASSERT_EQ(actual_events_map.size(), default_event_map.size());
-  for (auto actual_it = actual_events_map.cbegin();
-       actual_it != actual_events_map.cend();
-       std::advance(actual_it, 1)) {
-    ASSERT_TRUE(default_event_map.contains(actual_it->first));
-    ASSERT_EQ(default_event_map.at(actual_it->first).index(),
-              actual_it->second.index());
-  }
+  ASSERT_TRUE(std::holds_alternative<std::string>(events_map));
+  EXPECT_EQ(std::string("Command is not specified for key binding"),
+            std::get<std::string>(events_map));
 }

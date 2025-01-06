@@ -4,9 +4,14 @@ key-bindings:
     masks:
       - Ctrl
       - Shift
-    cmd: RunTerminal
+    cmd:
+      name: RunTerminal
+      args:
+        path: /bin/sh
+
   - type: press
     key: B
     masks:
       - Ctrl
-    cmd: ExitRequested
+    cmd:
+      name: ExitRequested

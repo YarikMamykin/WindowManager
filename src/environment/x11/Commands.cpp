@@ -8,9 +8,8 @@ namespace ymwm::environment::commands {
 
   void ExitRequested::execute(Environment& e) const { e.request_exit(); }
   void RunTerminal::execute(Environment& e) const {
-    std::thread([]() -> void {
-      std::system("/usr/bin/alacritty -o \"window.dimensions={columns=20, "
-                  "lines=20}\"");
+    std::thread([&terminal = path]() -> void {
+      std::system(terminal.c_str());
     }).detach();
   }
 
