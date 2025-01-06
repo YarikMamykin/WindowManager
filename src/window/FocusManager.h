@@ -25,7 +25,7 @@ namespace ymwm::window {
       return m_focused_window_index;
     }
 
-    inline void update() const noexcept {
+    inline void update() noexcept {
       if (auto fw = window()) {
         m_env->focus_window(fw->get());
         return;
@@ -34,17 +34,13 @@ namespace ymwm::window {
       m_env->reset_focus();
     }
 
-    inline void update_index() noexcept {
-      if (m_focused_window_index >= m_windows.size() and
-          not m_windows.empty()) {
-        m_focused_window_index = m_windows.size() - 1ul;
-      }
-    }
-
     inline void last_window() noexcept {
       if (m_windows.empty()) {
         return;
       }
+
+      update_index();
+
       m_before_focus_move();
 
       m_focused_window_index = m_windows.size() - 1ul;
@@ -64,6 +60,8 @@ namespace ymwm::window {
         m_env->reset_focus();
         return;
       }
+      update_index();
+
       m_before_focus_move();
 
       m_focused_window_index =
@@ -80,6 +78,8 @@ namespace ymwm::window {
         m_env->reset_focus();
         return;
       }
+
+      update_index();
 
       m_before_focus_move();
 
@@ -98,6 +98,14 @@ namespace ymwm::window {
 
     inline bool is_first_window() const noexcept {
       return not m_windows.empty() and m_focused_window_index == 0ul;
+    }
+
+  private:
+    inline void update_index() noexcept {
+      if (m_focused_window_index >= m_windows.size() and
+          not m_windows.empty()) {
+        m_focused_window_index = m_windows.size() - 1ul;
+      }
     }
 
   private:

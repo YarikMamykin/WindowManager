@@ -51,7 +51,6 @@ namespace ymwm::window {
 
       if (erased_successfully) {
         std::cout << std::format("Erased {} \n", id);
-        focus().update_index();
         focus().prev_window();
         layout().update();
       }
