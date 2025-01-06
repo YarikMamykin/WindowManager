@@ -1,7 +1,9 @@
 key-bindings:
   - type: press
     key: A
-    cmd: RunTerminal
+    cmd:
+      name: RunTerminal
   - type: press
     key: B
-    cmd: ExitRequested
+    cmd:
+      name: ExitRequested
