@@ -78,8 +78,12 @@ TEST(TestEventMap, CreateEventMapFromYamlFile) {
                                           ymwm::events::AbstractKeyMask::Ctrl };
   ASSERT_TRUE(actual_events_map.contains(event1));
   ASSERT_TRUE(actual_events_map.contains(event2));
-  EXPECT_TRUE(std::holds_alternative<ymwm::environment::commands::RunTerminal>(
+  ASSERT_TRUE(std::holds_alternative<ymwm::environment::commands::RunTerminal>(
       actual_events_map.at(event1)));
+  EXPECT_EQ("/bin/sh",
+            std::get<ymwm::environment::commands::RunTerminal>(
+                actual_events_map.at(event1))
+                .path);
   EXPECT_TRUE(
       std::holds_alternative<ymwm::environment::commands::ExitRequested>(
           actual_events_map.at(event2)));
