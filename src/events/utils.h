@@ -1,6 +1,7 @@
 #pragma once
 #include "AbstractKeyCode.h"
 #include "AbstractKeyMask.h"
+#include "common/Color.h"
 #include "environment/Command.h"
 
 #include <optional>
@@ -47,6 +48,52 @@ namespace ymwm::events::utils {
       result |= mask_symbol_to_code(mask.as<std::string>());
     }
     return result;
+  }
+
+  static inline void fill_cmd_args(environment::commands::RunTerminal& cmd,
+                                   const YAML::Node& args) noexcept {
+    if (not args.IsMap()) {
+      return;
+    }
+
+    if (auto path = args["path"]) {
+      cmd.path = path.as<std::string>();
+    }
+  }
+
+  static inline void
+  fill_cmd_args(environment::commands::ChangeBorderColor& cmd,
+                const YAML::Node& args) noexcept {
+    if (not args.IsMap()) {
+      return;
+    }
+
+    if (auto color = args["color"]) {
+      cmd.color = color.as<ymwm::common::Color>();
+    }
+  }
+
+  static inline void fill_cmd_args(environment::commands::MoveWindowRight& cmd,
+                                   const YAML::Node& args) noexcept {
+    if (not args.IsMap()) {
+      return;
+    }
+
+    if (auto dx = args["dx"]; dx.IsScalar()) {
+      cmd.dx = dx.as<int>();
+    }
+  }
+
+  template <typename CommandType>
+    requires requires {
+      not std::is_same_v<CommandType, environment::commands::Command>;
+    }
+  static inline void fill_cmd_args(CommandType&, const YAML::Node&) noexcept {}
+
+  static inline void fill_cmd_args(environment::commands::Command& cmd,
+                                   const YAML::Node& args) noexcept {
+    std::visit([&args](auto& command) -> void { fill_cmd_args(command, args); },
+               cmd);
   }
 
 } // namespace ymwm::events::utils
