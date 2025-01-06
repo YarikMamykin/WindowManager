@@ -2,6 +2,7 @@
 
 #include "Window.h"
 
+#include <functional>
 #include <optional>
 #include <vector>
 
@@ -10,10 +11,15 @@ namespace ymwm::window {
   struct FocusManager {
     using FocusedWindow = std::optional<std::reference_wrapper<Window>>;
 
-    FocusManager(const std::vector<Window>& windows, Environment* const env)
+    FocusManager(const std::vector<Window>& windows,
+                 Environment* const env,
+                 std::function<void()>&& before_focus_move,
+                 std::function<void()>&& after_focus_move)
         : m_windows(windows)
         , m_env(env)
-        , m_focused_window_index(0ul) {}
+        , m_focused_window_index(0ul)
+        , m_before_focus_move(before_focus_move)
+        , m_after_focus_move(after_focus_move) {}
 
     inline std::size_t window_index() const noexcept {
       return m_focused_window_index;
@@ -39,8 +45,12 @@ namespace ymwm::window {
       if (m_windows.empty()) {
         return;
       }
+      m_before_focus_move();
+
       m_focused_window_index = m_windows.size() - 1ul;
       update();
+
+      m_after_focus_move();
     }
 
     inline FocusedWindow window() const noexcept {
@@ -54,12 +64,15 @@ namespace ymwm::window {
         m_env->reset_focus();
         return;
       }
+      m_before_focus_move();
 
       m_focused_window_index =
           m_focused_window_index >= (m_windows.size() - 1ul)
               ? 0ul
               : m_focused_window_index + 1ul;
       update();
+
+      m_after_focus_move();
     }
 
     inline void prev_window() noexcept {
@@ -68,10 +81,14 @@ namespace ymwm::window {
         return;
       }
 
+      m_before_focus_move();
+
       m_focused_window_index = m_focused_window_index == 0ul
                                    ? m_windows.size() - 1ul
                                    : m_focused_window_index - 1ul;
       update();
+
+      m_after_focus_move();
     }
 
     inline bool is_last_window() const noexcept {
@@ -87,5 +104,7 @@ namespace ymwm::window {
     const std::vector<Window>& m_windows;
     Environment* const m_env;
     std::size_t m_focused_window_index;
+    std::function<void()> m_before_focus_move;
+    std::function<void()> m_after_focus_move;
   };
 } // namespace ymwm::window
