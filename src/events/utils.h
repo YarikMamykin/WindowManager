@@ -24,17 +24,7 @@ namespace ymwm::events::utils {
 
   static inline std::optional<environment::commands::Command>
   command_from_type(std::string&& command_type) noexcept {
-    static const std::unordered_map<std::string_view,
-                                    environment::commands::Command>
-        type_to_cmd_table{
-          {   environment::commands::RunTerminal::type,
-           environment::commands::RunTerminal{}  },
-          { environment::commands::ExitRequested::type,
-           environment::commands::ExitRequested{} }
-    };
-    return type_to_cmd_table.contains(command_type)
-               ? std::optional(type_to_cmd_table.at(command_type))
-               : std::nullopt;
+    return environment::commands::try_find_command(command_type);
   }
 
   static inline unsigned int

@@ -4,6 +4,11 @@
 
 namespace ymwm::common {
 
+  Color::Color() noexcept
+      : red(0x0)
+      , green(0x0)
+      , blue(0x0) {}
+
   Color::Color(unsigned short r, unsigned short g, unsigned short b) noexcept
       : red(r)
       , green(g)

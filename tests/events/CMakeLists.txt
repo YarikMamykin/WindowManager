@@ -10,10 +10,12 @@ target_include_directories(EventsTest
 target_link_libraries(EventsTest
 	${GTEST_LIBRARIES}
 	events
+	common
 )
 add_dependencies(EventsTest
 	googletestlib
 	events
+	common
 )
 add_test(NAME EventsTest COMMAND EventsTest WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/key-bindings.yaml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)

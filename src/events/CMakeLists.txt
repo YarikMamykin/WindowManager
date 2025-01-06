@@ -20,7 +20,9 @@ target_include_directories(events PRIVATE
 )
 target_link_libraries(events PRIVATE
 	${SHARED_LIBS}
+	common
 )
 add_dependencies(events
 	yaml_cpp
+	common
 )
