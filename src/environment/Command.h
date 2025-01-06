@@ -4,6 +4,7 @@
 #include "common/Color.h"
 
 #include <optional>
+#include <string>
 #include <variant>
 
 namespace ymwm::environment {
@@ -12,7 +13,8 @@ namespace ymwm::environment {
 
 namespace ymwm::environment::commands {
   DEFINE_COMMAND(ExitRequested)
-  DEFINE_COMMAND(RunTerminal)
+  DEFINE_COMMAND_WITH_PARAMS_1(RunTerminal,
+                               std::string path{ "/usr/bin/alacritty" })
   DEFINE_COMMAND_WITH_PARAMS_1(ChangeBorderColor, common::Color color);
   DEFINE_COMMAND_WITH_PARAMS_1(MoveWindowRight, int dx);
   DEFINE_COMMAND(CloseWindow)
