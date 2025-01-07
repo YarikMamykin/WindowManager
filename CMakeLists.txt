@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(WindowManager VERSION 0.7.0 LANGUAGES CXX)
+project(WindowManager VERSION 0.8.0 LANGUAGES CXX)
 
 set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)

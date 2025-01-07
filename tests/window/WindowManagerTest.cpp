@@ -16,6 +16,20 @@ static const ymwm::common::Color regular_color =
 static const ymwm::common::Color focused_color =
     ymwm::config::windows::focused_border_color;
 
+static inline std::string
+window_to_string(const ymwm::window::Window& w) noexcept {
+  return std::format("id: {}; x: {}; y: {}; w: {}; h: {}; bw: {}; bc: {},{},{}",
+                     w.id,
+                     w.x,
+                     w.y,
+                     w.w,
+                     w.h,
+                     w.border_width,
+                     w.border_color.red,
+                     w.border_color.green,
+                     w.border_color.blue);
+}
+
 TEST(TestWindowManager, SetLayoutNoWindows_NoWindowResizeCalled) {
   ymwm::environment::TestEnvironment tenv;
   ON_CALL(tenv, screen_width_and_height)
@@ -45,7 +59,8 @@ TEST(TestWindowManager, SetLayoutSeveralWindows_WindowResizeCalled) {
   EXPECT_CALL(tenv, move_and_resize)
       .WillOnce(testing::SaveArg<0>(windows_in_params.data()));
   EXPECT_CALL(tenv, update_window_border)
-      .WillOnce(testing::SaveArg<0>(windows_in_params.data() + 1ul));
+      .Times(2)
+      .WillRepeatedly(testing::SaveArg<0>(windows_in_params.data() + 1ul));
   EXPECT_CALL(tenv, focus_window)
       .WillOnce(testing::SaveArg<0>(windows_in_params.data() + 2ul));
   m.add_window(ymwm::window::Window{ .id = 1 });
@@ -63,12 +78,12 @@ TEST(TestWindowManager, SetLayoutSeveralWindows_WindowResizeCalled) {
   };
   EXPECT_CALL(tenv, screen_width_and_height).Times(1);
   EXPECT_CALL(tenv, move_and_resize).WillRepeatedly(save_window);
-  EXPECT_CALL(tenv, update_window_border).WillOnce(save_window);
+  EXPECT_CALL(tenv, update_window_border).Times(2).WillRepeatedly(save_window);
   EXPECT_CALL(tenv, focus_window).WillOnce(save_window);
   m.add_window(ymwm::window::Window{ .id = 2 });
 
   const std::array<ymwm::environment::ID, second_windows_in_params.size()>
-      expected_ids{ 2, 2, 1, 2 };
+      expected_ids{ 1, 2, 2, 1 };
   for (auto i = 0ul; i < second_windows_in_params.size(); ++i) {
     EXPECT_EQ(second_windows_in_params.at(i).id, expected_ids.at(i));
   }
@@ -81,11 +96,12 @@ TEST(TestWindowManager, AddRemoveWindows_LayoutAppliedAfterEachAction) {
 
   ymwm::window::Manager m{ &tenv };
 
+  m.layout().update(ymwm::config::layouts::maximized::screen_margins);
   m.layout().update(ymwm::layouts::MaximisedParameters{});
 
   EXPECT_CALL(tenv, screen_width_and_height);
   EXPECT_CALL(tenv, move_and_resize);
-  EXPECT_CALL(tenv, update_window_border);
+  EXPECT_CALL(tenv, update_window_border).Times(2);
   EXPECT_CALL(tenv, focus_window);
   m.add_window(ymwm::window::Window{ .id = 1 });
   EXPECT_THAT(m.windows(),
@@ -94,13 +110,14 @@ TEST(TestWindowManager, AddRemoveWindows_LayoutAppliedAfterEachAction) {
                   .w = 1000 - (2 * ymwm::config::windows::focused_border_width),
                   .h = 1000 - (2 * ymwm::config::windows::focused_border_width),
                   .border_width = ymwm::config::windows::focused_border_width,
-                  .border_color = focused_color }));
+                  .border_color = focused_color }))
+      << window_to_string(m.windows().front());
   ASSERT_TRUE(m.focus().window());
   EXPECT_EQ(m.focus().window()->get().id, 1);
 
   EXPECT_CALL(tenv, screen_width_and_height);
   EXPECT_CALL(tenv, move_and_resize).Times(2);
-  EXPECT_CALL(tenv, update_window_border);
+  EXPECT_CALL(tenv, update_window_border).Times(4);
   EXPECT_CALL(tenv, focus_window);
   m.add_window(ymwm::window::Window{ .id = 2 });
 
@@ -194,7 +211,7 @@ TEST(TestWindowManager, ResetFocusIfWindowsAreRemoved) {
   m.layout().update(ymwm::config::layouts::maximized::screen_margins);
   m.layout().update(ymwm::layouts::MaximisedParameters{});
 
-  EXPECT_CALL(tenv, update_window_border);
+  EXPECT_CALL(tenv, update_window_border).Times(2);
   EXPECT_CALL(tenv, move_and_resize);
   m.add_window(ymwm::window::Window{ .id = 1 });
   EXPECT_THAT(m.windows(),
@@ -226,7 +243,7 @@ TEST(TestWindowManager, CloseFocusedWindow) {
   m.layout().update(ymwm::config::layouts::maximized::screen_margins);
   m.layout().update(ymwm::layouts::MaximisedParameters{});
 
-  EXPECT_CALL(tenv, update_window_border);
+  EXPECT_CALL(tenv, update_window_border).Times(2);
   EXPECT_CALL(tenv, move_and_resize);
   m.add_window(ymwm::window::Window{ .id = 1 });
   EXPECT_THAT(m.windows(),

@@ -2,6 +2,7 @@
 
 #include "Window.h"
 
+#include <functional>
 #include <optional>
 #include <vector>
 
@@ -10,16 +11,21 @@ namespace ymwm::window {
   struct FocusManager {
     using FocusedWindow = std::optional<std::reference_wrapper<Window>>;
 
-    FocusManager(const std::vector<Window>& windows, Environment* const env)
+    FocusManager(const std::vector<Window>& windows,
+                 Environment* const env,
+                 std::function<void()>&& before_focus_move,
+                 std::function<void()>&& after_focus_move)
         : m_windows(windows)
         , m_env(env)
-        , m_focused_window_index(0ul) {}
+        , m_focused_window_index(0ul)
+        , m_before_focus_move(before_focus_move)
+        , m_after_focus_move(after_focus_move) {}
 
     inline std::size_t window_index() const noexcept {
       return m_focused_window_index;
     }
 
-    inline void update() const noexcept {
+    inline void update() noexcept {
       if (auto fw = window()) {
         m_env->focus_window(fw->get());
         return;
@@ -28,19 +34,19 @@ namespace ymwm::window {
       m_env->reset_focus();
     }
 
-    inline void update_index() noexcept {
-      if (m_focused_window_index >= m_windows.size() and
-          not m_windows.empty()) {
-        m_focused_window_index = m_windows.size() - 1ul;
-      }
-    }
-
     inline void last_window() noexcept {
       if (m_windows.empty()) {
         return;
       }
+
+      update_index();
+
+      m_before_focus_move();
+
       m_focused_window_index = m_windows.size() - 1ul;
       update();
+
+      m_after_focus_move();
     }
 
     inline FocusedWindow window() const noexcept {
@@ -54,12 +60,17 @@ namespace ymwm::window {
         m_env->reset_focus();
         return;
       }
+      update_index();
+
+      m_before_focus_move();
 
       m_focused_window_index =
           m_focused_window_index >= (m_windows.size() - 1ul)
               ? 0ul
               : m_focused_window_index + 1ul;
       update();
+
+      m_after_focus_move();
     }
 
     inline void prev_window() noexcept {
@@ -68,10 +79,16 @@ namespace ymwm::window {
         return;
       }
 
+      update_index();
+
+      m_before_focus_move();
+
       m_focused_window_index = m_focused_window_index == 0ul
                                    ? m_windows.size() - 1ul
                                    : m_focused_window_index - 1ul;
       update();
+
+      m_after_focus_move();
     }
 
     inline bool is_last_window() const noexcept {
@@ -84,8 +101,18 @@ namespace ymwm::window {
     }
 
   private:
+    inline void update_index() noexcept {
+      if (m_focused_window_index >= m_windows.size() and
+          not m_windows.empty()) {
+        m_focused_window_index = m_windows.size() - 1ul;
+      }
+    }
+
+  private:
     const std::vector<Window>& m_windows;
     Environment* const m_env;
     std::size_t m_focused_window_index;
+    std::function<void()> m_before_focus_move;
+    std::function<void()> m_after_focus_move;
   };
 } // namespace ymwm::window

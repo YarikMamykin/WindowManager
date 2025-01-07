@@ -28,11 +28,11 @@ namespace ymwm::environment::commands {
   }
 
   void FocusNextWindow::execute(Environment& e) const {
-    e.manager().focus_next_window();
+    e.manager().focus().next_window();
   }
 
   void FocusPrevWindow::execute(Environment& e) const {
-    e.manager().focus_prev_window();
+    e.manager().focus().prev_window();
   }
 
   void MoveFocusedWindowForward::execute(Environment& e) const {
