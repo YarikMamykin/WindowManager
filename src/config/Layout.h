@@ -29,4 +29,10 @@ namespace ymwm::config::layouts {
     static constinit inline Margins grid_margins{ .horizontal = 0u,
                                                   .vertical = 0u };
   } // namespace grid
+
+  namespace stack_vertical_right {
+    static constinit inline unsigned int main_window_ratio{ 50 };
+    static constinit inline unsigned int main_window_margin{ 5 };
+    static constinit inline unsigned int stack_window_margin{ 5 };
+  } // namespace stack_vertical_right
 } // namespace ymwm::config::layouts
