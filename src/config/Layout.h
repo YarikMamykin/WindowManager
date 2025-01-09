@@ -1,5 +1,6 @@
 #pragma once
 
+#include "common/Ratio.h"
 namespace ymwm::config::layouts {
   struct Margin {
     unsigned int left;
@@ -30,7 +31,7 @@ namespace ymwm::config::layouts {
   } // namespace grid
 
   namespace stack_vertical_right {
-    constinit inline unsigned int main_window_ratio{ 50 };
+    inline common::Ratio main_window_ratio{ 50 };
     constinit inline unsigned int main_window_margin{ 5 };
     constinit inline unsigned int stack_window_margin{ 5 };
   } // namespace stack_vertical_right
