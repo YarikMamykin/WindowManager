@@ -8,6 +8,7 @@ set(SRC_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/src)
 include(${DEPENDENCIES}/gtest.cmake)
 enable_testing()
 
+add_subdirectory(common)
 add_subdirectory(events)
 add_subdirectory(layouts)
 add_subdirectory(window)
