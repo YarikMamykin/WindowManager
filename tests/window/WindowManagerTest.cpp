@@ -340,6 +340,8 @@ TEST(TestWindowManager, MoveFocusedWindowBackward) {
       .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
 
   ymwm::window::Manager m{ &tenv };
+  m.layout().update(ymwm::config::layouts::maximized::screen_margins);
+  m.layout().update(ymwm::layouts::MaximisedParameters{});
 
   m.add_window(ymwm::window::Window{ .id = 1 });
   m.add_window(ymwm::window::Window{ .id = 2 });
