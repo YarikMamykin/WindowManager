@@ -1,18 +1,19 @@
-add_executable(RatioTest
+add_executable(CommonTest
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/RatioTest.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ColorTest.cpp
 )
-target_include_directories(RatioTest
+target_include_directories(CommonTest
 	PUBLIC
 	${SRC_INCLUDE_DIR}
 	${GTEST_INCLUDE_DIRS}
 )
-target_link_libraries(RatioTest
+target_link_libraries(CommonTest
 	${GTEST_LIBRARIES}
 	common
 )
-add_dependencies(RatioTest
+add_dependencies(CommonTest
 	googletestlib
 	common
 )
-add_test(NAME RatioTest COMMAND RatioTest WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+add_test(NAME CommonTest COMMAND CommonTest WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
