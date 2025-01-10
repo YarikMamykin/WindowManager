@@ -9,19 +9,12 @@ namespace ymwm::config::layouts {
     unsigned int bottom;
   };
 
-  namespace maximized {
-    constinit inline Margin screen_margins{ .left = 0u,
-                                            .right = 0u,
-                                            .top = 0u,
-                                            .bottom = 0u };
-  }
+  constinit inline Margin screen_margins{ .left = 0u,
+                                          .right = 0u,
+                                          .top = 0u,
+                                          .bottom = 0u };
 
   namespace grid {
-    constinit inline Margin screen_margins{ .left = 0u,
-                                            .right = 0u,
-                                            .top = 0u,
-                                            .bottom = 0u };
-
     struct Margins {
       unsigned int horizontal;
       unsigned int vertical;

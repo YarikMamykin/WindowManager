@@ -3,6 +3,7 @@
 #include "LayoutManager.h"
 #include "Window.h"
 #include "common/Color.h"
+#include "config/Layout.h"
 #include "config/Window.h"
 #include "environment/ID.h"
 
@@ -30,6 +31,8 @@ namespace ymwm::window {
                                     config::windows::focused_border_color))
         , m_layout_manager(m_windows, env) {
       m_windows.reserve(5);
+
+      layout().update(layouts::GridParameters(5ul));
     }
 
     inline void add_window(const Window& w) noexcept {

@@ -1,5 +1,6 @@
 #pragma once
 #include "Window.h"
+#include "config/Layout.h"
 #include "layouts/Layout.h"
 
 #include <vector>
@@ -11,10 +12,6 @@ namespace ymwm::window {
     LayoutManager(std::vector<Window>& windows, Environment* const env)
         : m_windows(windows)
         , m_env(env) {}
-
-    inline void update(const config::layouts::Margin& screen_margins) {
-      m_basic_layout_parameters.screen_margins = screen_margins;
-    }
 
     inline void update(const layouts::Parameters& parameters) {
       m_layout_parameters = parameters;
@@ -39,6 +36,8 @@ namespace ymwm::window {
       m_basic_layout_parameters.screen_width = screen_width;
       m_basic_layout_parameters.screen_height = screen_height;
       m_basic_layout_parameters.number_of_windows = m_windows.size();
+      m_basic_layout_parameters.screen_margins =
+          config::layouts::screen_margins;
 
       auto layout =
           layouts::Layout{ .basic_parameters = m_basic_layout_parameters,
