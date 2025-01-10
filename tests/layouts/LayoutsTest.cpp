@@ -6,7 +6,9 @@
 #include "window/Window.h"
 
 #include <format>
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <variant>
 
 static inline std::string
 window_to_string(const ymwm::window::Window& w) noexcept {
@@ -425,4 +427,32 @@ TEST(TestLayouts, StackVerticalRight) {
     }
     return result;
   }();
+}
+
+TEST(TestLayouts, GetLayoutParametersFromString) {
+  auto maximised_parameters = ymwm::layouts::try_find_parameters(
+      ymwm::layouts::MaximisedParameters::type);
+  ASSERT_TRUE(maximised_parameters);
+  ASSERT_TRUE(std::holds_alternative<ymwm::layouts::MaximisedParameters>(
+      *maximised_parameters));
+
+  auto grid_parameters =
+      ymwm::layouts::try_find_parameters(ymwm::layouts::GridParameters::type);
+  ASSERT_TRUE(grid_parameters);
+  ASSERT_TRUE(
+      std::holds_alternative<ymwm::layouts::GridParameters>(*grid_parameters));
+
+  auto stack_vertical_right_parameters = ymwm::layouts::try_find_parameters(
+      ymwm::layouts::StackVerticalRight::type);
+  ASSERT_TRUE(stack_vertical_right_parameters);
+  ASSERT_TRUE(std::holds_alternative<ymwm::layouts::StackVerticalRight>(
+      *stack_vertical_right_parameters));
+}
+
+TEST(TestLayouts, GetListOfLayoutsParameters) {
+  auto parameters_list = ymwm::layouts::list_of_parameters();
+  EXPECT_THAT(parameters_list,
+              testing::ElementsAre(ymwm::layouts::MaximisedParameters::type,
+                                   ymwm::layouts::GridParameters::type,
+                                   ymwm::layouts::StackVerticalRight::type));
 }
