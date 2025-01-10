@@ -4,8 +4,7 @@
 
 namespace ymwm::layouts {
   template <>
-  void Layout::apply(const MaximisedParameters& parameters,
-                     window::Window& w) noexcept {
+  void Layout::apply(const Maximised& parameters, window::Window& w) noexcept {
     auto& [screen_width, screen_height, screen_margins, number_of_windows] =
         basic_parameters;
 
@@ -18,7 +17,7 @@ namespace ymwm::layouts {
   }
 
   template <>
-  void Layout::update(const MaximisedParameters& parameters) noexcept {
+  void Layout::update(const Maximised& parameters) noexcept {
     this->parameters = parameters;
   }
 } // namespace ymwm::layouts

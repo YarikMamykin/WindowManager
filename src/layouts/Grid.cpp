@@ -3,8 +3,7 @@
 
 namespace ymwm::layouts {
   template <>
-  void Layout::apply(const GridParameters& parameters,
-                     window::Window& w) noexcept {
+  void Layout::apply(const Grid& parameters, window::Window& w) noexcept {
     auto& [screen_width, screen_height, screen_margins, number_of_windows] =
         basic_parameters;
 
@@ -32,8 +31,7 @@ namespace ymwm::layouts {
   }
 
   template <>
-  void Layout::update(const GridParameters& parameters) noexcept {
-    this->parameters =
-        layouts::GridParameters(this->basic_parameters.number_of_windows);
+  void Layout::update(const Grid& parameters) noexcept {
+    this->parameters = layouts::Grid(this->basic_parameters.number_of_windows);
   }
 } // namespace ymwm::layouts

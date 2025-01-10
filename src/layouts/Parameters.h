@@ -9,20 +9,20 @@
 
 namespace ymwm::layouts {
 
-  struct MaximisedParameters {
+  struct Maximised {
     static constexpr inline std::string_view type{ "Maximised" };
   };
 
-  struct GridParameters {
+  struct Grid {
     static constexpr inline std::string_view type{ "Grid" };
 
     config::layouts::grid::Margins margins;
     unsigned int grid_size;
     unsigned int number_of_margins;
 
-    inline GridParameters() noexcept = default;
+    inline Grid() noexcept = default;
 
-    inline GridParameters(std::size_t number_of_windows)
+    inline Grid(std::size_t number_of_windows)
         : margins(config::layouts::grid::grid_margins) {
       // For now Grid layout uses symmetric grid,
       // meaning 2x2, 3x3 and so on.
@@ -100,8 +100,7 @@ namespace ymwm::layouts {
     }
   };
 
-  using Parameters =
-      std::variant<MaximisedParameters, GridParameters, StackVerticalRight>;
+  using Parameters = std::variant<Maximised, Grid, StackVerticalRight>;
 
   template <std::size_t Index = std::variant_size_v<Parameters> - 1ul>
   static inline std::optional<Parameters>
