@@ -36,7 +36,7 @@ TEST(TestLayouts, MaximisedLayout) {
   basic_parameters.screen_margins.top = 0u;
   basic_parameters.screen_margins.bottom = 0u;
 
-  auto parameters = ymwm::layouts::MaximisedParameters{};
+  auto parameters = ymwm::layouts::Maximised{};
 
   std::vector<ymwm::window::Window> test_windows(
       4,
@@ -83,7 +83,7 @@ TEST(TestLayouts, MaximisedLayoutWithScreenMargins) {
   basic_parameters.screen_margins.top = 1u;
   basic_parameters.screen_margins.bottom = 1u;
 
-  auto parameters = ymwm::layouts::MaximisedParameters{};
+  auto parameters = ymwm::layouts::Maximised{};
 
   std::vector<ymwm::window::Window> test_windows(
       4,
@@ -169,7 +169,7 @@ TEST(TestLayouts, GridLayout) {
   });
   ASSERT_EQ(4ul, expected_windows.size());
 
-  auto parameters = ymwm::layouts::GridParameters(test_windows.size());
+  auto parameters = ymwm::layouts::Grid(test_windows.size());
 
   auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
 
@@ -235,7 +235,7 @@ TEST(TestLayouts, GridLayout_WithScreenMargins) {
   });
   ASSERT_EQ(4ul, expected_windows.size());
 
-  auto parameters = ymwm::layouts::GridParameters(test_windows.size());
+  auto parameters = ymwm::layouts::Grid(test_windows.size());
 
   auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
 
@@ -303,7 +303,7 @@ TEST(TestLayouts, GridLayout_WithScreenMargins_AndGridMargins) {
 
   ymwm::config::layouts::grid::grid_margins.horizontal = 10u;
   ymwm::config::layouts::grid::grid_margins.vertical = 20u;
-  auto parameters = ymwm::layouts::GridParameters(test_windows.size());
+  auto parameters = ymwm::layouts::Grid(test_windows.size());
 
   auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
 
@@ -430,17 +430,16 @@ TEST(TestLayouts, StackVerticalRight) {
 }
 
 TEST(TestLayouts, GetLayoutParametersFromString) {
-  auto maximised_parameters = ymwm::layouts::try_find_parameters(
-      ymwm::layouts::MaximisedParameters::type);
+  auto maximised_parameters =
+      ymwm::layouts::try_find_parameters(ymwm::layouts::Maximised::type);
   ASSERT_TRUE(maximised_parameters);
-  ASSERT_TRUE(std::holds_alternative<ymwm::layouts::MaximisedParameters>(
-      *maximised_parameters));
+  ASSERT_TRUE(
+      std::holds_alternative<ymwm::layouts::Maximised>(*maximised_parameters));
 
   auto grid_parameters =
-      ymwm::layouts::try_find_parameters(ymwm::layouts::GridParameters::type);
+      ymwm::layouts::try_find_parameters(ymwm::layouts::Grid::type);
   ASSERT_TRUE(grid_parameters);
-  ASSERT_TRUE(
-      std::holds_alternative<ymwm::layouts::GridParameters>(*grid_parameters));
+  ASSERT_TRUE(std::holds_alternative<ymwm::layouts::Grid>(*grid_parameters));
 
   auto stack_vertical_right_parameters = ymwm::layouts::try_find_parameters(
       ymwm::layouts::StackVerticalRight::type);
@@ -452,7 +451,7 @@ TEST(TestLayouts, GetLayoutParametersFromString) {
 TEST(TestLayouts, GetListOfLayoutsParameters) {
   auto parameters_list = ymwm::layouts::list_of_parameters();
   EXPECT_THAT(parameters_list,
-              testing::ElementsAre(ymwm::layouts::MaximisedParameters::type,
-                                   ymwm::layouts::GridParameters::type,
+              testing::ElementsAre(ymwm::layouts::Maximised::type,
+                                   ymwm::layouts::Grid::type,
                                    ymwm::layouts::StackVerticalRight::type));
 }
