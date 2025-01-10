@@ -15,9 +15,8 @@ namespace ymwm::layouts {
     unsigned int grid_size;
     unsigned int number_of_margins;
 
-    inline GridParameters(config::layouts::grid::Margins margins,
-                          std::size_t number_of_windows)
-        : margins(margins) {
+    inline GridParameters(std::size_t number_of_windows)
+        : margins(config::layouts::grid::grid_margins) {
       // For now Grid layout uses symmetric grid,
       // meaning 2x2, 3x3 and so on.
       for (std::size_t n : std::ranges::views::iota(2, 11)) {

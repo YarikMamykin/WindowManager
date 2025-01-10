@@ -33,7 +33,7 @@ namespace ymwm::layouts {
 
   template <>
   void Layout::update(const GridParameters& parameters) noexcept {
-    this->parameters = layouts::GridParameters(
-        parameters.margins, this->basic_parameters.number_of_windows);
+    this->parameters =
+        layouts::GridParameters(this->basic_parameters.number_of_windows);
   }
 } // namespace ymwm::layouts
