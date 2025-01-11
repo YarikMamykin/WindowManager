@@ -16,9 +16,9 @@ namespace ymwm::common {
 
   Color::Color(unsigned long color) noexcept {
     unsigned short* component = reinterpret_cast<unsigned short*>(&color);
-    red = *component;
+    blue = *component;
     green = *(component + 1);
-    blue = *(component + 2);
+    red = *(component + 2);
   }
 
   Color::Color(const std::string_view color) noexcept {
@@ -38,6 +38,7 @@ namespace ymwm::common {
   }
 
   Color::operator std::size_t() const noexcept {
+    static constexpr auto size_of_component{ sizeof(unsigned short) * 8 };
 
     unsigned long rgb{ red };
     rgb = rgb << size_of_component;

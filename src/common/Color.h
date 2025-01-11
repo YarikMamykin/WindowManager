@@ -3,8 +3,6 @@
 
 namespace ymwm::common {
   struct Color {
-    static constinit inline auto size_of_component{ sizeof(unsigned short) *
-                                                    8 };
     unsigned short red;
     unsigned short green;
     unsigned short blue;
