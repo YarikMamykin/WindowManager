@@ -1,0 +1,15 @@
+windows:
+  focused:
+    border:
+      width: 10
+      color:
+        - 255
+        - 128
+        - 39
+  regular:
+    border:
+      width: 13
+      color:
+        - 25
+        - 12
+        - 38

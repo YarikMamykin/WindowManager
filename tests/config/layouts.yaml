@@ -1,0 +1,14 @@
+layouts:
+  screen-margins:
+    left: 1
+    right: 2
+    top: 3
+    bottom: 4
+  grid:
+    margins:
+      horizontal: 12
+      vertical: 34
+  stack-vertical-right:
+    main-window-ratio: 80
+    main-window-margin: 12
+    stack-window-margin: 11
