@@ -5,6 +5,7 @@
 #include "common/Ratio.h"
 #include "config/Layout.h"
 #include "config/Window.h"
+#include "environment/Command.h"
 #include "events/Map.h"
 
 #include <yaml-cpp/exceptions.h>
@@ -125,8 +126,9 @@ namespace ymwm::config {
     }
   }
 
-  events::Map
-  Parser::event_map_from_yaml(const YAML::Node& key_bindings) const {
+  events::Map Parser::event_map_from_yaml(const YAML::Node& key_bindings) {
+    std::set<environment::commands::Command> cmds_created;
+
     events::Map event_map = events::default_event_map();
     if (not key_bindings) {
       return event_map;
@@ -145,7 +147,8 @@ namespace ymwm::config {
       if (auto type_value = type.as<std::string>();
           events::AbstractKeyPress::type == type_value) {
 
-        auto key_press_event = binding.as<events::AbstractKeyPress>();
+        ymwm::events::Event key_press_event =
+            binding.as<events::AbstractKeyPress>();
 
         if (not binding["cmd"]) {
           throw ParsingError("Command is not specified for key binding");
@@ -161,7 +164,12 @@ namespace ymwm::config {
           utils::fill_cmd_args(*cmd, cmd_args);
         }
 
-        event_map.insert(std::make_pair(key_press_event, *cmd));
+        auto [_, no_duplicate] = cmds_created.insert(*cmd);
+        if (no_duplicate) {
+          event_map.insert(std::make_pair(key_press_event, *cmd));
+          continue;
+        }
+        m_events_removed.push_back(key_press_event);
       }
     }
 
@@ -169,4 +177,7 @@ namespace ymwm::config {
   }
 
   [[nodiscard]] events::Map Parser::event_map() const { return m_event_map; }
+  [[nodiscard]] std::list<events::Event> Parser::events_removed() const {
+    return m_events_removed;
+  }
 } // namespace ymwm::config
