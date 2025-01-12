@@ -1,5 +1,5 @@
-#include "AbstractKeyPress.h"
 #include "common/Color.h"
+#include "events/AbstractKeyPress.h"
 #include "utils.h"
 
 #include <yaml-cpp/yaml.h>
@@ -14,7 +14,7 @@ namespace YAML {
       }
 
       // Extract values from YAML node
-      auto key_code = ymwm::events::utils::key_symbol_to_code(
+      auto key_code = ymwm::config::utils::key_symbol_to_code(
           node["key"].as<std::string>());
       if (not key_code) {
         return false;
@@ -26,7 +26,7 @@ namespace YAML {
         if (not masks.IsSequence()) {
           return false;
         }
-        event.mask = ymwm::events::utils::compose_mask(masks);
+        event.mask = ymwm::config::utils::compose_mask(masks);
       }
 
       return true;

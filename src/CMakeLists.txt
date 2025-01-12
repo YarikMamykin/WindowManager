@@ -5,6 +5,7 @@ if(${NATIVE_ENVIRONMENT} STREQUAL "X11")
 endif()
 
 add_subdirectory(common)
+add_subdirectory(config)
 add_subdirectory(events)
 add_subdirectory(layouts)
 add_subdirectory(environment)
@@ -19,6 +20,7 @@ add_dependencies(${PROJECT_NAME}
 	environment
 	layouts
 	common
+	config
 )
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
@@ -26,6 +28,7 @@ target_link_libraries(${PROJECT_NAME}
 	environment
 	layouts
 	common
+	config
 )
 target_compile_options(${PROJECT_NAME}
 	PRIVATE

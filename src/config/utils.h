@@ -1,21 +1,21 @@
 #pragma once
-#include "AbstractKeyCode.h"
-#include "AbstractKeyMask.h"
 #include "common/Color.h"
 #include "environment/Command.h"
+#include "events/AbstractKeyCode.h"
+#include "events/AbstractKeyMask.h"
 
 #include <optional>
 #include <string>
 #include <unordered_map>
 #include <yaml-cpp/yaml.h>
 
-namespace ymwm::events::utils {
+namespace ymwm::config::utils {
   static inline std::optional<unsigned int>
   key_symbol_to_code(std::string&& symbol) noexcept {
     static const std::unordered_map<std::string, unsigned int>
         symbol_to_code_table{
-          { "A", AbstractKeyCode::A },
-          { "B", AbstractKeyCode::B },
+          { "A", events::AbstractKeyCode::A },
+          { "B", events::AbstractKeyCode::B },
     };
 
     return symbol_to_code_table.contains(symbol)
@@ -33,17 +33,17 @@ namespace ymwm::events::utils {
 
     static const std::unordered_map<std::string, unsigned int>
         symbol_to_code_table{
-          {  "Ctrl",  AbstractKeyMask::Ctrl },
-          {   "Alt",   AbstractKeyMask::Alt },
-          { "Shift", AbstractKeyMask::Shift },
+          {  "Ctrl",  events::AbstractKeyMask::Ctrl },
+          {   "Alt",   events::AbstractKeyMask::Alt },
+          { "Shift", events::AbstractKeyMask::Shift },
     };
     return symbol_to_code_table.contains(symbol)
                ? symbol_to_code_table.at(symbol)
-               : AbstractKeyMask::NONE;
+               : events::AbstractKeyMask::NONE;
   }
 
   static inline unsigned int compose_mask(const YAML::Node& masks) noexcept {
-    unsigned int result = AbstractKeyMask::NONE;
+    unsigned int result = events::AbstractKeyMask::NONE;
     for (const auto& mask : masks) {
       result |= mask_symbol_to_code(mask.as<std::string>());
     }
@@ -96,4 +96,4 @@ namespace ymwm::events::utils {
                cmd);
   }
 
-} // namespace ymwm::events::utils
+} // namespace ymwm::config::utils

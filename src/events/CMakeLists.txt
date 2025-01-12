@@ -1,8 +1,6 @@
-include(${DEPENDENCIES}/yaml-cpp.cmake)
-
 set(NATIVE_ENVIRONMENT_SRC)
-set(INCLUDE_DIRS ${TARGET_INCLUDE_DIRECTORY} ${YAML_INCLUDE_DIR})
-set(SHARED_LIBS ${YAML_SHARED_LIB})
+set(INCLUDE_DIRS ${TARGET_INCLUDE_DIRECTORY})
+set(SHARED_LIBS "")
 
 if(${NATIVE_ENVIRONMENT} STREQUAL "X11")
 	list(APPEND NATIVE_ENVIRONMENT_SRC x11/KeyCodes.cpp)
@@ -23,6 +21,5 @@ target_link_libraries(events PRIVATE
 	common
 )
 add_dependencies(events
-	yaml_cpp
 	common
 )

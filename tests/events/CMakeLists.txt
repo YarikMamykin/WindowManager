@@ -18,6 +18,3 @@ add_dependencies(EventsTest
 	common
 )
 add_test(NAME EventsTest COMMAND EventsTest WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/key-bindings.yaml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/key-bindings-without-masks.yaml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/key-bindings-without-cmd-specified.yaml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)

@@ -2,11 +2,13 @@
 
 #include "common/Ratio.h"
 namespace ymwm::config::layouts {
+  using MarginType = unsigned int;
+
   struct Margin {
-    unsigned int left;
-    unsigned int right;
-    unsigned int top;
-    unsigned int bottom;
+    MarginType left;
+    MarginType right;
+    MarginType top;
+    MarginType bottom;
   };
 
   constinit inline Margin screen_margins{ .left = 0u,
@@ -16,8 +18,8 @@ namespace ymwm::config::layouts {
 
   namespace grid {
     struct Margins {
-      unsigned int horizontal;
-      unsigned int vertical;
+      MarginType horizontal;
+      MarginType vertical;
     };
 
     constinit inline Margins grid_margins{ .horizontal = 0u, .vertical = 0u };
@@ -25,7 +27,7 @@ namespace ymwm::config::layouts {
 
   namespace stack_vertical_right {
     inline common::Ratio main_window_ratio{ 50 };
-    constinit inline unsigned int main_window_margin{ 5 };
-    constinit inline unsigned int stack_window_margin{ 5 };
+    constinit inline MarginType main_window_margin{ 5 };
+    constinit inline MarginType stack_window_margin{ 5 };
   } // namespace stack_vertical_right
 } // namespace ymwm::config::layouts
