@@ -6,6 +6,7 @@
 #define START_DEFINE_COMMAND(name)                                             \
   struct name {                                                                \
     static inline constexpr std::string_view type{ #name };                    \
+    inline constexpr auto operator<=>(const name&) const noexcept = default;   \
     void execute([[maybe_unused]] Environment&) const;
 
 // clang-format off

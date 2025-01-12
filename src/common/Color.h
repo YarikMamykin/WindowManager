@@ -13,7 +13,7 @@ namespace ymwm::common {
     Color(const std::string_view color) noexcept;
     operator std::size_t() const noexcept;
 
-    inline constexpr bool
+    inline constexpr auto
     operator<=>(const Color& other) const noexcept = default;
   };
 
