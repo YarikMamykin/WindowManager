@@ -54,6 +54,13 @@ namespace ymwm::events {
                     ymwm::events::AbstractKeyMask::Shift },
         ymwm::environment::commands::MoveFocusedWindowBackward{});
 
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::l,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Shift },
+        ymwm::environment::commands::ChangeLayout{});
+
     return bindings;
   }
 

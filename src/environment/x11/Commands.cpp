@@ -42,4 +42,8 @@ namespace ymwm::environment::commands {
   void MoveFocusedWindowBackward::execute(Environment& e) const {
     e.manager().move_focused_window_backward();
   }
+
+  void ChangeLayout::execute(Environment& e) const {
+    e.manager().layout().next();
+  }
 } // namespace ymwm::environment::commands
