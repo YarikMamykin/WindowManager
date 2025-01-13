@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "config/Layout.h"
 #include "layouts/Layout.h"
+#include "layouts/Parameters.h"
 
 #include <vector>
 
@@ -27,6 +28,18 @@ namespace ymwm::window {
         layout.apply(w);
         m_env->move_and_resize(w);
       }
+    }
+
+    inline void next() noexcept {
+      static constexpr auto known_layouts = layouts::list_of_parameters();
+      auto current_layout_index = m_layout_parameters.index();
+      auto next_index = current_layout_index < (known_layouts.size() - 1ul)
+                            ? current_layout_index + 1ul
+                            : 0ul;
+
+      m_layout_parameters =
+          *layouts::try_find_parameters(known_layouts.at(next_index));
+      update();
     }
 
   private:
