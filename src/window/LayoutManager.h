@@ -1,9 +1,11 @@
 #pragma once
 #include "Window.h"
+#include "common/Ratio.h"
 #include "config/Layout.h"
 #include "layouts/Layout.h"
 #include "layouts/Parameters.h"
 
+#include <variant>
 #include <vector>
 
 namespace ymwm::window {
@@ -40,6 +42,16 @@ namespace ymwm::window {
       m_layout_parameters =
           *layouts::try_find_parameters(known_layouts.at(next_index));
       update();
+    }
+
+    inline void update_main_window_ratio(int diff) {
+      if (std::holds_alternative<layouts::StackVerticalRight>(
+              m_layout_parameters)) {
+        namespace cfg = ymwm::config::layouts::stack_vertical_right;
+        cfg::main_window_ratio =
+            ymwm::common::Ratio{ cfg::main_window_ratio + diff };
+        update();
+      };
     }
 
   private:
