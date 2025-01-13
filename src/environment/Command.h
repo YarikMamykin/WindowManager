@@ -23,6 +23,8 @@ namespace ymwm::environment::commands {
   DEFINE_COMMAND(MoveFocusedWindowForward)
   DEFINE_COMMAND(MoveFocusedWindowBackward)
   DEFINE_COMMAND(ChangeLayout)
+  DEFINE_COMMAND_WITH_PARAMS_1(IncreaseMainWindowRatio, int diff{ 10 });
+  DEFINE_COMMAND_WITH_PARAMS_1(DecreaseMainWindowRatio, int diff{ 10 });
 
   using Command = std::variant<ExitRequested,
                                RunTerminal,
@@ -33,7 +35,9 @@ namespace ymwm::environment::commands {
                                FocusPrevWindow,
                                MoveFocusedWindowForward,
                                MoveFocusedWindowBackward,
-                               ChangeLayout>;
+                               ChangeLayout,
+                               IncreaseMainWindowRatio,
+                               DecreaseMainWindowRatio>;
 
   template <std::size_t Index =
                 std::variant_size_v<environment::commands::Command> - 1ul>

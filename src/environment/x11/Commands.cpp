@@ -46,4 +46,12 @@ namespace ymwm::environment::commands {
   void ChangeLayout::execute(Environment& e) const {
     e.manager().layout().next();
   }
+
+  void IncreaseMainWindowRatio::execute(Environment& e) const {
+    e.manager().layout().update_main_window_ratio(diff < 0 ? 0 - diff : diff);
+  }
+
+  void DecreaseMainWindowRatio::execute(Environment& e) const {
+    e.manager().layout().update_main_window_ratio(diff > 0 ? 0 - diff : diff);
+  }
 } // namespace ymwm::environment::commands
