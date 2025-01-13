@@ -61,6 +61,18 @@ namespace ymwm::events {
                     ymwm::events::AbstractKeyMask::Shift },
         ymwm::environment::commands::ChangeLayout{});
 
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::l,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::IncreaseMainWindowRatio{});
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::h,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::DecreaseMainWindowRatio{});
+
     return bindings;
   }
 
