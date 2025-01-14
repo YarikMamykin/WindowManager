@@ -54,4 +54,8 @@ namespace ymwm::environment::commands {
   void DecreaseMainWindowRatio::execute(Environment& e) const {
     e.manager().layout().update_main_window_ratio(diff > 0 ? 0 - diff : diff);
   }
+
+  void SwapFocusedWindowOnTop::execute(Environment& e) const {
+    e.manager().swap_focused_window_with_top();
+  }
 } // namespace ymwm::environment::commands
