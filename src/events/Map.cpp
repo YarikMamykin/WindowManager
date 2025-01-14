@@ -73,6 +73,12 @@ namespace ymwm::events {
             .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::DecreaseMainWindowRatio{});
 
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Enter,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::SwapFocusedWindowOnTop{});
+
     return bindings;
   }
 
