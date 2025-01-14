@@ -3,6 +3,7 @@
 #include <algorithm>
 
 namespace ymwm::common {
+  template <unsigned int min = 0u, unsigned int max = 100u>
   struct Ratio {
 
     inline Ratio(unsigned int value) noexcept
@@ -11,8 +12,6 @@ namespace ymwm::common {
     inline operator unsigned int() const noexcept { return m_value; }
 
   private:
-    static constexpr inline unsigned int max{ 100 };
-    static constexpr inline unsigned int min{ 0 };
     int m_value;
   };
 } // namespace ymwm::common

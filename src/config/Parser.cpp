@@ -109,7 +109,8 @@ namespace ymwm::config {
 
       if (auto main_window_ratio = stack_vertical_right["main-window-ratio"]) {
         ymwm::config::layouts::stack_vertical_right::main_window_ratio =
-            ymwm::common::Ratio(main_window_ratio.as<unsigned int>());
+            ymwm::config::layouts::stack_vertical_right::MainWindowRatioType(
+                main_window_ratio.as<unsigned int>());
       }
 
       if (auto main_window_margin =
