@@ -57,5 +57,7 @@ namespace ymwm::events {
     static Type X;
     static Type Y;
     static Type Z;
+
+    static Type Enter;
   };
 } // namespace ymwm::events
