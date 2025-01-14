@@ -123,6 +123,16 @@ namespace ymwm::window {
       }
     }
 
+    inline void swap_focused_window_with_top() noexcept {
+      if (focus().is_first_window()) {
+        return;
+      }
+
+      std::swap(m_windows.at(focus().window_index()), m_windows.at(0));
+      layout().update();
+      focus().first_window();
+    }
+
     inline FocusManager<Environment>& focus() noexcept {
       return m_focus_manager;
     }
