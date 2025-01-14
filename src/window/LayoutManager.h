@@ -49,7 +49,7 @@ namespace ymwm::window {
               m_layout_parameters)) {
         namespace cfg = ymwm::config::layouts::stack_vertical_right;
         cfg::main_window_ratio =
-            ymwm::common::Ratio{ cfg::main_window_ratio + diff };
+            cfg::MainWindowRatioType{ cfg::main_window_ratio + diff };
         update();
       };
     }
