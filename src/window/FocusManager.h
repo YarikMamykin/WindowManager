@@ -34,6 +34,21 @@ namespace ymwm::window {
       m_env->reset_focus();
     }
 
+    inline void first_window() noexcept {
+      if (m_windows.empty()) {
+        return;
+      }
+
+      update_index();
+
+      m_before_focus_move();
+
+      m_focused_window_index = 0ul;
+      update();
+
+      m_after_focus_move();
+    }
+
     inline void last_window() noexcept {
       if (m_windows.empty()) {
         return;
