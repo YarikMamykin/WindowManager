@@ -26,7 +26,8 @@ namespace ymwm::config::layouts {
   } // namespace grid
 
   namespace stack_vertical_right {
-    inline common::Ratio main_window_ratio{ 50 };
+    using MainWindowRatioType = common::Ratio<10u, 90u>;
+    inline MainWindowRatioType main_window_ratio{ 50 };
     constinit inline MarginType main_window_margin{ 5 };
     constinit inline MarginType stack_window_margin{ 5 };
   } // namespace stack_vertical_right
