@@ -11,6 +11,9 @@ namespace ymwm::layouts {
 
   struct Maximised {
     static constexpr inline std::string_view type{ "Maximised" };
+    int two_borders{ std::max(config::windows::regular_border_width,
+                              config::windows::focused_border_width) *
+                     2 };
   };
 
   struct Grid {
@@ -19,6 +22,9 @@ namespace ymwm::layouts {
     config::layouts::grid::Margins margins;
     unsigned int grid_size;
     unsigned int number_of_margins;
+    int two_borders{ std::max(config::windows::regular_border_width,
+                              config::windows::focused_border_width) *
+                     2 };
 
     inline Grid() noexcept = default;
 
@@ -41,7 +47,7 @@ namespace ymwm::layouts {
     static constexpr inline std::string_view type{ "StackVerticalRight" };
 
     int screen_height_without_margins;
-    int two_borders{ std::min(config::windows::regular_border_width,
+    int two_borders{ std::max(config::windows::regular_border_width,
                               config::windows::focused_border_width) *
                      2 };
     std::size_t number_of_stack_windows;
