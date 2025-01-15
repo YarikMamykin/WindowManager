@@ -28,6 +28,9 @@ window_to_string(const ymwm::window::Window& w) noexcept {
 static inline const ymwm::common::Color color(0xff, 0x0, 0x0);
 
 TEST(TestLayouts, MaximisedLayout) {
+  ymwm::config::windows::regular_border_width = 0;
+  ymwm::config::windows::focused_border_width = 2;
+
   ymwm::layouts::Layout::BasicParameters basic_parameters;
   basic_parameters.screen_width = 1000;
   basic_parameters.screen_height = 1000;
@@ -52,8 +55,8 @@ TEST(TestLayouts, MaximisedLayout) {
       4,
       ymwm::window::Window{ .x = 0,
                             .y = 0,
-                            .w = 998,
-                            .h = 998,
+                            .w = 996,
+                            .h = 996,
                             .border_width = 1,
                             .border_color = color });
   ASSERT_EQ(4ul, expected_windows.size());
@@ -75,6 +78,9 @@ TEST(TestLayouts, MaximisedLayout) {
 }
 
 TEST(TestLayouts, MaximisedLayoutWithScreenMargins) {
+  ymwm::config::windows::regular_border_width = 0;
+  ymwm::config::windows::focused_border_width = 2;
+
   ymwm::layouts::Layout::BasicParameters basic_parameters;
   basic_parameters.screen_width = 1000;
   basic_parameters.screen_height = 1000;
@@ -99,8 +105,8 @@ TEST(TestLayouts, MaximisedLayoutWithScreenMargins) {
       4,
       ymwm::window::Window{ .x = 1,
                             .y = 1,
-                            .w = 996,
-                            .h = 996,
+                            .w = 994,
+                            .h = 994,
                             .border_width = 1,
                             .border_color = color });
   ASSERT_EQ(4ul, expected_windows.size());
@@ -122,6 +128,9 @@ TEST(TestLayouts, MaximisedLayoutWithScreenMargins) {
 }
 
 TEST(TestLayouts, GridLayout) {
+  ymwm::config::windows::regular_border_width = 0;
+  ymwm::config::windows::focused_border_width = 2;
+
   ymwm::layouts::Layout::BasicParameters basic_parameters;
   basic_parameters.screen_width = 1000;
   basic_parameters.screen_height = 1000;
@@ -144,26 +153,26 @@ TEST(TestLayouts, GridLayout) {
   std::vector<ymwm::window::Window> expected_windows({
       ymwm::window::Window{   .x = 0,
                            .y = 0,
-                           .w = 498,
-                           .h = 498,
+                           .w = 496,
+                           .h = 496,
                            .border_width = 1,
                            .border_color = color },
       ymwm::window::Window{ .x = 500,
                            .y = 0,
-                           .w = 498,
-                           .h = 498,
+                           .w = 496,
+                           .h = 496,
                            .border_width = 1,
                            .border_color = color },
       ymwm::window::Window{   .x = 0,
                            .y = 500,
-                           .w = 498,
-                           .h = 498,
+                           .w = 496,
+                           .h = 496,
                            .border_width = 1,
                            .border_color = color },
       ymwm::window::Window{ .x = 500,
                            .y = 500,
-                           .w = 498,
-                           .h = 498,
+                           .w = 496,
+                           .h = 496,
                            .border_width = 1,
                            .border_color = color }
   });
@@ -188,6 +197,9 @@ TEST(TestLayouts, GridLayout) {
 }
 
 TEST(TestLayouts, GridLayout_WithScreenMargins) {
+  ymwm::config::windows::regular_border_width = 0;
+  ymwm::config::windows::focused_border_width = 2;
+
   ymwm::layouts::Layout::BasicParameters basic_parameters;
   basic_parameters.screen_width = 1000;
   basic_parameters.screen_height = 1000;
@@ -210,26 +222,26 @@ TEST(TestLayouts, GridLayout_WithScreenMargins) {
   std::vector<ymwm::window::Window> expected_windows({
       ymwm::window::Window{   .x = 5,
                            .y = 5,
-                           .w = 493,
-                           .h = 493,
+                           .w = 491,
+                           .h = 491,
                            .border_width = 1,
                            .border_color = color },
       ymwm::window::Window{ .x = 500,
                            .y = 5,
-                           .w = 493,
-                           .h = 493,
+                           .w = 491,
+                           .h = 491,
                            .border_width = 1,
                            .border_color = color },
       ymwm::window::Window{   .x = 5,
                            .y = 500,
-                           .w = 493,
-                           .h = 493,
+                           .w = 491,
+                           .h = 491,
                            .border_width = 1,
                            .border_color = color },
       ymwm::window::Window{ .x = 500,
                            .y = 500,
-                           .w = 493,
-                           .h = 493,
+                           .w = 491,
+                           .h = 491,
                            .border_width = 1,
                            .border_color = color }
   });
@@ -254,6 +266,9 @@ TEST(TestLayouts, GridLayout_WithScreenMargins) {
 }
 
 TEST(TestLayouts, GridLayout_WithScreenMargins_AndGridMargins) {
+  ymwm::config::windows::regular_border_width = 0;
+  ymwm::config::windows::focused_border_width = 2;
+
   ymwm::layouts::Layout::BasicParameters basic_parameters;
   basic_parameters.screen_width = 1000;
   basic_parameters.screen_height = 1000;
@@ -276,26 +291,26 @@ TEST(TestLayouts, GridLayout_WithScreenMargins_AndGridMargins) {
   std::vector<ymwm::window::Window> expected_windows({
       ymwm::window::Window{   .x = 5,
                            .y = 5,
-                           .w = 488,
-                           .h = 483,
+                           .w = 486,
+                           .h = 481,
                            .border_width = 1,
                            .border_color = color },
       ymwm::window::Window{ .x = 505,
                            .y = 5,
-                           .w = 488,
-                           .h = 483,
+                           .w = 486,
+                           .h = 481,
                            .border_width = 1,
                            .border_color = color },
       ymwm::window::Window{   .x = 5,
                            .y = 510,
-                           .w = 488,
-                           .h = 483,
+                           .w = 486,
+                           .h = 481,
                            .border_width = 1,
                            .border_color = color },
       ymwm::window::Window{ .x = 505,
                            .y = 510,
-                           .w = 488,
-                           .h = 483,
+                           .w = 486,
+                           .h = 481,
                            .border_width = 1,
                            .border_color = color }
   });
@@ -322,6 +337,9 @@ TEST(TestLayouts, GridLayout_WithScreenMargins_AndGridMargins) {
 }
 
 TEST(TestLayouts, StackVerticalRight) {
+  ymwm::config::windows::regular_border_width = 0;
+  ymwm::config::windows::focused_border_width = 2;
+
   ymwm::layouts::Layout::BasicParameters basic_parameters;
   basic_parameters.screen_width = 1000;
   basic_parameters.screen_height = 1000;
