@@ -1,5 +1,6 @@
+#include "Maximized.h"
+
 #include "Layout.h"
-#include "layouts/Parameters.h"
 #include "window/Window.h"
 
 namespace ymwm::layouts {
