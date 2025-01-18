@@ -64,7 +64,7 @@ namespace ymwm::layouts {
                               int screen_width,
                               int screen_height,
                               std::size_t number_of_windows) {
-      namespace cfg = ymwm::config::layouts::stack_vertical_right;
+      namespace cfg = ymwm::config::layouts::stack_vertical;
       int double_two_borders{ 2 * two_borders };
 
       last_iteration = number_of_windows - 1ul;
@@ -126,7 +126,7 @@ namespace ymwm::layouts {
                              int screen_width,
                              int screen_height,
                              std::size_t number_of_windows) {
-      namespace cfg = ymwm::config::layouts::stack_vertical_right;
+      namespace cfg = ymwm::config::layouts::stack_vertical;
       int double_two_borders{ 2 * two_borders };
 
       last_iteration = number_of_windows - 1ul;

@@ -22,7 +22,7 @@ namespace ymwm::layouts {
                  main_window_width,
                  main_window_height] = parameters;
 
-    namespace cfg = ymwm::config::layouts::stack_vertical_right;
+    namespace cfg = ymwm::config::layouts::stack_vertical;
 
     if (0ul == iteration) {
       w.x = screen_margins.left;

@@ -105,23 +105,21 @@ namespace ymwm::config {
       }
     }
 
-    if (auto stack_vertical_right = layouts["stack-vertical-right"]) {
+    if (auto stack_vertical = layouts["stack-vertical-right"]) {
 
-      if (auto main_window_ratio = stack_vertical_right["main-window-ratio"]) {
-        ymwm::config::layouts::stack_vertical_right::main_window_ratio =
-            ymwm::config::layouts::stack_vertical_right::MainWindowRatioType(
+      if (auto main_window_ratio = stack_vertical["main-window-ratio"]) {
+        ymwm::config::layouts::stack_vertical::main_window_ratio =
+            ymwm::config::layouts::stack_vertical::MainWindowRatioType(
                 main_window_ratio.as<unsigned int>());
       }
 
-      if (auto main_window_margin =
-              stack_vertical_right["main-window-margin"]) {
-        ymwm::config::layouts::stack_vertical_right::main_window_margin =
+      if (auto main_window_margin = stack_vertical["main-window-margin"]) {
+        ymwm::config::layouts::stack_vertical::main_window_margin =
             main_window_margin.as<MarginType>();
       }
 
-      if (auto stack_window_margin =
-              stack_vertical_right["stack-window-margin"]) {
-        ymwm::config::layouts::stack_vertical_right::stack_window_margin =
+      if (auto stack_window_margin = stack_vertical["stack-window-margin"]) {
+        ymwm::config::layouts::stack_vertical::stack_window_margin =
             stack_window_margin.as<MarginType>();
       }
     }
