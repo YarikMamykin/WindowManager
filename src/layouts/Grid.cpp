@@ -1,7 +1,28 @@
+#include "Grid.h"
+
 #include "Layout.h"
 #include "window/Window.h"
 
+#include <ranges>
+
 namespace ymwm::layouts {
+
+  Grid::Grid() noexcept = default;
+
+  Grid::Grid(std::size_t number_of_windows)
+      : margins(config::layouts::grid::grid_margins) {
+    // For now Grid layout uses symmetric grid,
+    // meaning 2x2, 3x3 and so on.
+    for (std::size_t n : std::ranges::views::iota(2, 11)) {
+      if (number_of_windows <= (n * n)) {
+        grid_size = n;
+        break;
+      }
+    }
+
+    number_of_margins = grid_size - 1u;
+  }
+
   template <>
   void Layout::apply(const Grid& parameters, window::Window& w) noexcept {
     auto& [screen_width, screen_height, screen_margins, number_of_windows] =
