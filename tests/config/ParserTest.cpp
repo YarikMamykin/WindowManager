@@ -75,11 +75,9 @@ TEST(TestLayoutsConfig, EachLayoutConfig) {
   EXPECT_EQ(4, ymwm::config::layouts::screen_margins.bottom);
   EXPECT_EQ(12, ymwm::config::layouts::grid::grid_margins.horizontal);
   EXPECT_EQ(34, ymwm::config::layouts::grid::grid_margins.vertical);
-  EXPECT_EQ(80, ymwm::config::layouts::stack_vertical_right::main_window_ratio);
-  EXPECT_EQ(12,
-            ymwm::config::layouts::stack_vertical_right::main_window_margin);
-  EXPECT_EQ(11,
-            ymwm::config::layouts::stack_vertical_right::stack_window_margin);
+  EXPECT_EQ(80, ymwm::config::layouts::stack_vertical::main_window_ratio);
+  EXPECT_EQ(12, ymwm::config::layouts::stack_vertical::main_window_margin);
+  EXPECT_EQ(11, ymwm::config::layouts::stack_vertical::stack_window_margin);
 }
 
 TEST(TestLayoutsConfig, EachWindowConfig) {

@@ -46,8 +46,10 @@ namespace ymwm::window {
 
     inline void update_main_window_ratio(int diff) {
       if (std::holds_alternative<layouts::StackVerticalRight>(
+              m_layout_parameters) or
+          std::holds_alternative<layouts::StackVerticalLeft>(
               m_layout_parameters)) {
-        namespace cfg = ymwm::config::layouts::stack_vertical_right;
+        namespace cfg = ymwm::config::layouts::stack_vertical;
         cfg::main_window_ratio =
             cfg::MainWindowRatioType{ cfg::main_window_ratio + diff };
         update();
