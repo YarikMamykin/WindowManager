@@ -1,6 +1,7 @@
 #pragma once
 #include "Grid.h"
 #include "Maximized.h"
+#include "ParallelHorizontal.h"
 #include "StackVerticalLeft.h"
 #include "StackVerticalRight.h"
 
