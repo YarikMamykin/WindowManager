@@ -31,4 +31,8 @@ namespace ymwm::config::layouts {
     constinit inline MarginType main_window_margin{ 5 };
     constinit inline MarginType stack_window_margin{ 5 };
   } // namespace stack_vertical
+
+  namespace parallel {
+    constinit inline MarginType margin{ 2 };
+  }
 } // namespace ymwm::config::layouts
