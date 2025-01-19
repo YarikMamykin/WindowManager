@@ -1,6 +1,8 @@
 #pragma once
 #include "Grid.h"
 #include "Maximized.h"
+#include "ParallelHorizontal.h"
+#include "ParallelVertical.h"
 #include "StackVerticalLeft.h"
 #include "StackVerticalRight.h"
 
@@ -11,8 +13,12 @@
 
 namespace ymwm::layouts {
 
-  using Parameters =
-      std::variant<Maximised, Grid, StackVerticalRight, StackVerticalLeft>;
+  using Parameters = std::variant<Maximised,
+                                  Grid,
+                                  StackVerticalRight,
+                                  StackVerticalLeft,
+                                  ParallelVertical,
+                                  ParallelHorizontal>;
 
   template <std::size_t Index = std::variant_size_v<Parameters> - 1ul>
   static inline std::optional<Parameters>
