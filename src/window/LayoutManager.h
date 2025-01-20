@@ -4,6 +4,8 @@
 #include "config/Layout.h"
 #include "layouts/Layout.h"
 #include "layouts/Parameters.h"
+#include "layouts/StackHorizontalBottom.h"
+#include "layouts/StackHorizontalTop.h"
 
 #include <variant>
 #include <vector>
@@ -50,6 +52,16 @@ namespace ymwm::window {
           std::holds_alternative<layouts::StackVerticalLeft>(
               m_layout_parameters)) {
         namespace cfg = ymwm::config::layouts::stack_vertical;
+        cfg::main_window_ratio =
+            cfg::MainWindowRatioType{ cfg::main_window_ratio + diff };
+        update();
+      };
+
+      if (std::holds_alternative<layouts::StackHorizontalTop>(
+              m_layout_parameters) or
+          std::holds_alternative<layouts::StackHorizontalBottom>(
+              m_layout_parameters)) {
+        namespace cfg = ymwm::config::layouts::stack_horizontal;
         cfg::main_window_ratio =
             cfg::MainWindowRatioType{ cfg::main_window_ratio + diff };
         update();
