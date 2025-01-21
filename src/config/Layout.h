@@ -32,6 +32,13 @@ namespace ymwm::config::layouts {
     constinit inline MarginType stack_window_margin{ 5 };
   } // namespace stack_vertical
 
+  namespace stack_horizontal {
+    using MainWindowRatioType = common::Ratio<10u, 90u>;
+    inline MainWindowRatioType main_window_ratio{ 50 };
+    constinit inline MarginType main_window_margin{ 5 };
+    constinit inline MarginType stack_window_margin{ 5 };
+  } // namespace stack_horizontal
+
   namespace parallel {
     constinit inline MarginType margin{ 2 };
   }

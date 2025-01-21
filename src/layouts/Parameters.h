@@ -3,6 +3,8 @@
 #include "Maximized.h"
 #include "ParallelHorizontal.h"
 #include "ParallelVertical.h"
+#include "StackHorizontalBottom.h"
+#include "StackHorizontalTop.h"
 #include "StackVerticalLeft.h"
 #include "StackVerticalRight.h"
 
@@ -17,6 +19,8 @@ namespace ymwm::layouts {
                                   Grid,
                                   StackVerticalRight,
                                   StackVerticalLeft,
+                                  StackHorizontalTop,
+                                  StackHorizontalBottom,
                                   ParallelVertical,
                                   ParallelHorizontal>;
 
