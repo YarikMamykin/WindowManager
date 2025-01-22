@@ -7,6 +7,7 @@
 #include "StackHorizontalTop.h"
 #include "StackVerticalLeft.h"
 #include "StackVerticalRight.h"
+#include "layouts/StackVerticalDouble.h"
 
 #include <array>
 #include <optional>
@@ -19,6 +20,7 @@ namespace ymwm::layouts {
                                   Grid,
                                   StackVerticalRight,
                                   StackVerticalLeft,
+                                  StackVerticalDouble,
                                   StackHorizontalTop,
                                   StackHorizontalBottom,
                                   ParallelVertical,
