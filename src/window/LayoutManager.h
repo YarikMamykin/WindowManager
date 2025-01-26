@@ -50,6 +50,8 @@ namespace ymwm::window {
       if (std::holds_alternative<layouts::StackVerticalRight>(
               m_layout_parameters) or
           std::holds_alternative<layouts::StackVerticalLeft>(
+              m_layout_parameters) or
+          std::holds_alternative<layouts::StackVerticalDouble>(
               m_layout_parameters)) {
         namespace cfg = ymwm::config::layouts::stack_vertical;
         cfg::main_window_ratio =
@@ -60,6 +62,8 @@ namespace ymwm::window {
       if (std::holds_alternative<layouts::StackHorizontalTop>(
               m_layout_parameters) or
           std::holds_alternative<layouts::StackHorizontalBottom>(
+              m_layout_parameters) or
+          std::holds_alternative<layouts::StackHorizontalDouble>(
               m_layout_parameters)) {
         namespace cfg = ymwm::config::layouts::stack_horizontal;
         cfg::main_window_ratio =
