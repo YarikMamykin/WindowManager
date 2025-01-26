@@ -15,6 +15,7 @@ namespace ymwm::layouts {
     namespace cfg = ymwm::config::layouts::stack_horizontal;
 
     last_iteration = number_of_windows - 1ul;
+    std::size_t number_of_stack_windows = number_of_windows - 1ul;
 
     int height_without_margins_and_borders =
         screen_height - screen_margins.top - screen_margins.bottom -
@@ -22,16 +23,20 @@ namespace ymwm::layouts {
     main_window_width =
         screen_width - screen_margins.left - screen_margins.right - two_borders;
     main_window_height =
-        height_without_margins_and_borders * cfg::main_window_ratio / 100;
+        number_of_stack_windows > 0ul
+            ? height_without_margins_and_borders * cfg::main_window_ratio / 100
+            : (screen_height - screen_margins.top - screen_margins.bottom -
+               two_borders);
 
-    std::size_t number_of_stack_windows = number_of_windows - 1ul;
     stack_window_h = height_without_margins_and_borders *
                      (100 - cfg::main_window_ratio) / 100;
-    stack_window_w =
-        (screen_width - screen_margins.left - screen_margins.right -
-         (number_of_windows * two_borders) -
-         (number_of_stack_windows - 1ul) * cfg::stack_window_margin) /
-        (number_of_stack_windows);
+    if (number_of_stack_windows > 0ul) {
+      stack_window_w =
+          (screen_width - screen_margins.left - screen_margins.right -
+           (number_of_windows * two_borders) -
+           (number_of_stack_windows - 1ul) * cfg::stack_window_margin) /
+          (number_of_stack_windows);
+    }
   }
 
   template <>
@@ -53,8 +58,10 @@ namespace ymwm::layouts {
 
     if (0ul == iteration) {
       w.x = screen_margins.left;
-      w.y = screen_margins.top + cfg::main_window_margin + two_borders +
-            stack_window_h;
+      w.y = number_of_windows > 1ul
+                ? screen_margins.top + cfg::main_window_margin + two_borders +
+                      stack_window_h
+                : screen_margins.top;
       w.w = main_window_width;
       w.h = main_window_height;
       return;
