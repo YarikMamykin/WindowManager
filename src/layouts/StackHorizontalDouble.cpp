@@ -39,14 +39,22 @@ namespace ymwm::layouts {
         width_without_margins - (number_of_windows_per_stack * two_borders) -
         (cfg::stack_window_margin * (number_of_windows_per_stack - 1ul));
 
-    stack_window_w = stack_windows_width_without_margins_and_borders /
-                     number_of_windows_per_stack;
+    stack_window_w = number_of_stack_windows > 0ul
+                         ? stack_windows_width_without_margins_and_borders /
+                               number_of_windows_per_stack
+                         : 0;
 
     main_window_w = width_without_margins - two_borders;
     main_window_h =
-        height_without_margins_borders * cfg::main_window_ratio / 100;
-    main_window_y = screen_margins.top + two_borders + cfg::main_window_margin +
-                    stack_window_h;
+        number_of_stack_windows > 0ul
+            ? height_without_margins_borders * cfg::main_window_ratio / 100
+            : (screen_height - screen_margins.top - screen_margins.bottom -
+               two_borders);
+    main_window_y =
+        screen_margins.top +
+        (number_of_stack_windows > 0ul
+             ? two_borders + cfg::main_window_margin + stack_window_h
+             : 0);
   }
 
   template <>
