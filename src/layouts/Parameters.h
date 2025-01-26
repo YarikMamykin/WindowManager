@@ -4,7 +4,9 @@
 #include "ParallelHorizontal.h"
 #include "ParallelVertical.h"
 #include "StackHorizontalBottom.h"
+#include "StackHorizontalDouble.h"
 #include "StackHorizontalTop.h"
+#include "StackVerticalDouble.h"
 #include "StackVerticalLeft.h"
 #include "StackVerticalRight.h"
 
@@ -19,8 +21,10 @@ namespace ymwm::layouts {
                                   Grid,
                                   StackVerticalRight,
                                   StackVerticalLeft,
+                                  StackVerticalDouble,
                                   StackHorizontalTop,
                                   StackHorizontalBottom,
+                                  StackHorizontalDouble,
                                   ParallelVertical,
                                   ParallelHorizontal>;
 
