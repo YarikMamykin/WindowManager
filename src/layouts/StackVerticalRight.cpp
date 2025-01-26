@@ -46,9 +46,12 @@ namespace ymwm::layouts {
                          cfg::main_window_ratio / 100 +
                      two_borders + cfg::main_window_margin;
 
-    main_window_width = (screen_width_without_margins -
-                         cfg::main_window_margin - double_two_borders) *
-                        cfg::main_window_ratio / 100;
+    main_window_width = number_of_stack_windows > 0ul
+                            ? (screen_width_without_margins -
+                               cfg::main_window_margin - double_two_borders) *
+                                  cfg::main_window_ratio / 100
+                            : (screen_width - screen_margins.left -
+                               screen_margins.right - two_borders);
 
     main_window_height = screen_height_without_margins - two_borders;
   }
