@@ -11,6 +11,12 @@ executors:
     working_directory: /workspace
 
 jobs:
+  check_version_increment:
+    executor: archexecutor
+    steps:
+      - checkout
+      - run:
+          command: export TAG=$(git tag --sort=version:refname | tail -1); export CURRENT_VERSION=$(cat CMakeLists.txt | grep VERSION | sed -n 's/.*VERSION \([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p'); if [ "$TAG" = "$CURRENT_VERSION" ]; then exit 1; fi;
   lint:
     executor: archexecutor
     steps:
@@ -44,6 +50,7 @@ jobs:
 workflows:
   windowmanager:
     jobs:
+      - check_version_increment
       - lint
       - build
       - tests:
