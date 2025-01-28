@@ -31,7 +31,7 @@ namespace ymwm::window {
         , m_layout_manager(m_windows, env) {
       m_windows.reserve(5);
 
-      layout().update(layouts::Grid(5ul));
+      layout().update(layouts::Maximised{});
     }
 
     inline void add_window(const Window& w) noexcept {
