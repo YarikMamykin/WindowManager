@@ -1,5 +1,6 @@
 #include "environment/Command.h"
 #include "environment/Environment.h"
+#include "layouts/Parameters.h"
 
 #include <cstdlib>
 #include <thread>
@@ -45,6 +46,11 @@ namespace ymwm::environment::commands {
 
   void ChangeLayout::execute(Environment& e) const {
     e.manager().layout().next();
+  }
+
+  void SetLayout::execute(Environment& e) const {
+    e.manager().layout().update(*ymwm::layouts::try_find_parameters(layout));
+    e.manager().layout().update();
   }
 
   void IncreaseMainWindowRatio::execute(Environment& e) const {

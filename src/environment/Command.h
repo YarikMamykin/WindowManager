@@ -5,6 +5,7 @@
 
 #include <optional>
 #include <string>
+#include <string_view>
 #include <variant>
 
 namespace ymwm::environment {
@@ -23,6 +24,7 @@ namespace ymwm::environment::commands {
   DEFINE_COMMAND(MoveFocusedWindowForward)
   DEFINE_COMMAND(MoveFocusedWindowBackward)
   DEFINE_COMMAND(ChangeLayout)
+  DEFINE_COMMAND_WITH_PARAMS_1(SetLayout, std::string_view layout);
   DEFINE_COMMAND_WITH_PARAMS_1(IncreaseMainWindowRatio, int diff{ 10 });
   DEFINE_COMMAND_WITH_PARAMS_1(DecreaseMainWindowRatio, int diff{ 10 });
   DEFINE_COMMAND(SwapFocusedWindowOnTop)
@@ -37,6 +39,7 @@ namespace ymwm::environment::commands {
                                MoveFocusedWindowForward,
                                MoveFocusedWindowBackward,
                                ChangeLayout,
+                               SetLayout,
                                IncreaseMainWindowRatio,
                                DecreaseMainWindowRatio,
                                SwapFocusedWindowOnTop>;
