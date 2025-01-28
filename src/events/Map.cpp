@@ -4,6 +4,9 @@
 #include "AbstractKeyMask.h"
 #include "environment/Command.h"
 #include "events/AbstractKeyPress.h"
+#include "layouts/Grid.h"
+#include "layouts/Maximized.h"
+#include "layouts/StackVerticalDouble.h"
 
 namespace ymwm::events {
   Map default_event_map() noexcept {
@@ -78,6 +81,26 @@ namespace ymwm::events {
             .code = ymwm::events::AbstractKeyCode::Enter,
             .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::SwapFocusedWindowOnTop{});
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::g,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::SetLayout{ ymwm::layouts::Grid::type });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::m,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::SetLayout{
+            ymwm::layouts::Maximised::type });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::s,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::SetLayout{
+            ymwm::layouts::StackVerticalDouble::type });
 
     return bindings;
   }
