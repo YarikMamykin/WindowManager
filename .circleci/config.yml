@@ -50,12 +50,11 @@ jobs:
   update_tag:
     executor: archexecutor
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "SHA256:fFImZCmmcPq6AMFKXIA2hZ0uHMqv2QsW/0P2URERi28"
       - checkout
       - attach_workspace:
           at: /workspace
+      - run:
+          command: echo "$SSH_GITHUB_KEY" | tr -d '\r' | ssh-add - mkdir -p ~/.ssh chmod 700 ~/.ssh ssh-keyscan github.com >> ~/.ssh/known_hosts chmod 644 ~/.ssh/known_hosts
       - run:
           command: git config --global user.email "ymamykin@gmail.com"
       - run:
