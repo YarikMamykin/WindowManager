@@ -102,6 +102,12 @@ namespace ymwm::events {
         ymwm::environment::commands::SetLayout{
             ymwm::layouts::StackVerticalDouble::type });
 
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::r,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::RunTerminal{ "/usr/bin/dmenu_run" });
+
     return bindings;
   }
 
