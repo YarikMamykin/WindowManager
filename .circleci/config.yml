@@ -47,6 +47,15 @@ jobs:
       - run:
           command: ctest --test-dir Debug/tests --verbose
 
+  update_tag:
+    executor: archexecutor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /workspace
+      - run:
+          command: export NEW_TAG=$(cat CMakeLists.txt | grep VERSION | sed -n 's/.*VERSION \([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p'); git tag -a $NEW_TAG -m $NEW_TAG; git push origin --tags;
+
 workflows:
   windowmanager:
     jobs:
@@ -56,3 +65,8 @@ workflows:
       - tests:
           requires:
             - build
+      - update_tag:
+          filters:
+            branches:
+              only:
+                - main
