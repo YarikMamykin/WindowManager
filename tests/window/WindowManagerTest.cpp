@@ -501,3 +501,31 @@ TEST(TestWindowManager, SwapFocusedWindowWithTopOne) {
               .border_width = ymwm::config::windows::regular_border_width,
               .border_color = regular_color }));
 }
+
+TEST(TestWindowManager, TestFocusWindowById) {
+  ymwm::environment::TestEnvironment tenv;
+  ON_CALL(tenv, screen_width_and_height)
+      .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
+
+  ymwm::window::Manager m{ &tenv };
+  m.layout().update(ymwm::layouts::Maximised{});
+
+  m.add_window(ymwm::window::Window{ .id = 1 });
+  m.add_window(ymwm::window::Window{ .id = 2 });
+  m.add_window(ymwm::window::Window{ .id = 3 });
+
+  ASSERT_EQ(3ul, m.windows().size());
+  ASSERT_EQ(3, m.focus().window()->get().id);
+
+  EXPECT_CALL(tenv, update_window_border).Times(2);
+  EXPECT_CALL(tenv, focus_window).Times(1);
+
+  m.focus().window(2);
+  ASSERT_EQ(2, m.focus().window()->get().id);
+
+  EXPECT_CALL(tenv, update_window_border).Times(2);
+  EXPECT_CALL(tenv, focus_window).Times(1);
+
+  m.focus().window(1);
+  ASSERT_EQ(1, m.focus().window()->get().id);
+}
