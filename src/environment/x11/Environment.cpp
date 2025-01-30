@@ -111,6 +111,13 @@ namespace ymwm::environment {
       }
       break;
     }
+    case EnterNotify: {
+      if (NotifyNormal == event.xcrossing.mode and
+          NotifyInferior != event.xcrossing.detail) {
+        m_manager.focus().window(event.xcrossing.window);
+      }
+      break;
+    }
     case MapRequest: {
       XWindowAttributes wa;
       auto w = event.xmaprequest.window;

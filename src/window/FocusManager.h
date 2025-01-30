@@ -1,8 +1,11 @@
 #pragma once
 
 #include "Window.h"
+#include "environment/ID.h"
 
+#include <algorithm>
 #include <functional>
+#include <iterator>
 #include <optional>
 #include <vector>
 
@@ -68,6 +71,30 @@ namespace ymwm::window {
       return m_windows.empty() ? FocusedWindow{ std::nullopt }
                                : FocusedWindow{ const_cast<Window&>(
                                      m_windows.at(m_focused_window_index)) };
+    }
+
+    inline void window(environment::ID wid) noexcept {
+      if (m_windows.empty()) {
+        return;
+      }
+
+      auto found_window =
+          std::find_if(m_windows.cbegin(),
+                       m_windows.cend(),
+                       [wid](const auto& w) -> bool { return wid == w.id; });
+
+      if (m_windows.cend() == found_window) {
+        return;
+      }
+
+      update_index();
+
+      m_before_focus_move();
+
+      m_focused_window_index = std::distance(m_windows.cbegin(), found_window);
+      update();
+
+      m_after_focus_move();
     }
 
     inline void next_window() noexcept {
