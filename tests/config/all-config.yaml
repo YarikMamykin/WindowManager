@@ -1,0 +1,48 @@
+layouts:
+  screen-margins:
+    left: 1
+    right: 2
+    top: 3
+    bottom: 4
+  grid:
+    margins:
+      horizontal: 12
+      vertical: 34
+  stack-vertical-right:
+    main-window-ratio: 80
+    main-window-margin: 12
+    stack-window-margin: 11
+
+windows:
+  focused:
+    border:
+      width: 10
+      color:
+        - 255
+        - 128
+        - 39
+  regular:
+    border:
+      width: 13
+      color:
+        - 25
+        - 12
+        - 38
+
+key-bindings:
+  - type: press
+    key: A
+    masks:
+      - Ctrl
+      - Shift
+    cmd:
+      name: RunTerminal
+      args:
+        path: /bin/sh
+
+  - type: press
+    key: B
+    masks:
+      - Ctrl
+    cmd:
+      name: ExitRequested

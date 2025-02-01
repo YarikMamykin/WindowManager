@@ -7,12 +7,10 @@ add_custom_command(OUTPUT ${ARGPARSE_DIR}
 	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 
-get_build_type(build_type)
-
 add_custom_command(OUTPUT ${ARGPARSE_INCLUDE_DIR}
-	COMMAND cmake -S . -B ${build_type} -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
-	COMMAND cmake --build ${build_type} --parallel
-	COMMAND cmake --install ${build_type}
+	COMMAND cmake -S . -B ${CMAKE_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+	COMMAND cmake --build ${CMAKE_BUILD_TYPE} --parallel
+	COMMAND cmake --install ${CMAKE_BUILD_TYPE}
 	DEPENDS ${ARGPARSE_DIR}
 	WORKING_DIRECTORY ${ARGPARSE_DIR}
 )

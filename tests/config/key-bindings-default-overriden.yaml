@@ -1,0 +1,15 @@
+key-bindings:
+  - type: press
+    key: e
+    masks:
+      - Ctrl
+    cmd:
+      name: CloseWindow
+
+  - type: press
+    key: l
+    masks:
+      - Alt
+      - Shift
+    cmd:
+      name: ExitRequested

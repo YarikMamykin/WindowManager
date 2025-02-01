@@ -2,12 +2,12 @@
 
 #include "YamlModels.h"
 #include "common/Color.h"
-#include "common/Ratio.h"
 #include "config/Layout.h"
 #include "config/Window.h"
 #include "environment/Command.h"
 #include "events/Map.h"
 
+#include <algorithm>
 #include <yaml-cpp/exceptions.h>
 #include <yaml-cpp/yaml.h>
 
@@ -126,9 +126,13 @@ namespace ymwm::config {
   }
 
   events::Map Parser::event_map_from_yaml(const YAML::Node& key_bindings) {
-    std::set<environment::commands::Command> cmds_created;
-
     events::Map event_map = events::default_event_map();
+
+    std::set<environment::commands::Command> cmds_created;
+    for (const auto& event_to_cmd : event_map) {
+      cmds_created.insert(event_to_cmd.second);
+    }
+
     if (not key_bindings) {
       return event_map;
     }
@@ -164,11 +168,26 @@ namespace ymwm::config {
         }
 
         auto [_, no_duplicate] = cmds_created.insert(*cmd);
+        event_map[key_press_event] = *cmd;
+
         if (no_duplicate) {
-          event_map.insert(std::make_pair(key_press_event, *cmd));
           continue;
         }
-        m_events_removed.push_back(key_press_event);
+
+        // If duplicated command spotted,
+        // remove all previous occasions except last one,
+        // which should override the value.
+        if (auto found_event_to_cmd = std::find_if(
+                event_map.begin(),
+                event_map.end(),
+                [&cmd, &key_press_event](const auto& mapping) -> bool {
+                  return cmd == mapping.second and
+                         key_press_event != mapping.first;
+                });
+            event_map.end() != found_event_to_cmd) {
+          m_events_removed.push_back(found_event_to_cmd->first);
+          event_map.erase(found_event_to_cmd);
+        }
       }
     }
 

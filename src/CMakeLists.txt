@@ -1,5 +1,7 @@
 set(TARGET_INCLUDE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
+include(${DEPENDENCIES}/argparse.cmake)
+
 if(${NATIVE_ENVIRONMENT} STREQUAL "X11")
 	include(${DEPENDENCIES}/x11.cmake)
 endif()
@@ -14,6 +16,7 @@ add_executable(${PROJECT_NAME} main.cpp)
 target_include_directories(${PROJECT_NAME}
 	PRIVATE
 	${TARGET_INCLUDE_DIRECTORY}
+	${ARGPARSE_INCLUDE_DIR}
 )
 add_dependencies(${PROJECT_NAME}
 	events
@@ -21,6 +24,7 @@ add_dependencies(${PROJECT_NAME}
 	layouts
 	common
 	config
+	argparse_lib 
 )
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
