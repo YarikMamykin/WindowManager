@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "common/Ratio.h"
 #include "config/Layout.h"
+#include "layouts/Centered.h"
 #include "layouts/Layout.h"
 #include "layouts/Parameters.h"
 #include "layouts/StackHorizontalBottom.h"
@@ -70,6 +71,13 @@ namespace ymwm::window {
             cfg::MainWindowRatioType{ cfg::main_window_ratio + diff };
         update();
       };
+
+      if (std::holds_alternative<layouts::Centered>(m_layout_parameters)) {
+        namespace cfg = ymwm::config::layouts::centered;
+        cfg::window_width_ratio =
+            cfg::WindowWidthRatioType{ cfg::window_width_ratio + diff };
+        update();
+      }
     }
 
   private:
