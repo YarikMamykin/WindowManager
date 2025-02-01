@@ -42,4 +42,9 @@ namespace ymwm::config::layouts {
   namespace parallel {
     constinit inline MarginType margin{ 2 };
   }
+
+  namespace centered {
+    using WindowWidthRatioType = common::Ratio<50u, 100u>;
+    inline WindowWidthRatioType window_width_ratio{ 80 };
+  } // namespace centered
 } // namespace ymwm::config::layouts
