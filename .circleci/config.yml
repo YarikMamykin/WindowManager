@@ -66,7 +66,10 @@ jobs:
 workflows:
   windowmanager:
     jobs:
-      - check_version_increment
+      - check_version_increment:
+          filters:
+            branches:
+              ignore: main
       - lint
       - build
       - tests:
