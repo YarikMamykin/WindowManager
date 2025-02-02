@@ -2,6 +2,7 @@
 
 #include "AbstractKeyCode.h"
 #include "AbstractKeyMask.h"
+#include "common/Direction.h"
 #include "environment/Command.h"
 #include "events/AbstractKeyPress.h"
 #include "layouts/Grid.h"
@@ -107,6 +108,37 @@ namespace ymwm::events {
             .code = ymwm::events::AbstractKeyCode::R,
             .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::RunTerminal{ "/usr/bin/dmenu_run" });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::J,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Ctrl },
+        ymwm::environment::commands::MoveFocusOnGrid{
+            common::Direction::Down });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::K,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Ctrl },
+        ymwm::environment::commands::MoveFocusOnGrid{ common::Direction::Up });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::H,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Ctrl },
+        ymwm::environment::commands::MoveFocusOnGrid{
+            common::Direction::Left });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::L,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Ctrl },
+        ymwm::environment::commands::MoveFocusOnGrid{
+            common::Direction::Right });
 
     return bindings;
   }

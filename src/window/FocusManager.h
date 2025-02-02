@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Window.h"
+#include "common/Direction.h"
 #include "environment/ID.h"
 
 #include <algorithm>
@@ -142,12 +143,55 @@ namespace ymwm::window {
       return not m_windows.empty() and m_focused_window_index == 0ul;
     }
 
+    inline void move_on_grid(common::Direction direction,
+                             std::size_t grid_size,
+                             std::size_t number_of_windows) noexcept {
+      switch (direction) {
+      case common::Direction::Left:
+        if (0 != (m_focused_window_index % grid_size)) {
+          move_focus_to_index(m_focused_window_index - 1);
+        }
+        break;
+      case common::Direction::Right:
+        if ((grid_size - 1ul) != (m_focused_window_index % grid_size) and
+            number_of_windows > (m_focused_window_index + 1)) {
+          move_focus_to_index(m_focused_window_index + 1);
+        }
+        break;
+      case common::Direction::Up:
+        if (m_focused_window_index >= grid_size) {
+          move_focus_to_index(m_focused_window_index - grid_size);
+        }
+        break;
+      case common::Direction::Down:
+        if ((m_focused_window_index + grid_size) < number_of_windows) {
+          move_focus_to_index(m_focused_window_index + grid_size);
+        }
+        break;
+      }
+    }
+
   private:
     inline void update_index() noexcept {
       if (m_focused_window_index >= m_windows.size() and
           not m_windows.empty()) {
         m_focused_window_index = m_windows.size() - 1ul;
       }
+    }
+
+    inline void move_focus_to_index(std::size_t index) noexcept {
+      if (m_windows.empty()) {
+        return;
+      }
+
+      update_index();
+
+      m_before_focus_move();
+
+      m_focused_window_index = index;
+      update();
+
+      m_after_focus_move();
     }
 
   private:

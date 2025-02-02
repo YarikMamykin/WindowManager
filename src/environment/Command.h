@@ -2,6 +2,7 @@
 
 #include "CommandMacro.h"
 #include "common/Color.h"
+#include "common/Direction.h"
 
 #include <optional>
 #include <string>
@@ -28,6 +29,7 @@ namespace ymwm::environment::commands {
   DEFINE_COMMAND_WITH_PARAMS_1(IncreaseMainWindowRatio, int diff{ 10 });
   DEFINE_COMMAND_WITH_PARAMS_1(DecreaseMainWindowRatio, int diff{ 10 });
   DEFINE_COMMAND(SwapFocusedWindowOnTop)
+  DEFINE_COMMAND_WITH_PARAMS_1(MoveFocusOnGrid, common::Direction direction);
 
   using Command = std::variant<ExitRequested,
                                RunTerminal,
@@ -42,7 +44,8 @@ namespace ymwm::environment::commands {
                                SetLayout,
                                IncreaseMainWindowRatio,
                                DecreaseMainWindowRatio,
-                               SwapFocusedWindowOnTop>;
+                               SwapFocusedWindowOnTop,
+                               MoveFocusOnGrid>;
 
   template <std::size_t Index =
                 std::variant_size_v<environment::commands::Command> - 1ul>

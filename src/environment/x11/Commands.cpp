@@ -1,5 +1,6 @@
 #include "environment/Command.h"
 #include "environment/Environment.h"
+#include "layouts/Grid.h"
 #include "layouts/Parameters.h"
 
 #include <cstdlib>
@@ -63,5 +64,14 @@ namespace ymwm::environment::commands {
 
   void SwapFocusedWindowOnTop::execute(Environment& e) const {
     e.manager().swap_focused_window_with_top();
+  }
+
+  void MoveFocusOnGrid::execute(Environment& e) const {
+    if (layouts::Grid::type == e.manager().layout().current()) {
+      auto&& parameters = e.manager().layout().parameters();
+      const auto& grid_parameters = std::get<layouts::Grid>(parameters);
+      e.manager().focus().move_on_grid(
+          direction, grid_parameters.grid_size, e.manager().windows().size());
+    }
   }
 } // namespace ymwm::environment::commands
