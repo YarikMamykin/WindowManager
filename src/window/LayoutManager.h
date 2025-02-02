@@ -92,6 +92,11 @@ namespace ymwm::window {
       return layout.parameters;
     }
 
+    inline void rotate() noexcept {
+      m_layout_parameters = rotated_parameters();
+      update();
+    }
+
   private:
     inline layouts::Layout with_layout() noexcept {
       auto [screen_width, screen_height] = m_env->screen_width_and_height();
@@ -109,6 +114,35 @@ namespace ymwm::window {
       // Do any specific layout paramters update
       layout.update(m_basic_layout_parameters, m_layout_parameters);
       return layout;
+    }
+
+    inline layouts::Parameters rotated_parameters() const noexcept {
+      if (std::holds_alternative<layouts::StackVerticalRight>(
+              m_layout_parameters)) {
+        return layouts::StackHorizontalTop{};
+      }
+      if (std::holds_alternative<layouts::StackVerticalLeft>(
+              m_layout_parameters)) {
+        return layouts::StackHorizontalBottom{};
+      }
+      if (std::holds_alternative<layouts::StackVerticalDouble>(
+              m_layout_parameters)) {
+        return layouts::StackHorizontalDouble{};
+      }
+      if (std::holds_alternative<layouts::StackHorizontalTop>(
+              m_layout_parameters)) {
+        return layouts::StackVerticalLeft{};
+      }
+      if (std::holds_alternative<layouts::StackHorizontalBottom>(
+              m_layout_parameters)) {
+        return layouts::StackVerticalRight{};
+      }
+      if (std::holds_alternative<layouts::StackHorizontalDouble>(
+              m_layout_parameters)) {
+        return layouts::StackVerticalDouble{};
+      }
+
+      return m_layout_parameters;
     }
 
   private:
