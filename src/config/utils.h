@@ -4,6 +4,7 @@
 #include "events/AbstractKeyCode.h"
 #include "events/AbstractKeyMask.h"
 
+#include <cctype>
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -40,35 +41,13 @@ namespace ymwm::config::utils {
           {     "X",     events::AbstractKeyCode::X },
           {     "Y",     events::AbstractKeyCode::Y },
           {     "Z",     events::AbstractKeyCode::Z },
-          {     "a",     events::AbstractKeyCode::a },
-          {     "b",     events::AbstractKeyCode::b },
-          {     "c",     events::AbstractKeyCode::c },
-          {     "d",     events::AbstractKeyCode::d },
-          {     "e",     events::AbstractKeyCode::e },
-          {     "f",     events::AbstractKeyCode::f },
-          {     "g",     events::AbstractKeyCode::g },
-          {     "h",     events::AbstractKeyCode::h },
-          {     "i",     events::AbstractKeyCode::i },
-          {     "j",     events::AbstractKeyCode::j },
-          {     "k",     events::AbstractKeyCode::k },
-          {     "l",     events::AbstractKeyCode::l },
-          {     "m",     events::AbstractKeyCode::m },
-          {     "n",     events::AbstractKeyCode::n },
-          {     "o",     events::AbstractKeyCode::o },
-          {     "p",     events::AbstractKeyCode::p },
-          {     "q",     events::AbstractKeyCode::q },
-          {     "r",     events::AbstractKeyCode::r },
-          {     "s",     events::AbstractKeyCode::s },
-          {     "t",     events::AbstractKeyCode::t },
-          {     "u",     events::AbstractKeyCode::u },
-          {     "v",     events::AbstractKeyCode::v },
-          {     "w",     events::AbstractKeyCode::w },
-          {     "x",     events::AbstractKeyCode::x },
-          {     "y",     events::AbstractKeyCode::y },
-          {     "z",     events::AbstractKeyCode::z },
-
           { "Enter", events::AbstractKeyCode::Enter },
     };
+
+    std::transform(symbol.begin(),
+                   symbol.end(),
+                   symbol.begin(),
+                   [](unsigned char c) -> int { return std::toupper(c); });
 
     return symbol_to_code_table.contains(symbol)
                ? std::optional(symbol_to_code_table.at(symbol))

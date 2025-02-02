@@ -131,7 +131,7 @@ TEST(TestEventMap, RemoveDuplicatedCommadsFromParsedEventMap) {
   ASSERT_EQ(expected_removed_event, events_removed.front());
 
   expected_removed_event =
-      ymwm::events::AbstractKeyPress{ .code = ymwm::events::AbstractKeyCode::e,
+      ymwm::events::AbstractKeyPress{ .code = ymwm::events::AbstractKeyCode::E,
                                       .mask =
                                           ymwm::events::AbstractKeyMask::Ctrl };
   ASSERT_EQ(expected_removed_event, events_removed.back());
@@ -199,7 +199,7 @@ TEST(TestConfig, OverrideDefaultKeyBinding) {
   ASSERT_NE(event_map.end(), found_event_to_cmd);
 
   ymwm::events::Event exit_requested_event = ymwm::events::AbstractKeyPress{
-    .code = ymwm::events::AbstractKeyCode::l,
+    .code = ymwm::events::AbstractKeyCode::L,
     .mask = ymwm::events::AbstractKeyMask::Alt |
             ymwm::events::AbstractKeyMask::Shift
   };
@@ -213,7 +213,7 @@ TEST(TestConfig, OverrideDefaultKeyBinding) {
   ASSERT_NE(event_map.end(), found_event_to_cmd);
 
   ymwm::events::Event close_window_event =
-      ymwm::events::AbstractKeyPress{ .code = ymwm::events::AbstractKeyCode::e,
+      ymwm::events::AbstractKeyPress{ .code = ymwm::events::AbstractKeyCode::E,
                                       .mask =
                                           ymwm::events::AbstractKeyMask::Ctrl };
   ASSERT_EQ(close_window_event, found_event_to_cmd->first);
