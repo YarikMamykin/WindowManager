@@ -30,6 +30,7 @@ namespace ymwm::environment::commands {
   DEFINE_COMMAND_WITH_PARAMS_1(DecreaseMainWindowRatio, int diff{ 10 });
   DEFINE_COMMAND(SwapFocusedWindowOnTop)
   DEFINE_COMMAND_WITH_PARAMS_1(MoveFocusOnGrid, common::Direction direction);
+  DEFINE_COMMAND(RotateStackLayout)
 
   using Command = std::variant<ExitRequested,
                                RunTerminal,
@@ -45,7 +46,8 @@ namespace ymwm::environment::commands {
                                IncreaseMainWindowRatio,
                                DecreaseMainWindowRatio,
                                SwapFocusedWindowOnTop,
-                               MoveFocusOnGrid>;
+                               MoveFocusOnGrid,
+                               RotateStackLayout>;
 
   template <std::size_t Index =
                 std::variant_size_v<environment::commands::Command> - 1ul>

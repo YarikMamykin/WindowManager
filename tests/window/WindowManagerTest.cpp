@@ -6,6 +6,7 @@
 #include "layouts/Grid.h"
 #include "layouts/Layout.h"
 #include "layouts/Parameters.h"
+#include "layouts/StackHorizontalBottom.h"
 #include "window/Manager.h"
 #include "window/Window.h"
 
@@ -629,4 +630,59 @@ TEST(FocusManager, MoveFocusOnGrid_OneWindowInGridOnly) {
   m.focus().move_on_grid(
       ymwm::common::Direction::Down, grid_params.grid_size, 1ul);
   ASSERT_EQ(1, m.focus().window()->get().id);
+}
+
+TEST(TestLayoutManager, TestRotateStackLayout) {
+  ymwm::environment::TestEnvironment tenv;
+  ON_CALL(tenv, screen_width_and_height)
+      .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
+
+  ymwm::window::Manager m{ &tenv };
+  m.layout().update(ymwm::layouts::StackVerticalRight{});
+
+  auto params = m.layout().parameters();
+  ASSERT_TRUE(
+      std::holds_alternative<ymwm::layouts::StackVerticalRight>(params));
+
+  for (auto contains_expected_parameters : std::initializer_list<
+           std::function<bool(const ymwm::layouts::Parameters&)>>{
+           [](const ymwm::layouts::Parameters& p) -> bool {
+             return std::holds_alternative<ymwm::layouts::StackHorizontalTop>(
+                 p);
+           },
+           [](const ymwm::layouts::Parameters& p) -> bool {
+             return std::holds_alternative<ymwm::layouts::StackVerticalLeft>(p);
+           },
+           [](const ymwm::layouts::Parameters& p) -> bool {
+             return std::holds_alternative<
+                 ymwm::layouts::StackHorizontalBottom>(p);
+           },
+           [](const ymwm::layouts::Parameters& p) -> bool {
+             return std::holds_alternative<ymwm::layouts::StackVerticalRight>(
+                 p);
+           } }) {
+    m.layout().rotate();
+    params = m.layout().parameters();
+    ASSERT_TRUE(contains_expected_parameters(params));
+  }
+
+  m.layout().update(ymwm::layouts::StackVerticalDouble{});
+  params = m.layout().parameters();
+  ASSERT_TRUE(
+      std::holds_alternative<ymwm::layouts::StackVerticalDouble>(params));
+
+  for (auto contains_expected_parameters : std::initializer_list<
+           std::function<bool(const ymwm::layouts::Parameters&)>>{
+           [](const ymwm::layouts::Parameters& p) -> bool {
+             return std::holds_alternative<
+                 ymwm::layouts::StackHorizontalDouble>(p);
+           },
+           [](const ymwm::layouts::Parameters& p) -> bool {
+             return std::holds_alternative<ymwm::layouts::StackVerticalDouble>(
+                 p);
+           } }) {
+    m.layout().rotate();
+    params = m.layout().parameters();
+    ASSERT_TRUE(contains_expected_parameters(params));
+  }
 }

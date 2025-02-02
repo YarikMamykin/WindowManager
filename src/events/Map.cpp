@@ -140,6 +140,13 @@ namespace ymwm::events {
         ymwm::environment::commands::MoveFocusOnGrid{
             common::Direction::Right });
 
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::R,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Shift },
+        ymwm::environment::commands::RotateStackLayout{});
+
     return bindings;
   }
 

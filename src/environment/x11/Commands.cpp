@@ -74,4 +74,8 @@ namespace ymwm::environment::commands {
           direction, grid_parameters.grid_size, e.manager().windows().size());
     }
   }
+
+  void RotateStackLayout::execute(Environment& e) const {
+    e.manager().layout().rotate();
+  }
 } // namespace ymwm::environment::commands
