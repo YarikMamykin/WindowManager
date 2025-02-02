@@ -14,65 +14,65 @@ namespace ymwm::events {
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::e,
+            .code = ymwm::events::AbstractKeyCode::E,
             .mask = ymwm::events::AbstractKeyMask::Ctrl },
         ymwm::environment::commands::ExitRequested{});
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::t,
+            .code = ymwm::events::AbstractKeyCode::T,
             .mask = ymwm::events::AbstractKeyMask::Ctrl },
         ymwm::environment::commands::RunTerminal{});
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::c,
+            .code = ymwm::events::AbstractKeyCode::C,
             .mask = ymwm::events::AbstractKeyMask::Alt |
                     ymwm::events::AbstractKeyMask::Shift },
         ymwm::environment::commands::CloseWindow{});
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::j,
+            .code = ymwm::events::AbstractKeyCode::J,
             .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::FocusNextWindow{});
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::k,
+            .code = ymwm::events::AbstractKeyCode::K,
             .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::FocusPrevWindow{});
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::j,
+            .code = ymwm::events::AbstractKeyCode::J,
             .mask = ymwm::events::AbstractKeyMask::Alt |
                     ymwm::events::AbstractKeyMask::Shift },
         ymwm::environment::commands::MoveFocusedWindowForward{});
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::k,
+            .code = ymwm::events::AbstractKeyCode::K,
             .mask = ymwm::events::AbstractKeyMask::Alt |
                     ymwm::events::AbstractKeyMask::Shift },
         ymwm::environment::commands::MoveFocusedWindowBackward{});
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::l,
+            .code = ymwm::events::AbstractKeyCode::L,
             .mask = ymwm::events::AbstractKeyMask::Alt |
                     ymwm::events::AbstractKeyMask::Shift },
         ymwm::environment::commands::ChangeLayout{});
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::l,
+            .code = ymwm::events::AbstractKeyCode::L,
             .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::IncreaseMainWindowRatio{});
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::h,
+            .code = ymwm::events::AbstractKeyCode::H,
             .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::DecreaseMainWindowRatio{});
 
@@ -84,27 +84,27 @@ namespace ymwm::events {
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::g,
+            .code = ymwm::events::AbstractKeyCode::G,
             .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::SetLayout{ ymwm::layouts::Grid::type });
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::m,
+            .code = ymwm::events::AbstractKeyCode::M,
             .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::SetLayout{
             ymwm::layouts::Maximised::type });
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::s,
+            .code = ymwm::events::AbstractKeyCode::S,
             .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::SetLayout{
             ymwm::layouts::StackVerticalDouble::type });
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::r,
+            .code = ymwm::events::AbstractKeyCode::R,
             .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::RunTerminal{ "/usr/bin/dmenu_run" });
 
