@@ -8,6 +8,7 @@
 #include "layouts/StackHorizontalBottom.h"
 #include "layouts/StackHorizontalTop.h"
 
+#include <string_view>
 #include <variant>
 #include <vector>
 
@@ -78,6 +79,17 @@ namespace ymwm::window {
             cfg::WindowWidthRatioType{ cfg::window_width_ratio + diff };
         update();
       }
+    }
+
+    inline std::string_view current() const noexcept {
+      return std::visit(
+          [](const auto& p) -> std::string_view { return p.type; },
+          m_layout_parameters);
+    }
+
+    inline layouts::Parameters parameters() noexcept {
+      auto layout = with_layout();
+      return layout.parameters;
     }
 
   private:
