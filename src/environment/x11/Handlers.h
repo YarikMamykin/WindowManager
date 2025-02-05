@@ -9,11 +9,13 @@
 #include <algorithm>
 #include <array>
 #include <cstring>
-#include <cstdlib>
 #include <unordered_map>
 #include "common/Color.h"
 #include "environment/x11/AtomID.h"
 #include "config/Misc.h"
+#include "environment/x11/CPtrHandler.h"
+#include "environment/x11/XkbComponentNamesRecWrapper.h"
+#include "environment/x11/XkbRF_VarDefsRecWrapper.h"
 #include <X11/XKBlib.h>
 #include <X11/extensions/XKB.h>
 #include <X11/extensions/XKBrules.h>
@@ -61,54 +63,40 @@ namespace ymwm::environment {
 
   private:
     inline int get_number_of_layouts() const noexcept {
-      char* tmp = NULL;
-      XkbRF_VarDefsRec vdr;
+      CPtrWrapper<char*> tmp;
+      XkbRF_VarDefsRecWrapper<XkbRF_VarDefsRec> vdr;
       memset(&vdr, 0, sizeof(vdr));
-      XkbRF_GetNamesProp(display, &tmp, &vdr);
-      int count = std::count(config::misc::language_layout.begin(),
-                             config::misc::language_layout.end(),
-                             ',');
-      std::free(vdr.layout);
-      vdr.layout = const_cast<char*>(config::misc::language_layout.data());
-      count = 0 == count ? 1 : count + 1;
+      XkbRF_GetNamesProp(display, &tmp.ptr, &vdr.v);
+      std::free(vdr.v.layout);
+      vdr.v.layout = const_cast<char*>(config::misc::language_layout.data());
 
       std::string_view rules_filepath{ "/usr/share/X11/xkb/rules/evdev" };
       std::string_view locale{ "C" };
-      XkbRF_RulesPtr rules =
-          XkbRF_Load(const_cast<char*>(rules_filepath.data()),
-                     const_cast<char*>(locale.data()),
-                     true,
-                     true);
-      XkbComponentNamesRec rnames;
-      XkbRF_GetComponents(rules, &vdr, &rnames);
-      XkbComponentNamesRec cmdNames = { .keymap = rnames.keymap,
-                                        .keycodes = rnames.keycodes,
-                                        .types = rnames.types,
-                                        .compat = rnames.compat,
-                                        .symbols = rnames.symbols,
-                                        .geometry = rnames.geometry };
-      auto xkb = XkbGetKeyboardByName(display,
-                                      XkbUseCoreKbd,
-                                      &cmdNames,
-                                      XkbGBN_AllComponentsMask,
-                                      XkbGBN_AllComponentsMask &
-                                          (~XkbGBN_GeometryMask),
-                                      true);
-      XkbRF_SetNamesProp(display, "evdev", &vdr);
+      CPtrWrapper<XkbRF_RulesPtr> rules{
+        .ptr = XkbRF_Load(const_cast<char*>(rules_filepath.data()),
+                          const_cast<char*>(locale.data()),
+                          true,
+                          true)
+      };
 
-      if (tmp) {
-        std::free(tmp);
-      }
-      if (vdr.model) {
-        std::free(vdr.model);
-      }
-      if (vdr.variant) {
-        std::free(vdr.variant);
-      }
-      if (vdr.options) {
-        std::free(vdr.options);
-      }
+      XkbComponentNamesRecWrapper<XkbComponentNamesRec> rnames;
+      XkbRF_GetComponents(rules.ptr, &vdr.v, &rnames.v);
+      CPtrWrapper<XkbDescPtr> xkb{ .ptr = XkbGetKeyboardByName(
+                                       display,
+                                       XkbUseCoreKbd,
+                                       &rnames.v,
+                                       XkbGBN_AllComponentsMask,
+                                       XkbGBN_AllComponentsMask &
+                                           (~XkbGBN_GeometryMask),
+                                       true) };
+      std::string_view rules_filename{ "evdev" };
+      XkbRF_SetNamesProp(
+          display, const_cast<char*>(rules_filename.data()), &vdr.v);
 
+      int count = std::count(config::misc::language_layout.begin(),
+                             config::misc::language_layout.end(),
+                             ',');
+      count = 0 == count ? 1 : count + 1;
       return count;
     }
   };
