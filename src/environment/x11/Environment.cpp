@@ -216,4 +216,13 @@ namespace ymwm::environment {
     return { XDisplayWidth(m_handlers->display, m_handlers->screen),
              XDisplayHeight(m_handlers->display, m_handlers->screen) };
   }
+
+  void Environment::next_keyboard_layout() noexcept {
+    m_handlers->current_layout++;
+    if (m_handlers->max_layouts == m_handlers->current_layout) {
+      m_handlers->current_layout = 0;
+    }
+    XkbLockGroup(
+        m_handlers->display, XkbUseCoreKbd, m_handlers->current_layout);
+  }
 } // namespace ymwm::environment

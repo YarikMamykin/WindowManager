@@ -147,6 +147,13 @@ namespace ymwm::events {
                     ymwm::events::AbstractKeyMask::Shift },
         ymwm::environment::commands::RotateStackLayout{});
 
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Space,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Ctrl },
+        ymwm::environment::commands::NextLanguageLayout{});
+
     return bindings;
   }
 

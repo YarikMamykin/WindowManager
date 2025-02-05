@@ -46,3 +46,6 @@ key-bindings:
       - Ctrl
     cmd:
       name: ExitRequested
+
+misc:
+  languages: us,ru,ua

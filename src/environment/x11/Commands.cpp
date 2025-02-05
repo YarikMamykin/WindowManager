@@ -78,4 +78,8 @@ namespace ymwm::environment::commands {
   void RotateStackLayout::execute(Environment& e) const {
     e.manager().layout().rotate();
   }
+
+  void NextLanguageLayout::execute(Environment& e) const {
+    e.next_keyboard_layout();
+  }
 } // namespace ymwm::environment::commands

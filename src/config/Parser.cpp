@@ -3,6 +3,7 @@
 #include "YamlModels.h"
 #include "common/Color.h"
 #include "config/Layout.h"
+#include "config/Misc.h"
 #include "config/Window.h"
 #include "environment/Command.h"
 #include "events/Map.h"
@@ -17,7 +18,18 @@ namespace ymwm::config {
     YAML::Node config = YAML::LoadFile(config_path);
     parse_layouts_config(config["layouts"]);
     parse_window_config(config["windows"]);
+    parse_misc_config(config["misc"]);
     m_event_map = event_map_from_yaml(config["key-bindings"]);
+  }
+
+  void Parser::parse_misc_config(const YAML::Node& misc) const {
+    if (not misc) {
+      return;
+    }
+
+    if (auto language_layout = misc["languages"]) {
+      config::misc::language_layout = language_layout.as<std::string>();
+    }
   }
 
   void Parser::parse_window_config(const YAML::Node& windows) const {

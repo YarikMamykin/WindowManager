@@ -31,6 +31,7 @@ namespace ymwm::environment {
     void close_window(const window::Window& w) noexcept;
     ymwm::window::Manager<Environment>& manager() noexcept;
     std::tuple<int, int> screen_width_and_height() noexcept;
+    void next_keyboard_layout() noexcept;
 
   private:
     std::unique_ptr<Handlers> m_handlers;

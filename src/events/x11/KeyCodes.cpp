@@ -30,4 +30,5 @@ namespace ymwm::events {
   AbstractKeyCode::Type AbstractKeyCode::Y{ XK_y };
   AbstractKeyCode::Type AbstractKeyCode::Z{ XK_z };
   AbstractKeyCode::Type AbstractKeyCode::Enter{ XK_Return };
+  AbstractKeyCode::Type AbstractKeyCode::Space{ XK_space };
 } // namespace ymwm::events

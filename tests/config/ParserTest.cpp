@@ -1,6 +1,7 @@
 #include "config/Parser.h"
 
 #include "config/Layout.h"
+#include "config/Misc.h"
 #include "config/Window.h"
 #include "environment/Command.h"
 #include "events/AbstractKeyCode.h"
@@ -156,6 +157,7 @@ TEST(TestConfig, AllValidConfig) {
   EXPECT_EQ(80, ymwm::config::layouts::stack_vertical::main_window_ratio);
   EXPECT_EQ(12, ymwm::config::layouts::stack_vertical::main_window_margin);
   EXPECT_EQ(11, ymwm::config::layouts::stack_vertical::stack_window_margin);
+  EXPECT_EQ("us,ru,ua", ymwm::config::misc::language_layout);
   ymwm::events::Map events_map;
   EXPECT_NO_THROW(events_map = parser.event_map());
   auto event1 = ymwm::events::AbstractKeyPress{
@@ -217,4 +219,9 @@ TEST(TestConfig, OverrideDefaultKeyBinding) {
                                       .mask =
                                           ymwm::events::AbstractKeyMask::Ctrl };
   ASSERT_EQ(close_window_event, found_event_to_cmd->first);
+}
+
+TEST(TestConfig, ParseMisc) {
+  ymwm::config::Parser parser{ "misc.yaml" };
+  EXPECT_EQ("us,ru,ua", ymwm::config::misc::language_layout);
 }
