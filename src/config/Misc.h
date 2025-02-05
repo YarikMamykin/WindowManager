@@ -1,6 +1,7 @@
 #pragma once
 
-#include <string_view>
+#include <string>
+
 namespace ymwm::config::misc {
-  static constinit inline std::string_view language_layout{ "us,ru" };
+  constinit inline std::string language_layout{ "us,ru" };
 } // namespace ymwm::config::misc
