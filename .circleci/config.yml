@@ -70,11 +70,23 @@ workflows:
           filters:
             branches:
               ignore: main
-      - lint
-      - build
+      - lint:
+          filters:
+            branches:
+              ignore:
+                - main
+      - build:
+          filters:
+            branches:
+              ignore:
+                - main
       - tests:
           requires:
             - build
+          filters:
+            branches:
+              ignore:
+                - main
       - update_tag:
           filters:
             branches:
