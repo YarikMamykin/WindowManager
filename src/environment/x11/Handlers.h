@@ -22,6 +22,8 @@ namespace ymwm::environment {
     Window root_window;
     Cursor cursor;
     Colormap colormap;
+    Pixmap pixmap;
+    GC gc;
     std::unordered_map<common::Color, XColor, common::ColorHash> colors;
     std::array<Atom, 2ul> atoms;
     int current_layout;
@@ -34,7 +36,8 @@ namespace ymwm::environment {
     inline bool valid() const noexcept { return static_cast<bool>(display); }
 
   private:
-    inline int get_number_of_layouts() const noexcept;
+    int get_number_of_layouts() const noexcept;
+    void set_background_image() noexcept;
   };
 
 } // namespace ymwm::environment

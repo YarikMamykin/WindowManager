@@ -6,6 +6,7 @@
 #include "environment/x11/XkbComponentNamesRecWrapper.h"
 #include "environment/x11/XkbRF_VarDefsRecWrapper.h"
 
+#include <Imlib2.h>
 #include <algorithm>
 
 namespace ymwm::environment {
@@ -24,9 +25,13 @@ namespace ymwm::environment {
     atoms.at(AtomID::Utf8String) = XInternAtom(display, "UTF8_STRING", False);
     current_layout = 0;
     max_layouts = get_number_of_layouts();
+    set_background_image();
   }
 
   Handlers::~Handlers() {
+    imlib_free_image();
+    XFreePixmap(display, pixmap);
+    XFreeGC(display, gc);
     XFreeColormap(display, colormap);
     XFreeCursor(display, cursor);
     XDestroyWindow(display, root_window);
@@ -71,5 +76,48 @@ namespace ymwm::environment {
                            ',');
     count = 0 == count ? 1 : count + 1;
     return count;
+  }
+
+  void Handlers::set_background_image() noexcept {
+    int screen_width = XDisplayWidth(display, screen);
+    int screen_height = XDisplayHeight(display, screen);
+    imlib_set_cache_size(screen_width * screen_height);
+    imlib_context_set_display(display);
+    imlib_context_set_visual(DefaultVisual(display, screen));
+    imlib_context_set_colormap(DefaultColormap(display, screen));
+
+    Imlib_Image image =
+        imlib_load_image(config::misc::background_image_path.c_str());
+
+    imlib_context_set_image(image);
+
+    auto img_width = imlib_image_get_width();
+    auto img_height = imlib_image_get_height();
+
+    auto scaled_img = imlib_create_cropped_scaled_image(
+        0, 0, img_width, img_height, screen_width, screen_height);
+    imlib_free_image();
+
+    imlib_context_set_image(scaled_img);
+
+    pixmap = XCreatePixmap(display,
+                           root_window,
+                           img_width,
+                           img_height,
+                           DefaultDepth(display, screen));
+    imlib_context_set_drawable(pixmap);
+    imlib_render_image_on_drawable(0, 0);
+
+    // Create a graphics context
+    gc = XCreateGC(display, root_window, 0, nullptr);
+
+    // Set the pixmap as the background of the root window
+    XSetWindowBackgroundPixmap(display, root_window, pixmap);
+
+    // Clear the window to make the background take effect
+    XClearWindow(display, root_window);
+
+    // Flush the X buffer to make sure the changes take effect
+    XFlush(display);
   }
 } // namespace ymwm::environment
