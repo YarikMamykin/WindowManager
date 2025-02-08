@@ -1,8 +1,11 @@
 #pragma once
+#include "BackgroundImageHandler.h"
+#include "common/Color.h"
+
 #include <array>
 #include <cstring>
+#include <memory>
 #include <unordered_map>
-#include "common/Color.h"
 // clang-format on
 
 namespace ymwm::environment {
@@ -12,8 +15,7 @@ namespace ymwm::environment {
     Window root_window;
     Cursor cursor;
     Colormap colormap;
-    Pixmap pixmap;
-    GC gc;
+    std::unique_ptr<BackgroundImageHandler> background_image;
     std::unordered_map<common::Color, XColor, common::ColorHash> colors;
     std::array<Atom, 2ul> atoms;
     int current_layout;
@@ -27,7 +29,6 @@ namespace ymwm::environment {
 
   private:
     int get_number_of_layouts() const noexcept;
-    void set_background_image() noexcept;
   };
 
 } // namespace ymwm::environment
