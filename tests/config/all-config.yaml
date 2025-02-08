@@ -49,3 +49,4 @@ key-bindings:
 
 misc:
   languages: us,ru,ua
+  background_image: /tmp/some.png

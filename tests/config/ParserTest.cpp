@@ -158,6 +158,7 @@ TEST(TestConfig, AllValidConfig) {
   EXPECT_EQ(12, ymwm::config::layouts::stack_vertical::main_window_margin);
   EXPECT_EQ(11, ymwm::config::layouts::stack_vertical::stack_window_margin);
   EXPECT_EQ("us,ru,ua", ymwm::config::misc::language_layout);
+  EXPECT_EQ("/tmp/some.png", ymwm::config::misc::background_image_path);
   ymwm::events::Map events_map;
   EXPECT_NO_THROW(events_map = parser.event_map());
   auto event1 = ymwm::events::AbstractKeyPress{
@@ -224,4 +225,5 @@ TEST(TestConfig, OverrideDefaultKeyBinding) {
 TEST(TestConfig, ParseMisc) {
   ymwm::config::Parser parser{ "misc.yaml" };
   EXPECT_EQ("us,ru,ua", ymwm::config::misc::language_layout);
+  EXPECT_EQ("/tmp/some.png", ymwm::config::misc::background_image_path);
 }
