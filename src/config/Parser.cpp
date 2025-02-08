@@ -9,6 +9,7 @@
 #include "events/Map.h"
 
 #include <algorithm>
+#include <filesystem>
 #include <yaml-cpp/exceptions.h>
 #include <yaml-cpp/yaml.h>
 
@@ -29,6 +30,11 @@ namespace ymwm::config {
 
     if (auto language_layout = misc["languages"]) {
       config::misc::language_layout = language_layout.as<std::string>();
+    }
+
+    if (auto background_image_path = misc["background_image"]) {
+      config::misc::background_image_path =
+          background_image_path.as<std::string>();
     }
   }
 
