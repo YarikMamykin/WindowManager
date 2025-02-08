@@ -4,6 +4,7 @@
 #include "XClientKeyGrabber.h"
 #include "common/Color.h"
 #include "config/Window.h"
+#include "environment/x11/AtomID.h"
 #include "events/AbstractKeyCode.h"
 #include "events/AbstractKeyMask.h"
 #include "events/AbstractKeyPress.h"
