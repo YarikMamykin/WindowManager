@@ -137,7 +137,15 @@ namespace ymwm::window {
       return m_focus_manager;
     }
 
+    inline const FocusManager<Environment>& focus() const noexcept {
+      return m_focus_manager;
+    }
+
     inline LayoutManager<Environment>& layout() noexcept {
+      return m_layout_manager;
+    }
+
+    inline const LayoutManager<Environment>& layout() const noexcept {
       return m_layout_manager;
     }
 

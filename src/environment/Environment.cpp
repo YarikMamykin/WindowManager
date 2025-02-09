@@ -15,4 +15,9 @@ namespace ymwm::environment {
   ymwm::window::Manager<Environment>& Environment::manager() noexcept {
     return m_manager;
   }
+
+  const ymwm::window::Manager<Environment>&
+  Environment::manager() const noexcept {
+    return m_manager;
+  }
 } // namespace ymwm::environment

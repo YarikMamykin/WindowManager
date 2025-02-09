@@ -30,6 +30,7 @@ namespace ymwm::environment {
     void move_and_resize(const window::Window& w) noexcept;
     void close_window(const window::Window& w) noexcept;
     ymwm::window::Manager<Environment>& manager() noexcept;
+    const ymwm::window::Manager<Environment>& manager() const noexcept;
     std::tuple<int, int> screen_width_and_height() noexcept;
     void next_keyboard_layout() noexcept;
 
