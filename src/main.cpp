@@ -2,6 +2,7 @@
 #include "environment/Command.h"
 #include "environment/Environment.h"
 #include "events/Map.h"
+#include "rules/RuleApi.h"
 
 #include <argparse/argparse.hpp>
 #include <stdexcept>
@@ -38,10 +39,15 @@ int main(int argc, char** argv) {
 
   for (auto event = env.event(); not env.exit_requested();
        event = env.event()) {
+
     if (not events_map.contains(event)) {
       continue;
     }
-    env.execute(events_map.at(event));
+
+    if (const auto& command = events_map.at(event);
+        ymwm::rules::passes_rules(command, env)) {
+      env.execute(command);
+    }
   }
 
   return 0;
