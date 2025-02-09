@@ -72,4 +72,13 @@ namespace ymwm::layouts {
     fetch_parameters_types(list_of_parameters_types);
     return list_of_parameters_types;
   }
+
+  static inline bool is_stack_layout(std::string_view layout_type) noexcept {
+    return layout_type == layouts::StackVerticalDouble::type or
+           layout_type == layouts::StackVerticalRight::type or
+           layout_type == layouts::StackVerticalLeft::type or
+           layout_type == layouts::StackHorizontalTop::type or
+           layout_type == layouts::StackHorizontalBottom::type or
+           layout_type == layouts::StackHorizontalDouble::type;
+  }
 } // namespace ymwm::layouts
