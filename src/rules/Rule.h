@@ -3,6 +3,7 @@
 #include "RuleMacros.h"
 #include "environment/Environment.h"
 #include "events/Event.h"
+#include "layouts/Centered.h"
 #include "layouts/Parameters.h"
 
 #include <optional>
@@ -18,6 +19,12 @@ namespace ymwm::rules {
               Overridable::No,
               auto layout_type = env.manager().layout().current();
               return layouts::is_stack_layout(layout_type);)
+
+  DEFINE_RULE(CurrentLayoutMustBeOneOfStackOrCentered,
+              Overridable::No,
+              auto layout_type = env.manager().layout().current();
+              return layouts::is_stack_layout(layout_type) or
+                     layout_type == layouts::Centered::type;)
 
   DEFINE_RULE(CurrentLayoutMustBeGrid,
               Overridable::No,
@@ -49,6 +56,7 @@ namespace ymwm::rules {
 
   using Rule = std::variant<FocusedWindowMustBePresent,
                             CurrentLayoutMustBeOneOfStack,
+                            CurrentLayoutMustBeOneOfStackOrCentered,
                             CurrentLayoutMustBeGrid,
                             AtLeastTwoWindowsPresent,
                             EventMustBeWindowAdded,
