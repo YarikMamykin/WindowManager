@@ -21,6 +21,7 @@ namespace ymwm::rules {
         overridable_flag) };                                                   \
     constexpr bool operator()(                                                 \
         [[maybe_unused]] const auto& cmd,                                      \
+        [[maybe_unused]] const ymwm::events::Event& event,                     \
         [[maybe_unused]] const environment::Environment& env) const noexcept { \
       default_behavior                                                         \
     }                                                                          \

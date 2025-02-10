@@ -2,6 +2,7 @@
 
 #include "RuleMacros.h"
 #include "environment/Environment.h"
+#include "events/Event.h"
 #include "layouts/Parameters.h"
 
 #include <optional>
@@ -27,9 +28,33 @@ namespace ymwm::rules {
               Overridable::No,
               return 2ul <= env.manager().windows().size();)
 
+  DEFINE_RULE(EventMustBeWindowAdded,
+              Overridable::No,
+              return std::holds_alternative<ymwm::events::WindowAdded>(event);)
+
+  DEFINE_RULE(
+      EventMustBeWindowNameUpdated,
+      Overridable::No,
+      return std::holds_alternative<ymwm::events::WindowNameUpdated>(event);)
+
+  DEFINE_RULE(
+      EventMustBeMouseOverWindow,
+      Overridable::No,
+      return std::holds_alternative<ymwm::events::MouseOverWindow>(event);)
+
+  DEFINE_RULE(
+      EventMustBeWindowRemoved,
+      Overridable::No,
+      return std::holds_alternative<ymwm::events::WindowRemoved>(event);)
+
   using Rule = std::variant<FocusedWindowMustBePresent,
                             CurrentLayoutMustBeOneOfStack,
-                            CurrentLayoutMustBeGrid>;
+                            CurrentLayoutMustBeGrid,
+                            AtLeastTwoWindowsPresent,
+                            EventMustBeWindowAdded,
+                            EventMustBeWindowNameUpdated,
+                            EventMustBeMouseOverWindow,
+                            EventMustBeWindowRemoved>;
 
   template <std::size_t Index = std::variant_size_v<Rule> - 1ul>
   static inline std::optional<Rule>

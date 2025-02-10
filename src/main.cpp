@@ -45,8 +45,8 @@ int main(int argc, char** argv) {
     }
 
     if (const auto& command = events_map.at(event);
-        ymwm::rules::passes_rules(command, env)) {
-      env.execute(command);
+        ymwm::rules::passes_rules(command, event, env)) {
+      env.execute(command, event);
     }
   }
 

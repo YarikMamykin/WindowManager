@@ -10,9 +10,10 @@
 
 namespace ymwm::rules {
   bool passes_rules(const environment::commands::Command& cmd,
+                    [[maybe_unused]] const ymwm::events::Event& event,
                     const environment::Environment& env) noexcept {
     return std::visit(
-        [&env](const auto& c) -> bool {
+        [&env, event](const auto& c) -> bool {
           if (not rules_map.contains(c.type)) {
             // Command doesn't have specific rules, no check required.
             return true;
@@ -28,8 +29,8 @@ namespace ymwm::rules {
               return true;
             }
 
-            auto visitor = [&c, &env](const auto& rule) -> bool {
-              return rule(c, env);
+            auto visitor = [&c, &event, &env](const auto& rule) -> bool {
+              return rule(c, event, env);
             };
 
             if (bool rule_passed = std::visit(visitor, *rule);

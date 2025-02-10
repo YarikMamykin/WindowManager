@@ -7,7 +7,8 @@
   struct name {                                                                \
     static inline constexpr std::string_view type{ #name };                    \
     inline constexpr auto operator<=>(const name&) const noexcept = default;   \
-    void execute([[maybe_unused]] Environment&) const;
+    void execute([[maybe_unused]] Environment&,                                \
+                 [[maybe_unused]] const events::Event&) const;
 
 // clang-format off
 #define END_DEFINE_COMMAND };

@@ -8,6 +8,10 @@
 #include "events/AbstractKeyCode.h"
 #include "events/AbstractKeyMask.h"
 #include "events/AbstractKeyPress.h"
+#include "events/MouseOverWindow.h"
+#include "events/WindowAdded.h"
+#include "events/WindowNameUpdated.h"
+#include "events/WindowRemoved.h"
 #include "layouts/Parameters.h"
 
 #include <format>
@@ -108,14 +112,16 @@ namespace ymwm::environment {
       if ((XA_WM_NAME == property_atom_changed or
            m_handlers->atoms.at(AtomID::NetWMName) == property_atom_changed) and
           event.xproperty.state != PropertyDelete) {
-        m_manager.update_window_name(w, get_window_name(*m_handlers, w));
+        return events::WindowNameUpdated{ .wid = w,
+                                          .wname =
+                                              get_window_name(*m_handlers, w) };
       }
       break;
     }
     case EnterNotify: {
       if (NotifyNormal == event.xcrossing.mode and
           NotifyInferior != event.xcrossing.detail) {
-        m_manager.focus().window(event.xcrossing.window);
+        return events::MouseOverWindow{ .wid = event.xcrossing.window };
       }
       break;
     }
@@ -128,22 +134,23 @@ namespace ymwm::environment {
                      w,
                      EnterWindowMask | FocusChangeMask | PropertyChangeMask |
                          StructureNotifyMask);
-        m_manager.add_window(
-            { .id = w,
-              .x = wa.x,
-              .y = wa.y,
-              .w = wa.width,
-              .h = wa.height,
-              .border_width = ymwm::config::windows::regular_border_width,
-              .border_color = ymwm::config::windows::regular_border_color,
-              .name = get_window_name(*m_handlers, w) });
+        return events::WindowAdded{
+          .w = { .id = w,
+                .x = wa.x,
+                .y = wa.y,
+                .w = wa.width,
+                .h = wa.height,
+                .border_width = ymwm::config::windows::regular_border_width,
+                .border_color = ymwm::config::windows::regular_border_color,
+                .name = get_window_name(*m_handlers, w) }
+        };
       }
 
       break;
     }
     case UnmapNotify: {
       auto unmapped_window = event.xunmap.window;
-      m_manager.remove_window(unmapped_window);
+      return events::WindowRemoved{ .wid = unmapped_window };
       break;
     }
     case DestroyNotify: {

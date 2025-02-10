@@ -3,6 +3,8 @@
 #include "CommandMacro.h"
 #include "common/Color.h"
 #include "common/Direction.h"
+#include "environment/ID.h"
+#include "events/Event.h"
 
 #include <optional>
 #include <string>
@@ -32,6 +34,10 @@ namespace ymwm::environment::commands {
   DEFINE_COMMAND_WITH_PARAMS_1(MoveFocusOnGrid, common::Direction direction);
   DEFINE_COMMAND(RotateStackLayout)
   DEFINE_COMMAND(NextLanguageLayout);
+  DEFINE_COMMAND(AddWindow);
+  DEFINE_COMMAND(UpdateWindowName);
+  DEFINE_COMMAND_WITH_PARAMS_1(FocusWindow, environment::ID wid);
+  DEFINE_COMMAND_WITH_PARAMS_1(RemoveWindow, environment::ID wid);
 
   using Command = std::variant<ExitRequested,
                                RunTerminal,
@@ -49,7 +55,11 @@ namespace ymwm::environment::commands {
                                SwapFocusedWindowOnTop,
                                MoveFocusOnGrid,
                                RotateStackLayout,
-                               NextLanguageLayout>;
+                               NextLanguageLayout,
+                               AddWindow,
+                               UpdateWindowName,
+                               FocusWindow,
+                               RemoveWindow>;
 
   template <std::size_t Index =
                 std::variant_size_v<environment::commands::Command> - 1ul>

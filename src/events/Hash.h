@@ -19,6 +19,22 @@ namespace ymwm::events {
     inline std::size_t operator()(const AbstractUnknownEvent&) const noexcept {
       return 0u;
     }
+
+    inline std::size_t operator()(const WindowAdded& e) const noexcept {
+      return std::hash<std::string_view>{}(e.type);
+    }
+
+    inline std::size_t operator()(const WindowRemoved& e) const noexcept {
+      return std::hash<std::string_view>{}(e.type);
+    }
+
+    inline std::size_t operator()(const WindowNameUpdated& e) const noexcept {
+      return std::hash<std::string_view>{}(e.type);
+    }
+
+    inline std::size_t operator()(const MouseOverWindow& e) const noexcept {
+      return std::hash<std::string_view>{}(e.type);
+    }
   };
 
   struct Hasher {
