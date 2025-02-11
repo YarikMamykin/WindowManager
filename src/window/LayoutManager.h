@@ -49,31 +49,23 @@ namespace ymwm::window {
     }
 
     inline void update_main_window_ratio(int diff) {
-      if (std::holds_alternative<layouts::StackVerticalRight>(
-              m_layout_parameters) or
-          std::holds_alternative<layouts::StackVerticalLeft>(
-              m_layout_parameters) or
-          std::holds_alternative<layouts::StackVerticalDouble>(
-              m_layout_parameters)) {
+      if (layouts::is_stack_vertical(m_layout_parameters)) {
         namespace cfg = ymwm::config::layouts::stack_vertical;
         cfg::main_window_ratio =
             cfg::MainWindowRatioType{ cfg::main_window_ratio + diff };
         update();
+        return;
       };
 
-      if (std::holds_alternative<layouts::StackHorizontalTop>(
-              m_layout_parameters) or
-          std::holds_alternative<layouts::StackHorizontalBottom>(
-              m_layout_parameters) or
-          std::holds_alternative<layouts::StackHorizontalDouble>(
-              m_layout_parameters)) {
+      if (layouts::is_stack_horizontal(m_layout_parameters)) {
         namespace cfg = ymwm::config::layouts::stack_horizontal;
         cfg::main_window_ratio =
             cfg::MainWindowRatioType{ cfg::main_window_ratio + diff };
         update();
+        return;
       };
 
-      if (std::holds_alternative<layouts::Centered>(m_layout_parameters)) {
+      if (layouts::is<layouts::Centered>(m_layout_parameters)) {
         namespace cfg = ymwm::config::layouts::centered;
         cfg::window_width_ratio =
             cfg::WindowWidthRatioType{ cfg::window_width_ratio + diff };
@@ -90,6 +82,13 @@ namespace ymwm::window {
     inline layouts::Parameters parameters() noexcept {
       auto layout = with_layout();
       return layout.parameters;
+    }
+
+    template <typename T>
+    inline std::optional<T> parameters() noexcept {
+      auto p = parameters();
+      return layouts::is<T>(p) ? std::optional<T>{ std::get<T>(p) }
+                               : std::optional<T>{ std::nullopt };
     }
 
     inline void rotate() noexcept {
@@ -117,28 +116,22 @@ namespace ymwm::window {
     }
 
     inline layouts::Parameters rotated_parameters() const noexcept {
-      if (std::holds_alternative<layouts::StackVerticalRight>(
-              m_layout_parameters)) {
+      if (layouts::is<layouts::StackVerticalRight>(m_layout_parameters)) {
         return layouts::StackHorizontalTop{};
       }
-      if (std::holds_alternative<layouts::StackVerticalLeft>(
-              m_layout_parameters)) {
+      if (layouts::is<layouts::StackVerticalLeft>(m_layout_parameters)) {
         return layouts::StackHorizontalBottom{};
       }
-      if (std::holds_alternative<layouts::StackVerticalDouble>(
-              m_layout_parameters)) {
+      if (layouts::is<layouts::StackVerticalDouble>(m_layout_parameters)) {
         return layouts::StackHorizontalDouble{};
       }
-      if (std::holds_alternative<layouts::StackHorizontalTop>(
-              m_layout_parameters)) {
+      if (layouts::is<layouts::StackHorizontalTop>(m_layout_parameters)) {
         return layouts::StackVerticalLeft{};
       }
-      if (std::holds_alternative<layouts::StackHorizontalBottom>(
-              m_layout_parameters)) {
+      if (layouts::is<layouts::StackHorizontalBottom>(m_layout_parameters)) {
         return layouts::StackVerticalRight{};
       }
-      if (std::holds_alternative<layouts::StackHorizontalDouble>(
-              m_layout_parameters)) {
+      if (layouts::is<layouts::StackHorizontalDouble>(m_layout_parameters)) {
         return layouts::StackVerticalDouble{};
       }
 
