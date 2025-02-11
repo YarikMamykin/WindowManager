@@ -1,72 +1,84 @@
 #include "environment/Command.h"
 #include "environment/Environment.h"
+#include "events/Event.h"
+#include "events/MouseOverWindow.h"
+#include "events/WindowRemoved.h"
 #include "layouts/Grid.h"
 #include "layouts/Parameters.h"
 
 #include <cstdlib>
+#include <string>
 #include <thread>
+#include <variant>
 
 namespace ymwm::environment::commands {
 
-  void ExitRequested::execute(Environment& e) const { e.request_exit(); }
-  void RunTerminal::execute(Environment& e) const {
+  void ExitRequested::execute(Environment& e, const events::Event&) const {
+    e.request_exit();
+  }
+  void RunTerminal::execute(Environment& e, const events::Event&) const {
     std::thread([&terminal = path]() -> void {
       std::system(terminal.c_str());
     }).detach();
   }
 
-  void ChangeBorderColor::execute(Environment& e) const {
+  void ChangeBorderColor::execute(Environment& e, const events::Event&) const {
     if (auto fw = e.manager().focus().window()) {
       e.manager().update_focused_window_border(fw->get().border_width, color);
     }
   }
 
-  void MoveWindowRight::execute(Environment& e) const {
+  void MoveWindowRight::execute(Environment& e, const events::Event&) const {
     e.manager().move_focused_window_to(100, 0);
   }
 
-  void CloseWindow::execute(Environment& e) const {
+  void CloseWindow::execute(Environment& e, const events::Event&) const {
     e.manager().close_focused_window();
   }
 
-  void FocusNextWindow::execute(Environment& e) const {
+  void FocusNextWindow::execute(Environment& e, const events::Event&) const {
     e.manager().focus().next_window();
   }
 
-  void FocusPrevWindow::execute(Environment& e) const {
+  void FocusPrevWindow::execute(Environment& e, const events::Event&) const {
     e.manager().focus().prev_window();
   }
 
-  void MoveFocusedWindowForward::execute(Environment& e) const {
+  void MoveFocusedWindowForward::execute(Environment& e,
+                                         const events::Event&) const {
     e.manager().move_focused_window_forward();
   }
 
-  void MoveFocusedWindowBackward::execute(Environment& e) const {
+  void MoveFocusedWindowBackward::execute(Environment& e,
+                                          const events::Event&) const {
     e.manager().move_focused_window_backward();
   }
 
-  void ChangeLayout::execute(Environment& e) const {
+  void ChangeLayout::execute(Environment& e, const events::Event&) const {
     e.manager().layout().next();
   }
 
-  void SetLayout::execute(Environment& e) const {
+  void SetLayout::execute(Environment& e, const events::Event&) const {
     e.manager().layout().update(*ymwm::layouts::try_find_parameters(layout));
     e.manager().layout().update();
   }
 
-  void IncreaseMainWindowRatio::execute(Environment& e) const {
+  void IncreaseMainWindowRatio::execute(Environment& e,
+                                        const events::Event&) const {
     e.manager().layout().update_main_window_ratio(diff < 0 ? 0 - diff : diff);
   }
 
-  void DecreaseMainWindowRatio::execute(Environment& e) const {
+  void DecreaseMainWindowRatio::execute(Environment& e,
+                                        const events::Event&) const {
     e.manager().layout().update_main_window_ratio(diff > 0 ? 0 - diff : diff);
   }
 
-  void SwapFocusedWindowOnTop::execute(Environment& e) const {
+  void SwapFocusedWindowOnTop::execute(Environment& e,
+                                       const events::Event&) const {
     e.manager().swap_focused_window_with_top();
   }
 
-  void MoveFocusOnGrid::execute(Environment& e) const {
+  void MoveFocusOnGrid::execute(Environment& e, const events::Event&) const {
     if (layouts::Grid::type == e.manager().layout().current()) {
       auto&& parameters = e.manager().layout().parameters();
       const auto& grid_parameters = std::get<layouts::Grid>(parameters);
@@ -75,11 +87,36 @@ namespace ymwm::environment::commands {
     }
   }
 
-  void RotateStackLayout::execute(Environment& e) const {
+  void RotateStackLayout::execute(Environment& e, const events::Event&) const {
     e.manager().layout().rotate();
   }
 
-  void NextLanguageLayout::execute(Environment& e) const {
+  void NextLanguageLayout::execute(Environment& e, const events::Event&) const {
     e.next_keyboard_layout();
+  }
+
+  void AddWindow::execute(Environment& e, const events::Event& event) const {
+    if (const auto* w = std::get_if<events::WindowAdded>(&event)) {
+      e.manager().add_window(w->w);
+    }
+  }
+
+  void UpdateWindowName::execute(Environment& e,
+                                 const events::Event& event) const {
+    if (const auto* ev = std::get_if<events::WindowNameUpdated>(&event)) {
+      e.manager().update_window_name(ev->wid, std::u8string(ev->wname));
+    }
+  }
+
+  void FocusWindow::execute(Environment& e, const events::Event& event) const {
+    if (const auto* ev = std::get_if<events::MouseOverWindow>(&event)) {
+      e.manager().focus().window(ev->wid);
+    }
+  }
+
+  void RemoveWindow::execute(Environment& e, const events::Event& event) const {
+    if (const auto* ev = std::get_if<events::WindowRemoved>(&event)) {
+      e.manager().remove_window(ev->wid);
+    }
   }
 } // namespace ymwm::environment::commands
