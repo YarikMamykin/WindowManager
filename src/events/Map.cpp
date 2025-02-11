@@ -5,6 +5,10 @@
 #include "common/Direction.h"
 #include "environment/Command.h"
 #include "events/AbstractKeyPress.h"
+#include "events/MouseOverWindow.h"
+#include "events/WindowAdded.h"
+#include "events/WindowNameUpdated.h"
+#include "events/WindowRemoved.h"
 #include "layouts/Grid.h"
 #include "layouts/Maximized.h"
 #include "layouts/StackVerticalDouble.h"
@@ -12,6 +16,18 @@
 namespace ymwm::events {
   Map default_event_map() noexcept {
     Map bindings;
+
+    bindings.emplace(ymwm::events::WindowAdded{},
+                     ymwm::environment::commands::AddWindow{});
+
+    bindings.emplace(ymwm::events::WindowRemoved{},
+                     ymwm::environment::commands::RemoveWindow{});
+
+    bindings.emplace(ymwm::events::WindowNameUpdated{},
+                     ymwm::environment::commands::UpdateWindowName{});
+
+    bindings.emplace(ymwm::events::MouseOverWindow{},
+                     ymwm::environment::commands::FocusWindow{});
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{

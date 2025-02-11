@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
     if (not events_map.contains(event)) {
       continue;
     }
-    env.execute(events_map.at(event));
+    env.execute(events_map.at(event), event);
   }
 
   return 0;

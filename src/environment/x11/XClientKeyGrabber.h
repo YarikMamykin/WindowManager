@@ -9,9 +9,7 @@ namespace ymwm::environment {
     Handlers* handlers;
 
     template <typename EventType>
-    inline void operator()(const EventType& event) {
-      std::cerr << "Unexpected event type: " << event.type << "\n";
-    }
+    inline void operator()(const EventType& event) {}
 
     template <>
     inline void operator()(const events::AbstractKeyPress& event) {
