@@ -1,8 +1,8 @@
+#include "checks/ChecksApi.h"
 #include "config/Parser.h"
 #include "environment/Command.h"
 #include "environment/Environment.h"
 #include "events/Map.h"
-#include "rules/RuleApi.h"
 
 #include <argparse/argparse.hpp>
 #include <stdexcept>
@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
     }
 
     if (const auto& command = events_map.at(event);
-        ymwm::rules::passes_rules(command, event, env)) {
+        ymwm::checks::passes_checks(command, event, env)) {
       env.execute(command, event);
     }
   }

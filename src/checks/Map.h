@@ -1,56 +1,56 @@
 #pragma once
 
+#include "checks/Check.h"
 #include "environment/Command.h"
-#include "rules/Rule.h"
 
 #include <set>
 #include <string_view>
 #include <unordered_map>
 
-namespace ymwm::rules {
-  using Rules = std::set<std::string_view>;
-  using Map = std::unordered_map<std::string_view, Rules>;
+namespace ymwm::checks {
+  using Checks = std::set<std::string_view>;
+  using Map = std::unordered_map<std::string_view, Checks>;
 
-  static const inline Map rules_map{
+  static const inline Map checks_map{
     {               ymwm::environment::commands::CloseWindow::type,
-     Rules{ FocusedWindowMustBePresent::type }      },
+     Checks{ FocusedWindowMustBePresent::type }     },
     {         ymwm::environment::commands::ChangeBorderColor::type,
-     Rules{ FocusedWindowMustBePresent::type }      },
+     Checks{ FocusedWindowMustBePresent::type }     },
     {           ymwm::environment::commands::MoveWindowRight::type,
-     Rules{ FocusedWindowMustBePresent::type }      },
+     Checks{ FocusedWindowMustBePresent::type }     },
     {           ymwm::environment::commands::FocusNextWindow::type,
-     Rules{ FocusedWindowMustBePresent::type }      },
+     Checks{ FocusedWindowMustBePresent::type }     },
     {           ymwm::environment::commands::FocusPrevWindow::type,
-     Rules{ FocusedWindowMustBePresent::type }      },
+     Checks{ FocusedWindowMustBePresent::type }     },
     { ymwm::environment::commands::MoveFocusedWindowBackward::type,
-     Rules{ FocusedWindowMustBePresent::type }      },
+     Checks{ FocusedWindowMustBePresent::type }     },
     {  ymwm::environment::commands::MoveFocusedWindowForward::type,
-     Rules{ FocusedWindowMustBePresent::type }      },
+     Checks{ FocusedWindowMustBePresent::type }     },
     {   ymwm::environment::commands::IncreaseMainWindowRatio::type,
-     Rules{ FocusedWindowMustBePresent::type,
+     Checks{ FocusedWindowMustBePresent::type,
      CurrentLayoutMustBeOneOfStackOrCentered::type } },
     {   ymwm::environment::commands::DecreaseMainWindowRatio::type,
-     Rules{ FocusedWindowMustBePresent::type,
+     Checks{ FocusedWindowMustBePresent::type,
      CurrentLayoutMustBeOneOfStackOrCentered::type } },
     {    ymwm::environment::commands::SwapFocusedWindowOnTop::type,
-     Rules{ FocusedWindowMustBePresent::type,
+     Checks{ FocusedWindowMustBePresent::type,
      CurrentLayoutMustBeOneOfStack::type,
      AtLeastTwoWindowsPresent::type }               },
     {           ymwm::environment::commands::MoveFocusOnGrid::type,
-     Rules{ FocusedWindowMustBePresent::type,
+     Checks{ FocusedWindowMustBePresent::type,
      CurrentLayoutMustBeGrid::type }                },
     {         ymwm::environment::commands::RotateStackLayout::type,
-     Rules{ FocusedWindowMustBePresent::type,
+     Checks{ FocusedWindowMustBePresent::type,
      CurrentLayoutMustBeOneOfStack::type }          },
     {                 ymwm::environment::commands::AddWindow::type,
-     Rules{ EventMustBeWindowAdded::type }          },
+     Checks{ EventMustBeWindowAdded::type }         },
     {          ymwm::environment::commands::UpdateWindowName::type,
-     Rules{ EventMustBeWindowNameUpdated::type }    },
+     Checks{ EventMustBeWindowNameUpdated::type }   },
 
     {               ymwm::environment::commands::FocusWindow::type,
-     Rules{ EventMustBeMouseOverWindow::type }      },
+     Checks{ EventMustBeMouseOverWindow::type }     },
 
     {              ymwm::environment::commands::RemoveWindow::type,
-     Rules{ EventMustBeWindowRemoved::type }        }
+     Checks{ EventMustBeWindowRemoved::type }       }
   };
-} // namespace ymwm::rules
+} // namespace ymwm::checks

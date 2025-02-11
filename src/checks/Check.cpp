@@ -1,26 +1,25 @@
-#include "Rule.h"
-
-#include "RuleApi.h"
+#include "Check.h"
+#include "ChecksApi.h"
+#include "checks/Map.h"
 #include "environment/Environment.h"
-#include "rules/Map.h"
 
 #include <iostream>
 #include <string_view>
 #include <variant>
 
-namespace ymwm::rules {
-  bool passes_rules(const environment::commands::Command& cmd,
-                    [[maybe_unused]] const ymwm::events::Event& event,
-                    const environment::Environment& env) noexcept {
+namespace ymwm::checks {
+  bool passes_checks(const environment::commands::Command& cmd,
+                     [[maybe_unused]] const ymwm::events::Event& event,
+                     const environment::Environment& env) noexcept {
     return std::visit(
         [&env, event](const auto& c) -> bool {
-          if (not rules_map.contains(c.type)) {
-            // Command doesn't have specific rules, no check required.
+          if (not checks_map.contains(c.type)) {
+            // Command doesn't have specific checks, no check required.
             return true;
           }
 
-          const auto& rules = rules_map.at(c.type);
-          for (std::string_view rule_type : rules) {
+          const auto& checks = checks_map.at(c.type);
+          for (std::string_view rule_type : checks) {
             auto rule = try_find_rule(rule_type);
             if (not rule) {
               std::cerr << "Invalid rule type: " << rule_type << "!\n";
@@ -35,7 +34,7 @@ namespace ymwm::rules {
 
             if (bool rule_passed = std::visit(visitor, *rule);
                 not rule_passed) {
-              std::cerr << "Rule " << rule_type << " didn't pass for command "
+              std::cerr << "Check " << rule_type << " didn't pass for command "
                         << c.type << "\n";
               return rule_passed;
             }
@@ -45,4 +44,4 @@ namespace ymwm::rules {
         },
         cmd);
   }
-} // namespace ymwm::rules
+} // namespace ymwm::checks
