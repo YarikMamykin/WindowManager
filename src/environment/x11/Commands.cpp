@@ -79,11 +79,9 @@ namespace ymwm::environment::commands {
   }
 
   void MoveFocusOnGrid::execute(Environment& e, const events::Event&) const {
-    if (layouts::Grid::type == e.manager().layout().current()) {
-      auto&& parameters = e.manager().layout().parameters();
-      const auto& grid_parameters = std::get<layouts::Grid>(parameters);
+    if (auto parameters = e.manager().layout().parameters<layouts::Grid>()) {
       e.manager().focus().move_on_grid(
-          direction, grid_parameters.grid_size, e.manager().windows().size());
+          direction, parameters->grid_size, e.manager().windows().size());
     }
   }
 
