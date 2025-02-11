@@ -15,6 +15,7 @@
 #include <format>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <initializer_list>
 #include <variant>
 
 static inline std::string
@@ -1697,4 +1698,61 @@ TEST(TestLayouts, GetListOfLayoutsParameters) {
                                    ymwm::layouts::StackHorizontalDouble::type,
                                    ymwm::layouts::ParallelVertical::type,
                                    ymwm::layouts::ParallelHorizontal::type));
+}
+
+TEST(TestLayoutsUtils, TestIsLayout) {
+  EXPECT_TRUE(
+      ymwm::layouts::is<ymwm::layouts::Centered>(ymwm::layouts::Centered{}));
+  EXPECT_TRUE(
+      ymwm::layouts::is<ymwm::layouts::Maximised>(ymwm::layouts::Maximised{}));
+  EXPECT_TRUE(ymwm::layouts::is<ymwm::layouts::Grid>(ymwm::layouts::Grid{}));
+  EXPECT_TRUE(ymwm::layouts::is<ymwm::layouts::StackVerticalRight>(
+      ymwm::layouts::StackVerticalRight{}));
+  EXPECT_TRUE(ymwm::layouts::is<ymwm::layouts::StackVerticalLeft>(
+      ymwm::layouts::StackVerticalLeft{}));
+  EXPECT_TRUE(ymwm::layouts::is<ymwm::layouts::StackVerticalDouble>(
+      ymwm::layouts::StackVerticalDouble{}));
+  EXPECT_TRUE(ymwm::layouts::is<ymwm::layouts::StackHorizontalTop>(
+      ymwm::layouts::StackHorizontalTop{}));
+  EXPECT_TRUE(ymwm::layouts::is<ymwm::layouts::StackHorizontalBottom>(
+      ymwm::layouts::StackHorizontalBottom{}));
+  EXPECT_TRUE(ymwm::layouts::is<ymwm::layouts::StackHorizontalDouble>(
+      ymwm::layouts::StackHorizontalDouble{}));
+  EXPECT_TRUE(ymwm::layouts::is<ymwm::layouts::ParallelVertical>(
+      ymwm::layouts::ParallelVertical{}));
+  EXPECT_TRUE(ymwm::layouts::is<ymwm::layouts::ParallelHorizontal>(
+      ymwm::layouts::ParallelHorizontal{}));
+}
+
+TEST(TestLayoutsUtils, TestIsStackHorizontalLayout) {
+  using namespace ymwm::layouts;
+  for (const Parameters& p :
+       std::initializer_list<Parameters>{ StackHorizontalBottom{},
+                                          StackHorizontalTop{},
+                                          StackHorizontalDouble{} }) {
+    EXPECT_TRUE(is_stack_horizontal(p));
+    EXPECT_FALSE(is_stack_vertical(p));
+  }
+}
+
+TEST(TestLayoutsUtils, TestIsStackVerticalLayout) {
+  using namespace ymwm::layouts;
+  for (const Parameters& p : std::initializer_list<Parameters>{
+           StackVerticalLeft{}, StackVerticalRight{}, StackVerticalDouble{} }) {
+    EXPECT_TRUE(is_stack_vertical(p));
+    EXPECT_FALSE(is_stack_horizontal(p));
+  }
+}
+
+TEST(TestLayoutsUtils, TestIsStackLayout) {
+  using namespace ymwm::layouts;
+  for (const Parameters& p :
+       std::initializer_list<Parameters>{ StackVerticalLeft{},
+                                          StackVerticalRight{},
+                                          StackVerticalDouble{},
+                                          StackHorizontalBottom{},
+                                          StackHorizontalTop{},
+                                          StackHorizontalDouble{} }) {
+    EXPECT_TRUE(is_stack(p));
+  }
 }
