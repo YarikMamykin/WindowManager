@@ -49,28 +49,20 @@ namespace ymwm::window {
     }
 
     inline void update_main_window_ratio(int diff) {
-      if (std::holds_alternative<layouts::StackVerticalRight>(
-              m_layout_parameters) or
-          std::holds_alternative<layouts::StackVerticalLeft>(
-              m_layout_parameters) or
-          std::holds_alternative<layouts::StackVerticalDouble>(
-              m_layout_parameters)) {
+      if (layouts::is_stack_vertical_layout(m_layout_parameters)) {
         namespace cfg = ymwm::config::layouts::stack_vertical;
         cfg::main_window_ratio =
             cfg::MainWindowRatioType{ cfg::main_window_ratio + diff };
         update();
+        return;
       };
 
-      if (std::holds_alternative<layouts::StackHorizontalTop>(
-              m_layout_parameters) or
-          std::holds_alternative<layouts::StackHorizontalBottom>(
-              m_layout_parameters) or
-          std::holds_alternative<layouts::StackHorizontalDouble>(
-              m_layout_parameters)) {
+      if (layouts::is_stack_horizontal_layout(m_layout_parameters)) {
         namespace cfg = ymwm::config::layouts::stack_horizontal;
         cfg::main_window_ratio =
             cfg::MainWindowRatioType{ cfg::main_window_ratio + diff };
         update();
+        return;
       };
 
       if (std::holds_alternative<layouts::Centered>(m_layout_parameters)) {
@@ -78,6 +70,7 @@ namespace ymwm::window {
         cfg::window_width_ratio =
             cfg::WindowWidthRatioType{ cfg::window_width_ratio + diff };
         update();
+        return;
       }
     }
 

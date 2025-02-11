@@ -73,12 +73,38 @@ namespace ymwm::layouts {
     return list_of_parameters_types;
   }
 
-  static inline bool is_stack_layout(std::string_view layout_type) noexcept {
-    return layout_type == layouts::StackVerticalDouble::type or
-           layout_type == layouts::StackVerticalRight::type or
-           layout_type == layouts::StackVerticalLeft::type or
-           layout_type == layouts::StackHorizontalTop::type or
+  static inline constexpr bool
+  is_stack_horizontal_layout(std::string_view layout_type) noexcept {
+    return layout_type == layouts::StackHorizontalTop::type or
            layout_type == layouts::StackHorizontalBottom::type or
            layout_type == layouts::StackHorizontalDouble::type;
   }
+
+  static inline constexpr bool
+  is_stack_horizontal_layout(Parameters parameters) noexcept {
+    return std::holds_alternative<StackHorizontalTop>(parameters) or
+           std::holds_alternative<StackHorizontalBottom>(parameters) or
+           std::holds_alternative<StackHorizontalDouble>(parameters);
+  }
+
+  static inline constexpr bool
+  is_stack_vertical_layout(std::string_view layout_type) noexcept {
+    return layout_type == layouts::StackVerticalDouble::type or
+           layout_type == layouts::StackVerticalRight::type or
+           layout_type == layouts::StackVerticalLeft::type;
+  }
+
+  static inline constexpr bool
+  is_stack_vertical_layout(Parameters parameters) noexcept {
+    return std::holds_alternative<StackVerticalDouble>(parameters) or
+           std::holds_alternative<StackVerticalRight>(parameters) or
+           std::holds_alternative<StackVerticalLeft>(parameters);
+  }
+
+  static inline constexpr bool
+  is_stack_layout(std::string_view layout_type) noexcept {
+    return is_stack_horizontal_layout(layout_type) or
+           is_stack_vertical_layout(layout_type);
+  }
+
 } // namespace ymwm::layouts
