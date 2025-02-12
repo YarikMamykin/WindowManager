@@ -38,6 +38,21 @@ jobs:
           root: /workspace
           paths:
             - Debug/*
+  build-release:
+    executor: archexecutor
+    steps:
+      - checkout
+      - run:
+          command: cmake -S . -B RELEASE -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_TESTS=FALSE -DCMAKE_INSTALL_PREFIX=RELEASE
+      - run:
+          command: cmake --build RELEASE --parallel
+      - run:
+          command: cmake --install RELEASE --strip
+
+      - persist_to_workspace:
+          root: /workspace
+          paths:
+            - RELEASE/*
   tests:
     executor: archexecutor
     steps:
@@ -79,6 +94,11 @@ workflows:
           filters:
             branches:
               ignore:
+                - main
+      - build-release:
+          filters:
+            branches:
+              only:
                 - main
       - tests:
           requires:
