@@ -34,5 +34,7 @@ namespace ymwm::events {
 
     static Type Enter;
     static Type Space;
+    static Type Titulus;
+    static Type Backspace;
   };
 } // namespace ymwm::events

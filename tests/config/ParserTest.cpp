@@ -131,10 +131,11 @@ TEST(TestEventMap, RemoveDuplicatedCommadsFromParsedEventMap) {
   };
   ASSERT_EQ(expected_removed_event, events_removed.front());
 
-  expected_removed_event =
-      ymwm::events::AbstractKeyPress{ .code = ymwm::events::AbstractKeyCode::E,
-                                      .mask =
-                                          ymwm::events::AbstractKeyMask::Ctrl };
+  expected_removed_event = ymwm::events::AbstractKeyPress{
+    .code = ymwm::events::AbstractKeyCode::Q,
+    .mask = ymwm::events::AbstractKeyMask::Alt |
+            ymwm::events::AbstractKeyMask::Shift
+  };
   ASSERT_EQ(expected_removed_event, events_removed.back());
 }
 
