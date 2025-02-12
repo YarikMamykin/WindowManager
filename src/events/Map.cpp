@@ -12,6 +12,7 @@
 #include "layouts/Grid.h"
 #include "layouts/Maximized.h"
 #include "layouts/StackVerticalDouble.h"
+#include "layouts/StackVerticalLeft.h"
 
 namespace ymwm::events {
   Map default_event_map() noexcept {
@@ -31,14 +32,15 @@ namespace ymwm::events {
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::E,
-            .mask = ymwm::events::AbstractKeyMask::Ctrl },
+            .code = ymwm::events::AbstractKeyCode::Q,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Shift },
         ymwm::environment::commands::ExitRequested{});
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::T,
-            .mask = ymwm::events::AbstractKeyMask::Ctrl },
+            .code = ymwm::events::AbstractKeyCode::Titulus,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::RunTerminal{});
 
     bindings.emplace(
@@ -76,9 +78,9 @@ namespace ymwm::events {
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::L,
+            .code = ymwm::events::AbstractKeyCode::Backspace,
             .mask = ymwm::events::AbstractKeyMask::Alt |
-                    ymwm::events::AbstractKeyMask::Shift },
+                    ymwm::events::AbstractKeyMask::Ctrl },
         ymwm::environment::commands::ChangeLayout{});
 
     bindings.emplace(
@@ -114,10 +116,18 @@ namespace ymwm::events {
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
-            .code = ymwm::events::AbstractKeyCode::S,
-            .mask = ymwm::events::AbstractKeyMask::Alt },
+            .code = ymwm::events::AbstractKeyCode::T,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Shift },
         ymwm::environment::commands::SetLayout{
             ymwm::layouts::StackVerticalDouble::type });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::T,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::SetLayout{
+            ymwm::layouts::StackVerticalLeft::type });
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
@@ -166,8 +176,7 @@ namespace ymwm::events {
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
             .code = ymwm::events::AbstractKeyCode::Space,
-            .mask = ymwm::events::AbstractKeyMask::Alt |
-                    ymwm::events::AbstractKeyMask::Ctrl },
+            .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::NextLanguageLayout{});
 
     return bindings;
