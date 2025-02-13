@@ -103,7 +103,7 @@ TEST(TestWindowManager, AddRemoveWindows_LayoutAppliedAfterEachAction) {
 
   ymwm::window::Manager m{ &tenv };
 
-  m.layout().update(ymwm::layouts::Maximised{});
+  m.layout().update(ymwm::layouts::Centered{});
 
   EXPECT_CALL(tenv, screen_width_and_height);
   EXPECT_CALL(tenv, move_and_resize);
@@ -172,7 +172,7 @@ TEST(TestWindowManager, MoveFocusedWindowToCoords) {
       .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
 
   ymwm::window::Manager m{ &tenv };
-  m.layout().update(ymwm::layouts::Maximised{});
+  m.layout().update(ymwm::layouts::Centered{});
 
   m.add_window(ymwm::window::Window{ .id = 1 });
   EXPECT_THAT(m.windows(),
@@ -213,7 +213,7 @@ TEST(TestWindowManager, ResetFocusIfWindowsAreRemoved) {
       .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
 
   ymwm::window::Manager m{ &tenv };
-  m.layout().update(ymwm::layouts::Maximised{});
+  m.layout().update(ymwm::layouts::Centered{});
 
   EXPECT_CALL(tenv, update_window_border).Times(2);
   EXPECT_CALL(tenv, move_and_resize);
@@ -244,7 +244,7 @@ TEST(TestWindowManager, CloseFocusedWindow) {
       .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
 
   ymwm::window::Manager m{ &tenv };
-  m.layout().update(ymwm::layouts::Maximised{});
+  m.layout().update(ymwm::layouts::Centered{});
 
   EXPECT_CALL(tenv, update_window_border).Times(2);
   EXPECT_CALL(tenv, move_and_resize);
@@ -287,7 +287,7 @@ TEST(TestWindowManager, MoveFocusedWindowForward) {
       .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
 
   ymwm::window::Manager m{ &tenv };
-  m.layout().update(ymwm::layouts::Maximised{});
+  m.layout().update(ymwm::layouts::Centered{});
 
   m.add_window(ymwm::window::Window{ .id = 1 });
   m.add_window(ymwm::window::Window{ .id = 2 });
@@ -348,7 +348,7 @@ TEST(TestWindowManager, MoveFocusedWindowBackward) {
       .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
 
   ymwm::window::Manager m{ &tenv };
-  m.layout().update(ymwm::layouts::Maximised{});
+  m.layout().update(ymwm::layouts::Centered{});
 
   m.add_window(ymwm::window::Window{ .id = 1 });
   m.add_window(ymwm::window::Window{ .id = 2 });
@@ -439,7 +439,7 @@ TEST(TestWindowManager, SwapFocusedWindowWithTopOne) {
       .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
 
   ymwm::window::Manager m{ &tenv };
-  m.layout().update(ymwm::layouts::Maximised{});
+  m.layout().update(ymwm::layouts::Centered{});
 
   m.add_window(ymwm::window::Window{ .id = 1 });
   m.add_window(ymwm::window::Window{ .id = 2 });
@@ -512,7 +512,7 @@ TEST(TestWindowManager, TestFocusWindowById) {
       .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
 
   ymwm::window::Manager m{ &tenv };
-  m.layout().update(ymwm::layouts::Maximised{});
+  m.layout().update(ymwm::layouts::Centered{});
 
   m.add_window(ymwm::window::Window{ .id = 1 });
   m.add_window(ymwm::window::Window{ .id = 2 });

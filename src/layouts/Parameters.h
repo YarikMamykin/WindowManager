@@ -1,7 +1,6 @@
 #pragma once
 #include "Centered.h"
 #include "Grid.h"
-#include "Maximized.h"
 #include "ParallelHorizontal.h"
 #include "ParallelVertical.h"
 #include "StackHorizontalBottom.h"
@@ -19,7 +18,6 @@
 namespace ymwm::layouts {
 
   using Parameters = std::variant<Centered,
-                                  Maximised,
                                   Grid,
                                   StackVerticalRight,
                                   StackVerticalLeft,

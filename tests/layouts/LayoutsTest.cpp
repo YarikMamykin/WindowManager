@@ -35,59 +35,77 @@ window_to_string(const ymwm::window::Window& w) noexcept {
 
 static inline const ymwm::common::Color color(0xff, 0x0, 0x0);
 
-TEST(TestLayouts, MaximisedLayout) {
+TEST(TestLayouts, CenteredLayout) {
   ymwm::config::windows::regular_border_width = 0;
   ymwm::config::windows::focused_border_width = 2;
+  ymwm::config::layouts::centered::window_width_ratio = 50;
 
   ymwm::layouts::Layout::BasicParameters basic_parameters;
   basic_parameters.screen_width = 1000;
   basic_parameters.screen_height = 1000;
-  basic_parameters.screen_margins.left = 0u;
-  basic_parameters.screen_margins.right = 0u;
-  basic_parameters.screen_margins.top = 0u;
-  basic_parameters.screen_margins.bottom = 0u;
+  basic_parameters.screen_margins.left = 10u;
+  basic_parameters.screen_margins.right = 10u;
+  basic_parameters.screen_margins.top = 10u;
+  basic_parameters.screen_margins.bottom = 10u;
+  basic_parameters.number_of_windows = 4ul;
 
-  auto parameters = ymwm::layouts::Maximised{};
+  auto parameters = ymwm::layouts::Centered(basic_parameters.screen_margins,
+                                            basic_parameters.screen_width,
+                                            basic_parameters.screen_height);
 
   std::vector<ymwm::window::Window> test_windows(
-      4,
-      ymwm::window::Window{ .x = 0,
-                            .y = 0,
-                            .w = 200,
-                            .h = 200,
-                            .border_width = 1,
-                            .border_color = color });
-  ASSERT_EQ(4ul, test_windows.size());
+      basic_parameters.number_of_windows,
+      ymwm::window::Window{
+          .x = 0,
+          .y = 0,
+          .w = 200,
+          .h = 200,
+          .border_width = ymwm::config::windows::regular_border_width,
+          .border_color = ymwm::config::windows::regular_border_color });
+  ASSERT_EQ(basic_parameters.number_of_windows, test_windows.size());
+
+  ASSERT_EQ(10, basic_parameters.screen_margins.left);
+  ASSERT_EQ(10, basic_parameters.screen_margins.right);
+  ASSERT_EQ(10, basic_parameters.screen_margins.top);
+  ASSERT_EQ(10, basic_parameters.screen_margins.bottom);
+  ASSERT_EQ(50, ymwm::config::layouts::centered::window_width_ratio);
+  ASSERT_EQ(1000, basic_parameters.screen_width);
+  ASSERT_EQ(1000, basic_parameters.screen_height);
+  ASSERT_EQ(4, parameters.two_borders);
 
   std::vector<ymwm::window::Window> expected_windows(
-      4,
-      ymwm::window::Window{ .x = 0,
-                            .y = 0,
-                            .w = 996,
-                            .h = 996,
-                            .border_width = 1,
-                            .border_color = color });
-  ASSERT_EQ(4ul, expected_windows.size());
+      basic_parameters.number_of_windows,
+      {
+          ymwm::window::Window{
+                               .x = 245,
+                               .y = 10,
+                               .w = 486,
+                               .h = 976,
+                               .border_width = ymwm::config::windows::regular_border_width,
+                               .border_color = ymwm::config::windows::regular_border_color },
+  });
+  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
 
-  auto layout = ymwm::layouts::Layout(basic_parameters, parameters);
+  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
 
   for (auto& w : test_windows) {
-    layout.apply(w);
+    prepared_layout.apply(w);
   }
 
   EXPECT_EQ(test_windows, expected_windows)
       << [&test_windows]() -> std::string {
     std::string result;
     for (const auto& w : test_windows) {
-      result += std::format("{} {} {} {}\n", w.x, w.y, w.w, w.h);
+      result += window_to_string(w);
     }
     return result;
   }();
 }
 
-TEST(TestLayouts, MaximisedLayoutWithScreenMargins) {
+TEST(TestLayouts, CenteredLayoutWithScreenMargins) {
   ymwm::config::windows::regular_border_width = 0;
   ymwm::config::windows::focused_border_width = 2;
+  ymwm::config::layouts::centered::window_width_ratio = 100;
 
   ymwm::layouts::Layout::BasicParameters basic_parameters;
   basic_parameters.screen_width = 1000;
@@ -97,7 +115,9 @@ TEST(TestLayouts, MaximisedLayoutWithScreenMargins) {
   basic_parameters.screen_margins.top = 1u;
   basic_parameters.screen_margins.bottom = 1u;
 
-  auto parameters = ymwm::layouts::Maximised{};
+  auto parameters = ymwm::layouts::Centered{ basic_parameters.screen_margins,
+                                             basic_parameters.screen_width,
+                                             basic_parameters.screen_height };
 
   std::vector<ymwm::window::Window> test_windows(
       4,
@@ -1550,85 +1570,12 @@ TEST(TestLayouts, StackHorizontalDoubleLayout_MainWindowOnly) {
   }();
 }
 
-TEST(TestLayouts, CenteredLayout) {
-  ymwm::config::windows::regular_border_width = 0;
-  ymwm::config::windows::focused_border_width = 2;
-  ymwm::config::layouts::centered::window_width_ratio = 50;
-
-  ymwm::layouts::Layout::BasicParameters basic_parameters;
-  basic_parameters.screen_width = 1000;
-  basic_parameters.screen_height = 1000;
-  basic_parameters.screen_margins.left = 10u;
-  basic_parameters.screen_margins.right = 10u;
-  basic_parameters.screen_margins.top = 10u;
-  basic_parameters.screen_margins.bottom = 10u;
-  basic_parameters.number_of_windows = 4ul;
-
-  auto parameters = ymwm::layouts::Centered(basic_parameters.screen_margins,
-                                            basic_parameters.screen_width,
-                                            basic_parameters.screen_height);
-
-  std::vector<ymwm::window::Window> test_windows(
-      basic_parameters.number_of_windows,
-      ymwm::window::Window{
-          .x = 0,
-          .y = 0,
-          .w = 200,
-          .h = 200,
-          .border_width = ymwm::config::windows::regular_border_width,
-          .border_color = ymwm::config::windows::regular_border_color });
-  ASSERT_EQ(basic_parameters.number_of_windows, test_windows.size());
-
-  ASSERT_EQ(10, basic_parameters.screen_margins.left);
-  ASSERT_EQ(10, basic_parameters.screen_margins.right);
-  ASSERT_EQ(10, basic_parameters.screen_margins.top);
-  ASSERT_EQ(10, basic_parameters.screen_margins.bottom);
-  ASSERT_EQ(50, ymwm::config::layouts::centered::window_width_ratio);
-  ASSERT_EQ(1000, basic_parameters.screen_width);
-  ASSERT_EQ(1000, basic_parameters.screen_height);
-  ASSERT_EQ(4, parameters.two_borders);
-
-  std::vector<ymwm::window::Window> expected_windows(
-      basic_parameters.number_of_windows,
-      {
-          ymwm::window::Window{
-                               .x = 245,
-                               .y = 10,
-                               .w = 486,
-                               .h = 976,
-                               .border_width = ymwm::config::windows::regular_border_width,
-                               .border_color = ymwm::config::windows::regular_border_color },
-  });
-  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
-
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += window_to_string(w);
-    }
-    return result;
-  }();
-}
-
 TEST(TestLayouts, GetLayoutParametersFromString) {
   auto centered_parameters =
       ymwm::layouts::try_find_parameters(ymwm::layouts::Centered::type);
   ASSERT_TRUE(centered_parameters);
   ASSERT_TRUE(
       std::holds_alternative<ymwm::layouts::Centered>(*centered_parameters));
-
-  auto maximised_parameters =
-      ymwm::layouts::try_find_parameters(ymwm::layouts::Maximised::type);
-  ASSERT_TRUE(maximised_parameters);
-  ASSERT_TRUE(
-      std::holds_alternative<ymwm::layouts::Maximised>(*maximised_parameters));
 
   auto grid_parameters =
       ymwm::layouts::try_find_parameters(ymwm::layouts::Grid::type);
@@ -1688,7 +1635,6 @@ TEST(TestLayouts, GetListOfLayoutsParameters) {
   auto parameters_list = ymwm::layouts::list_of_parameters();
   EXPECT_THAT(parameters_list,
               testing::ElementsAre(ymwm::layouts::Centered::type,
-                                   ymwm::layouts::Maximised::type,
                                    ymwm::layouts::Grid::type,
                                    ymwm::layouts::StackVerticalRight::type,
                                    ymwm::layouts::StackVerticalLeft::type,
@@ -1703,8 +1649,6 @@ TEST(TestLayouts, GetListOfLayoutsParameters) {
 TEST(TestLayoutsUtils, TestIsLayout) {
   EXPECT_TRUE(
       ymwm::layouts::is<ymwm::layouts::Centered>(ymwm::layouts::Centered{}));
-  EXPECT_TRUE(
-      ymwm::layouts::is<ymwm::layouts::Maximised>(ymwm::layouts::Maximised{}));
   EXPECT_TRUE(ymwm::layouts::is<ymwm::layouts::Grid>(ymwm::layouts::Grid{}));
   EXPECT_TRUE(ymwm::layouts::is<ymwm::layouts::StackVerticalRight>(
       ymwm::layouts::StackVerticalRight{}));
