@@ -45,6 +45,6 @@ namespace ymwm::config::layouts {
 
   namespace centered {
     using WindowWidthRatioType = common::Ratio<50u, 100u>;
-    inline WindowWidthRatioType window_width_ratio{ 80 };
+    inline WindowWidthRatioType window_width_ratio{ 100 };
   } // namespace centered
 } // namespace ymwm::config::layouts
