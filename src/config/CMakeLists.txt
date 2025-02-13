@@ -8,7 +8,7 @@ target_include_directories(config PRIVATE
 	${YAML_INCLUDE_DIR}
 )
 target_link_libraries(config PRIVATE
-	${YAML_SHARED_LIB}
+	${YAML_LIB}
 )
 add_dependencies(config
 	yaml_cpp

@@ -1,6 +1,6 @@
 set(YAML_DIR ${CMAKE_BINARY_DIR}/yaml-cpp)
 set(YAML_INCLUDE_DIR ${YAML_DIR}/include)
-set(YAML_SHARED_LIB ${CMAKE_INSTALL_PREFIX}/lib/libyaml-cpp.so)
+set(YAML_LIB ${CMAKE_INSTALL_PREFIX}/lib/libyaml-cpp.a)
 set(YAML_REPO https://github.com/jbeder/yaml-cpp.git)
 
 add_custom_command(OUTPUT ${YAML_DIR}
@@ -8,8 +8,8 @@ add_custom_command(OUTPUT ${YAML_DIR}
 	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 
-add_custom_command(OUTPUT ${YAML_SHARED_LIB}
-	COMMAND cmake -S . -B ${CMAKE_BUILD_TYPE} -DYAML_BUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+add_custom_command(OUTPUT ${YAML_LIB}
+	COMMAND cmake -S . -B ${CMAKE_BUILD_TYPE} -DYAML_BUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
 	COMMAND cmake --build ${CMAKE_BUILD_TYPE} --parallel
 	COMMAND cmake --install ${CMAKE_BUILD_TYPE}
 	DEPENDS ${YAML_DIR}
@@ -18,5 +18,5 @@ add_custom_command(OUTPUT ${YAML_SHARED_LIB}
 
 add_custom_target(yaml_cpp 
 	DEPENDS ${YAML_DIR}
-	DEPENDS ${YAML_SHARED_LIB}
+	DEPENDS ${YAML_LIB}
 )
