@@ -65,6 +65,10 @@ namespace ymwm::window {
         return;
       }
 
+      if (auto w = window(); w.has_value() and wid == w->get().id) {
+        return;
+      }
+
       auto found_window =
           std::find_if(m_windows.cbegin(),
                        m_windows.cend(),

@@ -686,3 +686,35 @@ TEST(TestLayoutManager, TestRotateStackLayout) {
     ASSERT_TRUE(contains_expected_parameters(params));
   }
 }
+
+TEST(TestFocusManager, DontFocusSameWindowTwice) {
+  ymwm::environment::TestEnvironment tenv;
+  ON_CALL(tenv, screen_width_and_height)
+      .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
+
+  ymwm::window::Manager m{ &tenv };
+
+  m.add_window(ymwm::window::Window{ .id = 1 });
+
+  ASSERT_EQ(1, m.focus().window()->get().id);
+  ASSERT_EQ(1ul, m.windows().size());
+  ASSERT_TRUE(m.focus().window());
+  ASSERT_EQ(1, m.focus().window()->get().id);
+
+  EXPECT_CALL(tenv, focus_window).Times(0);
+  m.focus().window(1);
+}
+
+TEST(TestFocusManager, DontFocusNonExistingWindow) {
+  ymwm::environment::TestEnvironment tenv;
+  ON_CALL(tenv, screen_width_and_height)
+      .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
+
+  ymwm::window::Manager m{ &tenv };
+
+  ASSERT_TRUE(m.windows().empty());
+  ASSERT_FALSE(m.focus().window().has_value());
+
+  EXPECT_CALL(tenv, focus_window).Times(0);
+  m.focus().window(1);
+}

@@ -107,7 +107,9 @@ namespace ymwm::environment::commands {
   }
 
   void FocusWindow::execute(Environment& e, const events::Event& event) const {
-    if (const auto* ev = std::get_if<events::MouseOverWindow>(&event)) {
+    if (const auto* ev = std::get_if<events::MouseOverWindow>(&event);
+        ev and
+        not layouts::is<layouts::Centered>(e.manager().layout().parameters())) {
       e.manager().focus().window(ev->wid);
     }
   }
