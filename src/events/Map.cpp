@@ -9,8 +9,8 @@
 #include "events/WindowAdded.h"
 #include "events/WindowNameUpdated.h"
 #include "events/WindowRemoved.h"
+#include "layouts/Centered.h"
 #include "layouts/Grid.h"
-#include "layouts/Maximized.h"
 #include "layouts/StackVerticalDouble.h"
 #include "layouts/StackVerticalLeft.h"
 
@@ -112,7 +112,7 @@ namespace ymwm::events {
             .code = ymwm::events::AbstractKeyCode::M,
             .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::SetLayout{
-            ymwm::layouts::Maximised::type });
+            ymwm::layouts::Centered::type });
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
