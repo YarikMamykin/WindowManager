@@ -153,6 +153,7 @@ namespace ymwm::window {
       m_before_focus_move();
 
       m_focused_window_index = new_index;
+      verify_index();
       update();
 
       m_after_focus_move();
