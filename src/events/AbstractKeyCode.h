@@ -36,5 +36,7 @@ namespace ymwm::events {
     static Type Space;
     static Type Titulus;
     static Type Backspace;
+    static Type Period;
+    static Type Comma;
   };
 } // namespace ymwm::events
