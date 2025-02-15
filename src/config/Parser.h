@@ -3,6 +3,7 @@
 #include "events/Map.h"
 
 #include <filesystem>
+#include <format>
 #include <list>
 #include <stdexcept>
 #include <string_view>
@@ -20,6 +21,8 @@ namespace ymwm::config {
     [[nodiscard]] events::Map event_map() const;
     [[nodiscard]] std::list<events::Event> events_removed() const;
 
+    static void default_config_to_yaml(std::filesystem::path&& config_path);
+
   private:
     events::Map event_map_from_yaml(const YAML::Node& key_bindings);
     void parse_layouts_config(const YAML::Node& layouts) const;
@@ -33,6 +36,11 @@ namespace ymwm::config {
   struct ParsingError : std::runtime_error {
     ParsingError(std::string_view err)
         : std::runtime_error(err.data()) {}
+  };
+
+  struct CannotOpenFileError : std::runtime_error {
+    CannotOpenFileError(std::string&& err)
+        : std::runtime_error(std::format("Cannot open file: {}", err)) {}
   };
 
 } // namespace ymwm::config

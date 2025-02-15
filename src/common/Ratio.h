@@ -5,13 +5,14 @@
 namespace ymwm::common {
   template <unsigned int min = 0u, unsigned int max = 100u>
   struct Ratio {
+    using UnderlyingType = unsigned int;
 
-    inline Ratio(unsigned int value) noexcept
+    inline Ratio(UnderlyingType value) noexcept
         : m_value(std::clamp(value, min, max)) {}
 
-    inline operator unsigned int() const noexcept { return m_value; }
+    inline operator UnderlyingType() const noexcept { return m_value; }
 
   private:
-    int m_value;
+    UnderlyingType m_value;
   };
 } // namespace ymwm::common

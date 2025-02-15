@@ -47,12 +47,6 @@ namespace ymwm::config::utils {
 
   static inline std::optional<unsigned int>
   key_symbol_to_code(std::string&& symbol) noexcept {
-
-    std::transform(symbol.begin(),
-                   symbol.end(),
-                   symbol.begin(),
-                   [](unsigned char c) -> int { return std::toupper(c); });
-
     return symbol_to_code_table.contains(symbol)
                ? std::optional(symbol_to_code_table.at(symbol))
                : std::nullopt;
@@ -63,7 +57,8 @@ namespace ymwm::config::utils {
     return environment::commands::try_find_command(command_type);
   }
 
-  static inline const std::unordered_map<std::string, unsigned int>
+  static inline const std::unordered_map<std::string_view,
+                                         events::AbstractKeyMask::Type>
       mask_symbol_to_code_table{
         {  "Ctrl",  events::AbstractKeyMask::Ctrl },
         {   "Alt",   events::AbstractKeyMask::Alt },
@@ -74,7 +69,7 @@ namespace ymwm::config::utils {
   mask_symbol_to_code(std::string&& symbol) noexcept {
 
     return mask_symbol_to_code_table.contains(symbol)
-               ? symbol_to_code_table.at(symbol)
+               ? mask_symbol_to_code_table.at(symbol)
                : events::AbstractKeyMask::NONE;
   }
 
