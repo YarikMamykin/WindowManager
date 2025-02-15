@@ -133,6 +133,18 @@ namespace ymwm::window {
       focus().first_window();
     }
 
+    inline void activate() noexcept {
+      layout().update();
+      focus().update();
+    }
+
+    inline void deactivate() noexcept {
+      for (auto& w : m_windows) {
+        w.x = 0 - w.w * 2;
+        m_env->move_and_resize(w);
+      }
+    }
+
     inline FocusManager<Environment>& focus() noexcept {
       return m_focus_manager;
     }
