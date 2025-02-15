@@ -1,13 +1,13 @@
 key-bindings:
   - type: press
-    key: e
+    key: E
     masks:
       - Ctrl
     cmd:
       name: CloseWindow
 
   - type: press
-    key: l
+    key: L
     masks:
       - Alt
       - Shift

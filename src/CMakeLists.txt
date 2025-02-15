@@ -45,4 +45,8 @@ target_compile_options(${PROJECT_NAME}
 	-Wextra
 	-Wpedantic
 )
+target_compile_definitions(${PROJECT_NAME}
+ PRIVATE
+ VERSION="${PROJECT_VERSION}"
+)
 install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/)

@@ -9,6 +9,7 @@
 #include "events/Map.h"
 
 #include <algorithm>
+#include <filesystem>
 #include <gtest/gtest.h>
 #include <variant>
 
@@ -84,6 +85,11 @@ TEST(TestLayoutsConfig, EachLayoutConfig) {
   EXPECT_EQ(80, ymwm::config::layouts::stack_vertical::main_window_ratio);
   EXPECT_EQ(12, ymwm::config::layouts::stack_vertical::main_window_margin);
   EXPECT_EQ(11, ymwm::config::layouts::stack_vertical::stack_window_margin);
+  EXPECT_EQ(70, ymwm::config::layouts::stack_horizontal::main_window_ratio);
+  EXPECT_EQ(13, ymwm::config::layouts::stack_horizontal::main_window_margin);
+  EXPECT_EQ(10, ymwm::config::layouts::stack_horizontal::stack_window_margin);
+  EXPECT_EQ(10, ymwm::config::layouts::parallel::margin);
+  EXPECT_EQ(90, ymwm::config::layouts::centered::window_width_ratio);
 }
 
 TEST(TestLayoutsConfig, EachWindowConfig) {
@@ -158,6 +164,11 @@ TEST(TestConfig, AllValidConfig) {
   EXPECT_EQ(80, ymwm::config::layouts::stack_vertical::main_window_ratio);
   EXPECT_EQ(12, ymwm::config::layouts::stack_vertical::main_window_margin);
   EXPECT_EQ(11, ymwm::config::layouts::stack_vertical::stack_window_margin);
+  EXPECT_EQ(70, ymwm::config::layouts::stack_horizontal::main_window_ratio);
+  EXPECT_EQ(13, ymwm::config::layouts::stack_horizontal::main_window_margin);
+  EXPECT_EQ(10, ymwm::config::layouts::stack_horizontal::stack_window_margin);
+  EXPECT_EQ(10, ymwm::config::layouts::parallel::margin);
+  EXPECT_EQ(90, ymwm::config::layouts::centered::window_width_ratio);
   EXPECT_EQ("us,ru,ua", ymwm::config::misc::language_layout);
   EXPECT_EQ("/tmp/some.png", ymwm::config::misc::background_image_path);
   ymwm::events::Map events_map;
@@ -227,4 +238,57 @@ TEST(TestConfig, ParseMisc) {
   ymwm::config::Parser parser{ "misc.yaml" };
   EXPECT_EQ("us,ru,ua", ymwm::config::misc::language_layout);
   EXPECT_EQ("/tmp/some.png", ymwm::config::misc::background_image_path);
+}
+
+TEST(TestConfig, GenerateConfigToFile) {
+  ymwm::config::layouts::screen_margins = { 10, 11, 21, 34 };
+  ymwm::config::layouts::grid::grid_margins = { 1, 2 };
+  ymwm::config::layouts::parallel::margin = 123;
+  ymwm::config::layouts::centered::window_width_ratio = 74;
+  ymwm::config::layouts::stack_vertical::main_window_margin = 51;
+  ymwm::config::layouts::stack_vertical::stack_window_margin = 52;
+  ymwm::config::layouts::stack_vertical::main_window_ratio = 53;
+  ymwm::config::layouts::stack_horizontal::main_window_margin = 48;
+  ymwm::config::layouts::stack_horizontal::stack_window_margin = 49;
+  ymwm::config::layouts::stack_horizontal::main_window_ratio = 73;
+  ymwm::config::windows::regular_border_color = { 0xff, 0x10, 0xfe };
+  ymwm::config::windows::focused_border_color = { 0xaa, 0xdc, 0xee };
+  ymwm::config::windows::regular_border_width = 1;
+  ymwm::config::windows::focused_border_width = 2;
+  ymwm::config::misc::language_layout = "ru,fr,de";
+  ymwm::config::misc::background_image_path = "/tmp/someimg.png";
+
+  const std::filesystem::path test_config_path =
+      std::filesystem::temp_directory_path() / "test-config.yaml";
+  EXPECT_NO_THROW(
+      ymwm::config::Parser::default_config_to_yaml(test_config_path.string()));
+  ASSERT_TRUE(std::filesystem::exists(test_config_path));
+
+  ymwm::config::Parser parser{ test_config_path.string() };
+  auto parsed_event_map = parser.event_map();
+
+  EXPECT_EQ(10, ymwm::config::layouts::screen_margins.left);
+  EXPECT_EQ(11, ymwm::config::layouts::screen_margins.right);
+  EXPECT_EQ(21, ymwm::config::layouts::screen_margins.top);
+  EXPECT_EQ(34, ymwm::config::layouts::screen_margins.bottom);
+  EXPECT_EQ(1, ymwm::config::layouts::grid::grid_margins.horizontal);
+  EXPECT_EQ(2, ymwm::config::layouts::grid::grid_margins.vertical);
+  EXPECT_EQ(123, ymwm::config::layouts::parallel::margin);
+  EXPECT_EQ(74, ymwm::config::layouts::centered::window_width_ratio);
+  EXPECT_EQ(53, ymwm::config::layouts::stack_vertical::main_window_ratio);
+  EXPECT_EQ(51, ymwm::config::layouts::stack_vertical::main_window_margin);
+  EXPECT_EQ(52, ymwm::config::layouts::stack_vertical::stack_window_margin);
+  EXPECT_EQ(73, ymwm::config::layouts::stack_horizontal::main_window_ratio);
+  EXPECT_EQ(48, ymwm::config::layouts::stack_horizontal::main_window_margin);
+  EXPECT_EQ(49, ymwm::config::layouts::stack_horizontal::stack_window_margin);
+  EXPECT_EQ(1, ymwm::config::windows::regular_border_width);
+  EXPECT_EQ(2, ymwm::config::windows::focused_border_width);
+  EXPECT_EQ(0xff, ymwm::config::windows::regular_border_color.red);
+  EXPECT_EQ(0x10, ymwm::config::windows::regular_border_color.green);
+  EXPECT_EQ(0xfe, ymwm::config::windows::regular_border_color.blue);
+  EXPECT_EQ(0xaa, ymwm::config::windows::focused_border_color.red);
+  EXPECT_EQ(0xdc, ymwm::config::windows::focused_border_color.green);
+  EXPECT_EQ(0xee, ymwm::config::windows::focused_border_color.blue);
+  EXPECT_EQ("ru,fr,de", ymwm::config::misc::language_layout);
+  EXPECT_EQ("/tmp/someimg.png", ymwm::config::misc::background_image_path);
 }

@@ -1,5 +1,7 @@
 #include "Parser.h"
 
+#include "CommandToYaml.h"
+#include "EventToYaml.h"
 #include "YamlModels.h"
 #include "common/Color.h"
 #include "config/Layout.h"
@@ -10,6 +12,7 @@
 
 #include <algorithm>
 #include <filesystem>
+#include <fstream>
 #include <yaml-cpp/exceptions.h>
 #include <yaml-cpp/yaml.h>
 
@@ -123,7 +126,7 @@ namespace ymwm::config {
       }
     }
 
-    if (auto stack_vertical = layouts["stack-vertical-right"]) {
+    if (auto stack_vertical = layouts["stack-vertical"]) {
 
       if (auto main_window_ratio = stack_vertical["main-window-ratio"]) {
         ymwm::config::layouts::stack_vertical::main_window_ratio =
@@ -139,6 +142,40 @@ namespace ymwm::config {
       if (auto stack_window_margin = stack_vertical["stack-window-margin"]) {
         ymwm::config::layouts::stack_vertical::stack_window_margin =
             stack_window_margin.as<MarginType>();
+      }
+    }
+
+    if (auto stack_horizontal = layouts["stack-horizontal"]) {
+
+      if (auto main_window_ratio = stack_horizontal["main-window-ratio"]) {
+        ymwm::config::layouts::stack_horizontal::main_window_ratio =
+            ymwm::config::layouts::stack_horizontal::MainWindowRatioType(
+                main_window_ratio.as<unsigned int>());
+      }
+
+      if (auto main_window_margin = stack_horizontal["main-window-margin"]) {
+        ymwm::config::layouts::stack_horizontal::main_window_margin =
+            main_window_margin.as<MarginType>();
+      }
+
+      if (auto stack_window_margin = stack_horizontal["stack-window-margin"]) {
+        ymwm::config::layouts::stack_horizontal::stack_window_margin =
+            stack_window_margin.as<MarginType>();
+      }
+    }
+
+    if (auto parallel = layouts["parallel"]) {
+      if (auto margin = parallel["margin"]) {
+        ymwm::config::layouts::parallel::margin =
+            margin.as<layouts::MarginType>();
+      }
+    }
+
+    if (auto centered = layouts["centered"]) {
+      if (auto window_width_ratio = centered["window-width-ratio"]) {
+        ymwm::config::layouts::centered::window_width_ratio =
+            window_width_ratio
+                .as<layouts::centered::WindowWidthRatioType::UnderlyingType>();
       }
     }
   }
@@ -215,5 +252,86 @@ namespace ymwm::config {
   [[nodiscard]] events::Map Parser::event_map() const { return m_event_map; }
   [[nodiscard]] std::list<events::Event> Parser::events_removed() const {
     return m_events_removed;
+  }
+
+  void Parser::default_config_to_yaml(std::filesystem::path&& config_path) {
+    using namespace config::layouts;
+    using namespace config::windows;
+    using namespace config::misc;
+
+    std::ofstream fout(config_path);
+    if (not fout.is_open()) {
+      throw CannotOpenFileError{ config_path.string() };
+    }
+
+    auto event_map = ymwm::events::default_event_map();
+
+    YAML::Node config;
+
+    // Create the "layouts" node
+    YAML::Node layouts;
+    layouts["screen-margins"]["left"] = screen_margins.left;
+    layouts["screen-margins"]["right"] = screen_margins.right;
+    layouts["screen-margins"]["top"] = screen_margins.top;
+    layouts["screen-margins"]["bottom"] = screen_margins.bottom;
+
+    layouts["grid"]["margins"]["horizontal"] = grid::grid_margins.horizontal;
+    layouts["grid"]["margins"]["vertical"] = grid::grid_margins.vertical;
+
+    layouts["stack-vertical-right"]["main-window-ratio"] =
+        static_cast<stack_vertical::MainWindowRatioType::UnderlyingType>(
+            stack_vertical::main_window_ratio);
+    layouts["stack-vertical-right"]["main-window-margin"] =
+        static_cast<stack_vertical::MainWindowRatioType::UnderlyingType>(
+            stack_vertical::main_window_margin);
+    layouts["stack-vertical-right"]["stack-window-margin"] =
+        stack_vertical::stack_window_margin;
+
+    layouts["stack-horizontal-right"]["main-window-ratio"] =
+        static_cast<stack_horizontal::MainWindowRatioType::UnderlyingType>(
+            stack_horizontal::main_window_ratio);
+    layouts["stack-horizontal-right"]["main-window-margin"] =
+        static_cast<stack_horizontal::MainWindowRatioType::UnderlyingType>(
+            stack_horizontal::main_window_margin);
+    layouts["stack-horizontal-right"]["stack-window-margin"] =
+        stack_horizontal::stack_window_margin;
+
+    layouts["parallel"]["margin"] = parallel::margin;
+    layouts["centered"]["window-width-ratio"] =
+        static_cast<centered::WindowWidthRatioType::UnderlyingType>(
+            centered::window_width_ratio);
+
+    // Create the "windows" node
+    YAML::Node windows;
+    windows["regular"]["border"]["width"] = regular_border_width;
+    windows["regular"]["border"]["color"] = regular_border_color;
+
+    windows["focused"]["border"]["width"] = focused_border_width;
+    windows["focused"]["border"]["color"] = focused_border_color;
+
+    // Create the "key-bindings" node
+    YAML::Node key_bindings;
+
+    for (const auto& [event, command] : event_map) {
+
+      if (auto event_node = std::visit(EventToYaml{}, event)) {
+        YAML::Node binding;
+        binding = event_node.value();
+        binding["cmd"] = std::visit(CommandToYaml{}, command);
+        key_bindings.push_back(binding);
+      }
+    }
+
+    YAML::Node misc;
+    misc["languages"] = misc::language_layout;
+    misc["background_image"] = misc::background_image_path.string();
+
+    config["key-bindings"] = key_bindings;
+    config["layouts"] = layouts;
+    config["windows"] = windows;
+    config["misc"] = misc;
+
+    fout << config;
+    fout.close();
   }
 } // namespace ymwm::config

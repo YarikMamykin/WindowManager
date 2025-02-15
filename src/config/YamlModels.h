@@ -1,7 +1,10 @@
+#pragma once
 #include "common/Color.h"
+#include "common/Direction.h"
 #include "events/AbstractKeyPress.h"
 #include "utils.h"
 
+#include <algorithm>
 #include <yaml-cpp/yaml.h>
 
 namespace YAML {
@@ -31,6 +34,29 @@ namespace YAML {
 
       return true;
     }
+
+    static Node encode(const ymwm::events::AbstractKeyPress& event) {
+      Node node;
+
+      node["type"] = event.type;
+
+      for (const auto& [symbol, code] :
+           ymwm::config::utils::symbol_to_code_table) {
+        if (code == event.code) {
+          node["key"] = symbol;
+          break;
+        }
+      }
+
+      for (const auto& [symbol, mask] :
+           ymwm::config::utils::mask_symbol_to_code_table) {
+        if (event.mask & mask) {
+          node["masks"].push_back(symbol);
+        }
+      }
+
+      return node;
+    }
   };
 } // namespace YAML
 
@@ -58,6 +84,67 @@ namespace YAML {
       }
 
       return false;
+    }
+
+    static Node encode(const ymwm::common::Color& color) {
+      Node node;
+      node.push_back(color.red);
+      node.push_back(color.green);
+      node.push_back(color.blue);
+      return node;
+    }
+  };
+
+  template <>
+  struct convert<ymwm::common::Direction> {
+    static bool decode(const Node& node, ymwm::common::Direction& direction) {
+      if (!node.IsScalar()) {
+        return false;
+      }
+
+      auto value = node.as<std::string>();
+
+      std::transform(value.begin(),
+                     value.end(),
+                     value.begin(),
+                     [](unsigned char c) -> int { return std::tolower(c); });
+
+      if ("up" == value) {
+        direction = ymwm::common::Direction::Up;
+        return true;
+      }
+
+      if ("down" == value) {
+        direction = ymwm::common::Direction::Down;
+        return true;
+      }
+
+      if ("left" == value) {
+        direction = ymwm::common::Direction::Left;
+        return true;
+      }
+
+      if ("right" == value) {
+        direction = ymwm::common::Direction::Right;
+        return true;
+      }
+
+      return false;
+    }
+
+    static Node encode(const ymwm::common::Direction& direction) {
+      Node node;
+      switch (direction) {
+      case ymwm::common::Direction::Up:
+        node = "Up";
+      case ymwm::common::Direction::Down:
+        node = "Down";
+      case ymwm::common::Direction::Left:
+        node = "Left";
+      case ymwm::common::Direction::Right:
+        node = "Right";
+      }
+      return node;
     }
   };
 } // namespace YAML
