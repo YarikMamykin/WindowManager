@@ -11,41 +11,42 @@
 #include <yaml-cpp/yaml.h>
 
 namespace ymwm::config::utils {
+  inline const std::unordered_map<std::string, unsigned int>
+      symbol_to_code_table{
+        {         "A",         events::AbstractKeyCode::A },
+        {         "B",         events::AbstractKeyCode::B },
+        {         "C",         events::AbstractKeyCode::C },
+        {         "D",         events::AbstractKeyCode::D },
+        {         "E",         events::AbstractKeyCode::E },
+        {         "F",         events::AbstractKeyCode::F },
+        {         "G",         events::AbstractKeyCode::G },
+        {         "H",         events::AbstractKeyCode::H },
+        {         "I",         events::AbstractKeyCode::I },
+        {         "J",         events::AbstractKeyCode::J },
+        {         "K",         events::AbstractKeyCode::K },
+        {         "L",         events::AbstractKeyCode::L },
+        {         "M",         events::AbstractKeyCode::M },
+        {         "N",         events::AbstractKeyCode::N },
+        {         "O",         events::AbstractKeyCode::O },
+        {         "P",         events::AbstractKeyCode::P },
+        {         "Q",         events::AbstractKeyCode::Q },
+        {         "R",         events::AbstractKeyCode::R },
+        {         "S",         events::AbstractKeyCode::S },
+        {         "T",         events::AbstractKeyCode::T },
+        {         "U",         events::AbstractKeyCode::U },
+        {         "V",         events::AbstractKeyCode::V },
+        {         "W",         events::AbstractKeyCode::W },
+        {         "X",         events::AbstractKeyCode::X },
+        {         "Y",         events::AbstractKeyCode::Y },
+        {         "Z",         events::AbstractKeyCode::Z },
+        {     "Enter",     events::AbstractKeyCode::Enter },
+        { "Backspace", events::AbstractKeyCode::Backspace },
+        {     "Space",     events::AbstractKeyCode::Space },
+        {         "~",   events::AbstractKeyCode::Titulus },
+  };
+
   static inline std::optional<unsigned int>
   key_symbol_to_code(std::string&& symbol) noexcept {
-    static const std::unordered_map<std::string, unsigned int>
-        symbol_to_code_table{
-          {         "A",         events::AbstractKeyCode::A },
-          {         "B",         events::AbstractKeyCode::B },
-          {         "C",         events::AbstractKeyCode::C },
-          {         "D",         events::AbstractKeyCode::D },
-          {         "E",         events::AbstractKeyCode::E },
-          {         "F",         events::AbstractKeyCode::F },
-          {         "G",         events::AbstractKeyCode::G },
-          {         "H",         events::AbstractKeyCode::H },
-          {         "I",         events::AbstractKeyCode::I },
-          {         "J",         events::AbstractKeyCode::J },
-          {         "K",         events::AbstractKeyCode::K },
-          {         "L",         events::AbstractKeyCode::L },
-          {         "M",         events::AbstractKeyCode::M },
-          {         "N",         events::AbstractKeyCode::N },
-          {         "O",         events::AbstractKeyCode::O },
-          {         "P",         events::AbstractKeyCode::P },
-          {         "Q",         events::AbstractKeyCode::Q },
-          {         "R",         events::AbstractKeyCode::R },
-          {         "S",         events::AbstractKeyCode::S },
-          {         "T",         events::AbstractKeyCode::T },
-          {         "U",         events::AbstractKeyCode::U },
-          {         "V",         events::AbstractKeyCode::V },
-          {         "W",         events::AbstractKeyCode::W },
-          {         "X",         events::AbstractKeyCode::X },
-          {         "Y",         events::AbstractKeyCode::Y },
-          {         "Z",         events::AbstractKeyCode::Z },
-          {     "Enter",     events::AbstractKeyCode::Enter },
-          { "Backspace", events::AbstractKeyCode::Backspace },
-          {     "Space",     events::AbstractKeyCode::Space },
-          {         "~",   events::AbstractKeyCode::Titulus },
-    };
 
     std::transform(symbol.begin(),
                    symbol.end(),
@@ -62,16 +63,17 @@ namespace ymwm::config::utils {
     return environment::commands::try_find_command(command_type);
   }
 
+  static inline const std::unordered_map<std::string, unsigned int>
+      mask_symbol_to_code_table{
+        {  "Ctrl",  events::AbstractKeyMask::Ctrl },
+        {   "Alt",   events::AbstractKeyMask::Alt },
+        { "Shift", events::AbstractKeyMask::Shift },
+  };
+
   static inline unsigned int
   mask_symbol_to_code(std::string&& symbol) noexcept {
 
-    static const std::unordered_map<std::string, unsigned int>
-        symbol_to_code_table{
-          {  "Ctrl",  events::AbstractKeyMask::Ctrl },
-          {   "Alt",   events::AbstractKeyMask::Alt },
-          { "Shift", events::AbstractKeyMask::Shift },
-    };
-    return symbol_to_code_table.contains(symbol)
+    return mask_symbol_to_code_table.contains(symbol)
                ? symbol_to_code_table.at(symbol)
                : events::AbstractKeyMask::NONE;
   }
