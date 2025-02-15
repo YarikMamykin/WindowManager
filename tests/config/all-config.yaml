@@ -8,10 +8,18 @@ layouts:
     margins:
       horizontal: 12
       vertical: 34
-  stack-vertical-right:
+  stack-vertical:
     main-window-ratio: 80
     main-window-margin: 12
     stack-window-margin: 11
+  stack-horizontal:
+    main-window-ratio: 70
+    main-window-margin: 13
+    stack-window-margin: 10
+  parallel:
+    margin: 10
+  centered:
+    window-width-ratio: 90
 
 windows:
   focused:
