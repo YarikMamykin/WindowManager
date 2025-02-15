@@ -17,6 +17,10 @@ namespace ymwm::environment {
   void Environment::request_exit() noexcept { m_exit_requested = true; }
 
   ymwm::window::Manager<Environment>& Environment::manager() noexcept {
-    return m_manager;
+    return m_group_manager.manager();
+  }
+
+  ymwm::window::GroupManager<Environment>& Environment::group() noexcept {
+    return m_group_manager;
   }
 } // namespace ymwm::environment

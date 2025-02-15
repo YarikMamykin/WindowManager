@@ -3,7 +3,7 @@
 #include "Command.h"
 #include "events/Event.h"
 #include "events/Map.h"
-#include "window/Manager.h"
+#include "window/GroupManager.h"
 
 #include <memory>
 #include <tuple>
@@ -31,12 +31,13 @@ namespace ymwm::environment {
     void move_and_resize(const window::Window& w) noexcept;
     void close_window(const window::Window& w) noexcept;
     ymwm::window::Manager<Environment>& manager() noexcept;
+    ymwm::window::GroupManager<Environment>& group() noexcept;
     std::tuple<int, int> screen_width_and_height() noexcept;
     void next_keyboard_layout() noexcept;
 
   private:
     std::unique_ptr<Handlers> m_handlers;
     bool m_exit_requested;
-    mutable ymwm::window::Manager<Environment> m_manager;
+    ymwm::window::GroupManager<Environment> m_group_manager;
   };
 } // namespace ymwm::environment
