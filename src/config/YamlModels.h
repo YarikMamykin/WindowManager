@@ -31,6 +31,29 @@ namespace YAML {
 
       return true;
     }
+
+    static Node encode(const ymwm::events::AbstractKeyPress& event) {
+      Node node;
+
+      node["type"] = event.type;
+
+      for (const auto& [symbol, code] :
+           ymwm::config::utils::symbol_to_code_table) {
+        if (code == event.code) {
+          node["key"] = symbol;
+          break;
+        }
+      }
+
+      for (const auto& [symbol, mask] :
+           ymwm::config::utils::mask_symbol_to_code_table) {
+        if (event.mask & mask) {
+          node["masks"].push_back(symbol);
+        }
+      }
+
+      return node;
+    }
   };
 } // namespace YAML
 
@@ -58,6 +81,14 @@ namespace YAML {
       }
 
       return false;
+    }
+
+    static Node encode(const ymwm::common::Color& color) {
+      Node node;
+      node["red"] = color.red;
+      node["green"] = color.green;
+      node["blue"] = color.blue;
+      return node;
     }
   };
 } // namespace YAML
