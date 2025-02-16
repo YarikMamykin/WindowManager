@@ -2,6 +2,7 @@
 #include "config/Layout.h"
 #include "config/Window.h"
 #include "layouts/Centered.h"
+#include "layouts/Helpers.h"
 #include "layouts/Layout.h"
 #include "layouts/ParallelHorizontal.h"
 #include "layouts/ParallelVertical.h"

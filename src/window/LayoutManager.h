@@ -1,8 +1,8 @@
 #pragma once
 #include "Window.h"
-#include "common/Ratio.h"
 #include "config/Layout.h"
 #include "layouts/Centered.h"
+#include "layouts/Helpers.h"
 #include "layouts/Layout.h"
 #include "layouts/Parameters.h"
 #include "layouts/StackHorizontalBottom.h"

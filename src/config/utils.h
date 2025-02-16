@@ -1,6 +1,7 @@
 #pragma once
 #include "common/Color.h"
 #include "environment/Command.h"
+#include "environment/Helpers.h"
 #include "events/AbstractKeyCode.h"
 #include "events/AbstractKeyMask.h"
 

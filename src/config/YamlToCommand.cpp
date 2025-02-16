@@ -3,7 +3,7 @@
 #include "YamlModels.h"
 #include "common/Color.h"
 #include "common/Direction.h"
-#include "layouts/Parameters.h"
+#include "layouts/Helpers.h"
 
 namespace ymwm::config {
 
