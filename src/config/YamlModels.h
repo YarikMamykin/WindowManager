@@ -137,12 +137,16 @@ namespace YAML {
       switch (direction) {
       case ymwm::common::Direction::Up:
         node = "Up";
+        break;
       case ymwm::common::Direction::Down:
         node = "Down";
+        break;
       case ymwm::common::Direction::Left:
         node = "Left";
+        break;
       case ymwm::common::Direction::Right:
         node = "Right";
+        break;
       }
       return node;
     }
