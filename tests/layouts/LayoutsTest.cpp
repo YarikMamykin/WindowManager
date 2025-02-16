@@ -1,4 +1,5 @@
 #include "common/Color.h"
+#include "common/VariantInterfaceHelpers.h"
 #include "config/Layout.h"
 #include "config/Window.h"
 #include "layouts/Centered.h"
@@ -1321,59 +1322,67 @@ TEST(TestLayouts, StackHorizontalDoubleLayout_MainWindowOnly) {
 
 TEST(TestLayouts, GetLayoutParametersFromString) {
   auto centered_parameters =
-      ymwm::layouts::try_find_parameters(ymwm::layouts::Centered::type);
+      ymwm::common::try_find_type<ymwm::layouts::Parameters>(
+          ymwm::layouts::Centered::type);
   ASSERT_TRUE(centered_parameters);
   ASSERT_TRUE(
       std::holds_alternative<ymwm::layouts::Centered>(*centered_parameters));
 
-  auto grid_parameters =
-      ymwm::layouts::try_find_parameters(ymwm::layouts::Grid::type);
+  auto grid_parameters = ymwm::common::try_find_type<ymwm::layouts::Parameters>(
+      ymwm::layouts::Grid::type);
   ASSERT_TRUE(grid_parameters);
   ASSERT_TRUE(std::holds_alternative<ymwm::layouts::Grid>(*grid_parameters));
 
-  auto stack_vertical_parameters = ymwm::layouts::try_find_parameters(
-      ymwm::layouts::StackVerticalRight::type);
+  auto stack_vertical_parameters =
+      ymwm::common::try_find_type<ymwm::layouts::Parameters>(
+          ymwm::layouts::StackVerticalRight::type);
   ASSERT_TRUE(stack_vertical_parameters);
   ASSERT_TRUE(std::holds_alternative<ymwm::layouts::StackVerticalRight>(
       *stack_vertical_parameters));
 
-  stack_vertical_parameters = ymwm::layouts::try_find_parameters(
-      ymwm::layouts::StackVerticalLeft::type);
+  stack_vertical_parameters =
+      ymwm::common::try_find_type<ymwm::layouts::Parameters>(
+          ymwm::layouts::StackVerticalLeft::type);
   ASSERT_TRUE(stack_vertical_parameters);
   ASSERT_TRUE(std::holds_alternative<ymwm::layouts::StackVerticalLeft>(
       *stack_vertical_parameters));
 
-  stack_vertical_parameters = ymwm::layouts::try_find_parameters(
-      ymwm::layouts::StackVerticalDouble::type);
+  stack_vertical_parameters =
+      ymwm::common::try_find_type<ymwm::layouts::Parameters>(
+          ymwm::layouts::StackVerticalDouble::type);
   ASSERT_TRUE(stack_vertical_parameters);
   ASSERT_TRUE(std::holds_alternative<ymwm::layouts::StackVerticalDouble>(
       *stack_vertical_parameters));
 
-  auto stack_horizontal_parameters = ymwm::layouts::try_find_parameters(
-      ymwm::layouts::StackHorizontalTop::type);
+  auto stack_horizontal_parameters =
+      ymwm::common::try_find_type<ymwm::layouts::Parameters>(
+          ymwm::layouts::StackHorizontalTop::type);
   ASSERT_TRUE(stack_horizontal_parameters);
   ASSERT_TRUE(std::holds_alternative<ymwm::layouts::StackHorizontalTop>(
       *stack_horizontal_parameters));
 
-  stack_horizontal_parameters = ymwm::layouts::try_find_parameters(
-      ymwm::layouts::StackHorizontalBottom::type);
+  stack_horizontal_parameters =
+      ymwm::common::try_find_type<ymwm::layouts::Parameters>(
+          ymwm::layouts::StackHorizontalBottom::type);
   ASSERT_TRUE(stack_horizontal_parameters);
   ASSERT_TRUE(std::holds_alternative<ymwm::layouts::StackHorizontalBottom>(
       *stack_horizontal_parameters));
 
-  stack_horizontal_parameters = ymwm::layouts::try_find_parameters(
-      ymwm::layouts::StackHorizontalDouble::type);
+  stack_horizontal_parameters =
+      ymwm::common::try_find_type<ymwm::layouts::Parameters>(
+          ymwm::layouts::StackHorizontalDouble::type);
   ASSERT_TRUE(stack_horizontal_parameters);
   ASSERT_TRUE(std::holds_alternative<ymwm::layouts::StackHorizontalDouble>(
       *stack_horizontal_parameters));
 
   auto parallel_parameters =
-      ymwm::layouts::try_find_parameters(ymwm::layouts::ParallelVertical::type);
+      ymwm::common::try_find_type<ymwm::layouts::Parameters>(
+          ymwm::layouts::ParallelVertical::type);
   ASSERT_TRUE(parallel_parameters);
   ASSERT_TRUE(std::holds_alternative<ymwm::layouts::ParallelVertical>(
       *parallel_parameters));
 
-  parallel_parameters = ymwm::layouts::try_find_parameters(
+  parallel_parameters = ymwm::common::try_find_type<ymwm::layouts::Parameters>(
       ymwm::layouts::ParallelHorizontal::type);
   ASSERT_TRUE(parallel_parameters);
   ASSERT_TRUE(std::holds_alternative<ymwm::layouts::ParallelHorizontal>(
@@ -1381,7 +1390,7 @@ TEST(TestLayouts, GetLayoutParametersFromString) {
 }
 
 TEST(TestLayouts, GetListOfLayoutsParameters) {
-  auto parameters_list = ymwm::layouts::list_of_parameters();
+  auto parameters_list = ymwm::common::known_ids<ymwm::layouts::Parameters>();
   EXPECT_THAT(parameters_list,
               testing::ElementsAre(ymwm::layouts::Centered::type,
                                    ymwm::layouts::Grid::type,

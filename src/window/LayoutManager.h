@@ -1,5 +1,6 @@
 #pragma once
 #include "Window.h"
+#include "common/VariantInterfaceHelpers.h"
 #include "config/Layout.h"
 #include "layouts/Centered.h"
 #include "layouts/Helpers.h"
@@ -37,14 +38,15 @@ namespace ymwm::window {
     }
 
     inline void next() noexcept {
-      static constexpr auto known_layouts = layouts::list_of_parameters();
+      static constexpr auto known_layouts =
+          common::known_ids<layouts::Parameters>();
       auto current_layout_index = m_layout_parameters.index();
       auto next_index = current_layout_index < (known_layouts.size() - 1ul)
                             ? current_layout_index + 1ul
                             : 0ul;
 
-      m_layout_parameters =
-          *layouts::try_find_parameters(known_layouts.at(next_index));
+      m_layout_parameters = *common::try_find_type<layouts::Parameters>(
+          known_layouts.at(next_index));
       update();
     }
 

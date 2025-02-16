@@ -1,3 +1,4 @@
+#include "common/VariantInterfaceHelpers.h"
 #include "environment/Command.h"
 #include "environment/Environment.h"
 #include "events/Event.h"
@@ -59,7 +60,9 @@ namespace ymwm::environment::commands {
   }
 
   void SetLayout::execute(Environment& e, const events::Event&) const {
-    e.manager().layout().update(*ymwm::layouts::try_find_parameters(layout));
+    using namespace ymwm::common;
+    using namespace ymwm::layouts;
+    e.manager().layout().update(*try_find_type<Parameters>(layout));
     e.manager().layout().update();
   }
 
