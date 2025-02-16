@@ -1,4 +1,5 @@
 #pragma once
+#include <string_view>
 
 namespace ymwm::events {
   struct AbstractMousePress {
@@ -7,6 +8,6 @@ namespace ymwm::events {
 
     constexpr bool
     operator==(const AbstractMousePress&) const noexcept = default;
-    static inline constexpr char type[] = "mousepress";
+    static inline constexpr std::string_view type{ "mousepress" };
   };
 } // namespace ymwm::events

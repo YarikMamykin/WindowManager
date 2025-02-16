@@ -1,4 +1,5 @@
 #pragma once
+#include <string_view>
 
 namespace ymwm::events {
   struct AbstractKeyPress {
@@ -6,6 +7,6 @@ namespace ymwm::events {
     unsigned int mask{ 0u };
 
     constexpr bool operator==(const AbstractKeyPress&) const noexcept = default;
-    static inline constexpr char type[] = "press";
+    static inline constexpr std::string_view type{ "press" };
   };
 } // namespace ymwm::events
