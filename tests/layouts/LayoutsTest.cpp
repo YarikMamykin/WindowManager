@@ -35,6 +35,30 @@ window_to_string(const ymwm::window::Window& w) noexcept {
 
 static inline const ymwm::common::Color color(0xff, 0x0, 0x0);
 
+static inline void
+verify_windows(const ymwm::layouts::Layout::BasicParameters& basic_parameters,
+               const ymwm::layouts::Parameters& parameters,
+               const std::vector<ymwm::window::Window>& expected_windows,
+               std::vector<ymwm::window::Window>& test_windows) noexcept {
+
+  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
+
+  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
+
+  for (auto& w : test_windows) {
+    prepared_layout.apply(w);
+  }
+
+  EXPECT_EQ(test_windows, expected_windows)
+      << [&test_windows]() -> std::string {
+    std::string result;
+    for (const auto& w : test_windows) {
+      result += window_to_string(w);
+    }
+    return result;
+  }();
+}
+
 TEST(TestLayouts, CenteredLayout) {
   ymwm::config::windows::regular_border_width = 0;
   ymwm::config::windows::focused_border_width = 2;
@@ -84,22 +108,7 @@ TEST(TestLayouts, CenteredLayout) {
                                .border_width = ymwm::config::windows::regular_border_width,
                                .border_color = ymwm::config::windows::regular_border_color },
   });
-  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
-
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += window_to_string(w);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, CenteredLayoutWithScreenMargins) {
@@ -114,45 +123,31 @@ TEST(TestLayouts, CenteredLayoutWithScreenMargins) {
   basic_parameters.screen_margins.right = 1u;
   basic_parameters.screen_margins.top = 1u;
   basic_parameters.screen_margins.bottom = 1u;
+  basic_parameters.number_of_windows = 4ul;
 
   auto parameters = ymwm::layouts::Centered{ basic_parameters.screen_margins,
                                              basic_parameters.screen_width,
                                              basic_parameters.screen_height };
 
   std::vector<ymwm::window::Window> test_windows(
-      4,
+      basic_parameters.number_of_windows,
       ymwm::window::Window{ .x = 0,
                             .y = 0,
                             .w = 200,
                             .h = 200,
                             .border_width = 1,
                             .border_color = color });
-  ASSERT_EQ(4ul, test_windows.size());
+  ASSERT_EQ(basic_parameters.number_of_windows, test_windows.size());
 
   std::vector<ymwm::window::Window> expected_windows(
-      4,
+      basic_parameters.number_of_windows,
       ymwm::window::Window{ .x = 1,
                             .y = 1,
                             .w = 994,
                             .h = 994,
                             .border_width = 1,
                             .border_color = color });
-  ASSERT_EQ(4ul, expected_windows.size());
-
-  auto layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += std::format("{} {} {} {}\n", w.x, w.y, w.w, w.h);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, GridLayout) {
@@ -169,14 +164,14 @@ TEST(TestLayouts, GridLayout) {
   basic_parameters.number_of_windows = 4ul;
 
   std::vector<ymwm::window::Window> test_windows(
-      4,
+      basic_parameters.number_of_windows,
       ymwm::window::Window{ .x = 0,
                             .y = 0,
                             .w = 200,
                             .h = 200,
                             .border_width = 1,
                             .border_color = color });
-  ASSERT_EQ(4ul, test_windows.size());
+  ASSERT_EQ(basic_parameters.number_of_windows, test_windows.size());
 
   std::vector<ymwm::window::Window> expected_windows({
       ymwm::window::Window{   .x = 0,
@@ -204,24 +199,9 @@ TEST(TestLayouts, GridLayout) {
                            .border_width = 1,
                            .border_color = color }
   });
-  ASSERT_EQ(4ul, expected_windows.size());
-
   auto parameters = ymwm::layouts::Grid(test_windows.size());
 
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += std::format("{} {} {} {}\n", w.x, w.y, w.w, w.h);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, GridLayout_WithScreenMargins) {
@@ -238,14 +218,14 @@ TEST(TestLayouts, GridLayout_WithScreenMargins) {
   basic_parameters.number_of_windows = 4ul;
 
   std::vector<ymwm::window::Window> test_windows(
-      4,
+      basic_parameters.number_of_windows,
       ymwm::window::Window{ .x = 0,
                             .y = 0,
                             .w = 200,
                             .h = 200,
                             .border_width = 1,
                             .border_color = color });
-  ASSERT_EQ(4ul, test_windows.size());
+  ASSERT_EQ(basic_parameters.number_of_windows, test_windows.size());
 
   std::vector<ymwm::window::Window> expected_windows({
       ymwm::window::Window{   .x = 5,
@@ -273,24 +253,11 @@ TEST(TestLayouts, GridLayout_WithScreenMargins) {
                            .border_width = 1,
                            .border_color = color }
   });
-  ASSERT_EQ(4ul, expected_windows.size());
+  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
 
   auto parameters = ymwm::layouts::Grid(test_windows.size());
 
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += std::format("{} {} {} {}\n", w.x, w.y, w.w, w.h);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, GridLayout_WithScreenMargins_AndGridMargins) {
@@ -307,14 +274,14 @@ TEST(TestLayouts, GridLayout_WithScreenMargins_AndGridMargins) {
   basic_parameters.number_of_windows = 4ul;
 
   std::vector<ymwm::window::Window> test_windows(
-      4,
+      basic_parameters.number_of_windows,
       ymwm::window::Window{ .x = 0,
                             .y = 0,
                             .w = 200,
                             .h = 200,
                             .border_width = 1,
                             .border_color = color });
-  ASSERT_EQ(4ul, test_windows.size());
+  ASSERT_EQ(basic_parameters.number_of_windows, test_windows.size());
 
   std::vector<ymwm::window::Window> expected_windows({
       ymwm::window::Window{   .x = 5,
@@ -342,26 +309,13 @@ TEST(TestLayouts, GridLayout_WithScreenMargins_AndGridMargins) {
                            .border_width = 1,
                            .border_color = color }
   });
-  ASSERT_EQ(4ul, expected_windows.size());
+  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
 
   ymwm::config::layouts::grid::grid_margins.horizontal = 10u;
   ymwm::config::layouts::grid::grid_margins.vertical = 20u;
   auto parameters = ymwm::layouts::Grid(test_windows.size());
 
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += std::format("{} {} {} {}\n", w.x, w.y, w.w, w.h);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, StackVerticalRight) {
@@ -456,22 +410,9 @@ TEST(TestLayouts, StackVerticalRight) {
                            .border_width = ymwm::config::windows::regular_border_width,
                            .border_color = ymwm::config::windows::regular_border_color },
   });
-  ASSERT_EQ(7ul, expected_windows.size());
+  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
 
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += window_to_string(w);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, StackVerticalLeft) {
@@ -566,22 +507,9 @@ TEST(TestLayouts, StackVerticalLeft) {
                            .border_width = ymwm::config::windows::regular_border_width,
                            .border_color = ymwm::config::windows::regular_border_color },
   });
-  ASSERT_EQ(7ul, expected_windows.size());
+  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
 
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += window_to_string(w);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, ParallelVertical) {
@@ -654,22 +582,7 @@ TEST(TestLayouts, ParallelVertical) {
                            .border_width = ymwm::config::windows::regular_border_width,
                            .border_color = ymwm::config::windows::regular_border_color },
   });
-  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
-
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += window_to_string(w);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, ParallelHorizontal) {
@@ -742,22 +655,7 @@ TEST(TestLayouts, ParallelHorizontal) {
                            .border_width = ymwm::config::windows::regular_border_width,
                            .border_color = ymwm::config::windows::regular_border_color },
   });
-  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
-
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += window_to_string(w);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, StackHorizontalTop) {
@@ -835,22 +733,7 @@ TEST(TestLayouts, StackHorizontalTop) {
                            .border_width = ymwm::config::windows::regular_border_width,
                            .border_color = ymwm::config::windows::regular_border_color },
   });
-  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
-
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += window_to_string(w);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, StackHorizontalBottom) {
@@ -928,22 +811,7 @@ TEST(TestLayouts, StackHorizontalBottom) {
                            .border_width = ymwm::config::windows::regular_border_width,
                            .border_color = ymwm::config::windows::regular_border_color },
   });
-  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
-
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += window_to_string(w);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, StackVerticalDouble) {
@@ -1027,22 +895,7 @@ TEST(TestLayouts, StackVerticalDouble) {
                            .border_width = ymwm::config::windows::regular_border_width,
                            .border_color = ymwm::config::windows::regular_border_color },
   });
-  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
-
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += window_to_string(w);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, StackHorizontalDouble) {
@@ -1126,22 +979,7 @@ TEST(TestLayouts, StackHorizontalDouble) {
                            .border_width = ymwm::config::windows::regular_border_width,
                            .border_color = ymwm::config::windows::regular_border_color },
   });
-  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
-
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += window_to_string(w);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, StackVerticalRightLayout_MainWindowOnly) {
@@ -1197,22 +1035,7 @@ TEST(TestLayouts, StackVerticalRightLayout_MainWindowOnly) {
                            .border_width = ymwm::config::windows::regular_border_width,
                            .border_color = ymwm::config::windows::regular_border_color },
   });
-  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
-
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += window_to_string(w);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, StackVerticalLeftLayout_MainWindowOnly) {
@@ -1268,22 +1091,7 @@ TEST(TestLayouts, StackVerticalLeftLayout_MainWindowOnly) {
                            .border_width = ymwm::config::windows::regular_border_width,
                            .border_color = ymwm::config::windows::regular_border_color },
   });
-  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
-
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += window_to_string(w);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, StackHorizontalTopLayout_MainWindowOnly) {
@@ -1339,22 +1147,7 @@ TEST(TestLayouts, StackHorizontalTopLayout_MainWindowOnly) {
                            .border_width = ymwm::config::windows::regular_border_width,
                            .border_color = ymwm::config::windows::regular_border_color },
   });
-  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
-
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += window_to_string(w);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, StackHorizontalBottomLayout_MainWindowOnly) {
@@ -1410,22 +1203,7 @@ TEST(TestLayouts, StackHorizontalBottomLayout_MainWindowOnly) {
                            .border_width = ymwm::config::windows::regular_border_width,
                            .border_color = ymwm::config::windows::regular_border_color },
   });
-  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
-
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += window_to_string(w);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, StackVerticalDoubleLayout_MainWindowOnly) {
@@ -1481,22 +1259,7 @@ TEST(TestLayouts, StackVerticalDoubleLayout_MainWindowOnly) {
                            .border_width = ymwm::config::windows::regular_border_width,
                            .border_color = ymwm::config::windows::regular_border_color },
   });
-  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
-
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += window_to_string(w);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, StackHorizontalDoubleLayout_MainWindowOnly) {
@@ -1552,22 +1315,7 @@ TEST(TestLayouts, StackHorizontalDoubleLayout_MainWindowOnly) {
                            .border_width = ymwm::config::windows::regular_border_width,
                            .border_color = ymwm::config::windows::regular_border_color },
   });
-  ASSERT_EQ(basic_parameters.number_of_windows, expected_windows.size());
-
-  auto prepared_layout = ymwm::layouts::Layout(basic_parameters, parameters);
-
-  for (auto& w : test_windows) {
-    prepared_layout.apply(w);
-  }
-
-  EXPECT_EQ(test_windows, expected_windows)
-      << [&test_windows]() -> std::string {
-    std::string result;
-    for (const auto& w : test_windows) {
-      result += window_to_string(w);
-    }
-    return result;
-  }();
+  verify_windows(basic_parameters, parameters, expected_windows, test_windows);
 }
 
 TEST(TestLayouts, GetLayoutParametersFromString) {
