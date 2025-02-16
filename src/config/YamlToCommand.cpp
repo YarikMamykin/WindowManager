@@ -3,6 +3,8 @@
 #include "YamlModels.h"
 #include "common/Color.h"
 #include "common/Direction.h"
+#include "common/VariantInterfaceHelpers.h"
+#include "layouts/Helpers.h"
 #include "layouts/Parameters.h"
 
 namespace ymwm::config {
@@ -35,9 +37,11 @@ namespace ymwm::config {
   void YamlToCommand::FillCmdArgs::operator()(
       environment::commands::SetLayout& command) const {
     auto layout_type = cmd_args["layout"].as<std::string>();
-    if (auto validated_layout_type = ymwm::layouts::validate(layout_type);
-        not validated_layout_type.empty()) {
-      command.layout = validated_layout_type;
+    if (auto validated_layout_type =
+            ymwm::common::try_validate_type<ymwm::layouts::Parameters>(
+                layout_type);
+        validated_layout_type.has_value()) {
+      command.layout = *validated_layout_type;
     }
   }
 
@@ -68,7 +72,8 @@ namespace ymwm::config {
   std::optional<ymwm::environment::commands::Command>
   YamlToCommand::default_command_from_node(const YAML::Node& cmd_node) {
     auto command_type = cmd_node["name"].as<std::string>();
-    auto command = environment::commands::try_find_command(command_type);
+    auto command =
+        common::try_find_type<environment::commands::Command>(command_type);
     return command;
   }
 

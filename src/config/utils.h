@@ -1,5 +1,6 @@
 #pragma once
 #include "common/Color.h"
+#include "common/VariantInterfaceHelpers.h"
 #include "environment/Command.h"
 #include "events/AbstractKeyCode.h"
 #include "events/AbstractKeyMask.h"
@@ -56,7 +57,7 @@ namespace ymwm::config::utils {
 
   static inline std::optional<environment::commands::Command>
   command_from_type(std::string&& command_type) noexcept {
-    return environment::commands::try_find_command(command_type);
+    return common::try_find_type<environment::commands::Command>(command_type);
   }
 
   static inline const std::unordered_map<std::string_view,
