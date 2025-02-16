@@ -2,7 +2,6 @@ include(${DEPENDENCIES}/yaml-cpp.cmake)
 
 add_library(config OBJECT
 	${CMAKE_CURRENT_SOURCE_DIR}/Parser.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/CommandToYaml.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/YamlToCommand.cpp
 )
 target_include_directories(config PRIVATE 
