@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(WindowManager VERSION 0.37.5 LANGUAGES CXX)
+project(WindowManager VERSION 0.37.6 LANGUAGES CXX)
 
 set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)
@@ -11,7 +11,8 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 set(DEPENDENCIES ${CMAKE_SOURCE_DIR}/dependencies)
-set(NATIVE_ENVIRONMENT X11)
+set(NATIVE_ENVIRONMENT "X11" CACHE STRING "Specify the native environment (e.g., X11, Wayland, etc.)")
+option(BUILD_TESTS "Build unit tests" OFF)
 
 add_subdirectory(src)
 add_subdirectory(tests)
