@@ -27,6 +27,9 @@ int main(int argc, char** argv) {
   auto events_map = parse_config(std::move(parsed_args.config_path));
 
   ymwm::environment::Environment env{ events_map };
+  if (env.exit_requested()) {
+    return 1;
+  }
 
   for (auto event = env.event(); not env.exit_requested();
        event = env.event()) {
