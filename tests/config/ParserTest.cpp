@@ -10,8 +10,59 @@
 
 #include <algorithm>
 #include <filesystem>
+#include <format>
 #include <gtest/gtest.h>
 #include <variant>
+
+std::string event_to_string(const ymwm::events::Event& event) {
+  auto visitor = [](const auto& e) -> std::string {
+    if constexpr (std::is_same_v<const ymwm::events::AbstractKeyPress&,
+                                 decltype(e)>) {
+      return std::format("Type: {}, Key: {}, Mask: {}", e.type, e.code, e.mask);
+    } else {
+      return std::format("Type: {}", e.type.data());
+    }
+  };
+  return std::visit(visitor, event);
+}
+
+std::string
+command_to_string(const ymwm::environment::commands::Command& command) {
+  auto visitor = [](const auto& command) -> std::string {
+    if constexpr (std::is_same_v<
+                      const ymwm::environment::commands::RunTerminal&,
+                      decltype(command)>) {
+      return std::format("Type: {}, Args: {}", command.type, command.path);
+    } else if constexpr (std::is_same_v<
+                             const ymwm::environment::commands::SetLayout&,
+                             decltype(command)>) {
+      return std::format("Type: {}, Args: {}", command.type, command.layout);
+    } else {
+      return std::format("Type: {}", command.type);
+    }
+  };
+  return std::visit(visitor, command);
+}
+
+static inline std::string
+print_event_maps(const ymwm::events::Map& event_map1,
+                 const ymwm::events::Map& event_map2) noexcept {
+  std::string result;
+  auto event_map1_it = event_map1.begin();
+  auto event_map2_it = event_map2.begin();
+  for (; event_map1_it != event_map1.end() and
+         event_map2_it != event_map2.end();) {
+    result += std::format(
+        "Event1_1: {}\tEvent1_2: {}\nCommand1_1: {}\tCommand1_2: {}\n\n",
+        event_to_string(event_map1_it->first),
+        event_to_string(event_map2_it->first),
+        command_to_string(event_map1_it->second),
+        command_to_string(event_map2_it->second));
+    std::advance(event_map1_it, 1);
+    std::advance(event_map2_it, 1);
+  }
+  return result;
+}
 
 TEST(TestEventMap, CreateEventMapFromYamlFile) {
   ymwm::config::Parser parser{ "key-bindings.yaml" };
@@ -266,6 +317,7 @@ TEST(TestConfig, GenerateConfigToFile) {
 
   ymwm::config::Parser parser{ test_config_path.string() };
   auto parsed_event_map = parser.event_map();
+  const auto default_event_map = ymwm::events::default_event_map();
 
   EXPECT_EQ(10, ymwm::config::layouts::screen_margins.left);
   EXPECT_EQ(11, ymwm::config::layouts::screen_margins.right);
@@ -291,4 +343,13 @@ TEST(TestConfig, GenerateConfigToFile) {
   EXPECT_EQ(0xee, ymwm::config::windows::focused_border_color.blue);
   EXPECT_EQ("ru,fr,de", ymwm::config::misc::language_layout);
   EXPECT_EQ("/tmp/someimg.png", ymwm::config::misc::background_image_path);
+
+  ASSERT_EQ(parsed_event_map.size(), default_event_map.size());
+
+  for (const auto& [event, command] : default_event_map) {
+    EXPECT_TRUE(parsed_event_map.contains(event)) << event_to_string(event);
+  }
+
+  EXPECT_EQ(parsed_event_map, default_event_map)
+      << print_event_maps(parsed_event_map, default_event_map);
 }
