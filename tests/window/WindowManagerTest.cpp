@@ -7,6 +7,7 @@
 #include "layouts/Layout.h"
 #include "layouts/Parameters.h"
 #include "layouts/StackHorizontalBottom.h"
+#include "window/GroupManager.h"
 #include "window/Manager.h"
 #include "window/Window.h"
 
@@ -717,4 +718,56 @@ TEST(TestFocusManager, DontFocusNonExistingWindow) {
 
   EXPECT_CALL(tenv, focus_window).Times(0);
   m.focus().window(1);
+}
+
+TEST(TestGroupManager, TryMovingToNextGroupWhenOnlyOneExists) {
+  ymwm::environment::TestEnvironment tenv;
+  ON_CALL(tenv, screen_width_and_height)
+      .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
+
+  ymwm::window::GroupManager m{ &tenv };
+
+  m.manager().add_window({ .id = 1 });
+
+  EXPECT_CALL(tenv, focus_window).Times(0);
+  EXPECT_CALL(tenv, move_and_resize).Times(0);
+  m.next();
+}
+
+TEST(TestGroupManager, TryMovingToPrevGroupWhenOnlyOneExists) {
+  ymwm::environment::TestEnvironment tenv;
+  ON_CALL(tenv, screen_width_and_height)
+      .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
+
+  ymwm::window::GroupManager m{ &tenv };
+
+  m.manager().add_window({ .id = 1 });
+
+  EXPECT_CALL(tenv, focus_window).Times(0);
+  EXPECT_CALL(tenv, move_and_resize).Times(0);
+  m.prev();
+}
+
+TEST(TestGroupManager, AddGroup) {
+  ymwm::environment::TestEnvironment tenv;
+  ON_CALL(tenv, screen_width_and_height)
+      .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
+
+  ymwm::window::GroupManager m{ &tenv };
+
+  m.manager().add_window({ .id = 1 });
+  ASSERT_EQ(1ul, m.manager().windows().size());
+  m.add();
+  ASSERT_EQ(0ul, m.manager().windows().size());
+
+  EXPECT_CALL(tenv, move_and_resize).Times(1);
+  m.next();
+  ASSERT_EQ(1ul, m.manager().windows().size());
+  ASSERT_EQ(1, m.manager().windows().front().id);
+
+  // Expect hiding window of current group,
+  // before moving to previous group.
+  EXPECT_CALL(tenv, move_and_resize).Times(1);
+  m.prev();
+  ASSERT_EQ(0ul, m.manager().windows().size());
 }
