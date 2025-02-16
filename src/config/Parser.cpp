@@ -7,6 +7,7 @@
 #include "config/Layout.h"
 #include "config/Misc.h"
 #include "config/Window.h"
+#include "config/YamlToCommand.h"
 #include "environment/Command.h"
 #include "events/Map.h"
 
@@ -208,18 +209,14 @@ namespace ymwm::config {
         ymwm::events::Event key_press_event =
             binding.as<events::AbstractKeyPress>();
 
-        if (not binding["cmd"]) {
+        auto cmd_node = binding["cmd"];
+        if (not cmd_node) {
           throw ParsingError("Command is not specified for key binding");
         }
 
-        auto cmd =
-            utils::command_from_type(binding["cmd"]["name"].as<std::string>());
+        auto cmd = YamlToCommand::convert(cmd_node);
         if (not cmd) {
           throw ParsingError("Unknown command specified");
-        }
-
-        if (auto cmd_args = binding["cmd"]["args"]) {
-          utils::fill_cmd_args(*cmd, cmd_args);
         }
 
         auto [_, no_duplicate] = cmds_created.insert(*cmd);
