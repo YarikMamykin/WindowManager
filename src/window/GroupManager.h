@@ -22,20 +22,6 @@ namespace ymwm::window {
       m_managers.emplace_back(m_env);
       next();
     }
-    // inline void remove() noexcept {
-    // if (one_manager_present()) {
-    // return;
-    // }
-
-    // manager().deactivate();
-
-    // m_managers.erase(std::next(m_managers.begin(), m_active_manager));
-    // if (not is_first_active()) {
-    // --m_active_manager;
-    // }
-
-    // manager().activate();
-    // }
 
     inline void next() noexcept {
       if (one_manager_present()) {
