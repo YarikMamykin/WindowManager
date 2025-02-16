@@ -43,7 +43,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: cmake -S . -B RELEASE -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_TESTS=FALSE -DCMAKE_INSTALL_PREFIX=RELEASE
+          command: cmake -S . -B RELEASE -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_TESTS=TRUE -DCMAKE_INSTALL_PREFIX=RELEASE
       - run:
           command: cmake --build RELEASE --parallel
       - run:
@@ -53,6 +53,18 @@ jobs:
           root: /workspace
           paths:
             - RELEASE/*
+
+  build-release-without-tests:
+    executor: archexecutor
+    steps:
+      - checkout
+      - run:
+          command: cmake -S . -B RELEASE -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_TESTS=FALSE -DCMAKE_INSTALL_PREFIX=RELEASE
+      - run:
+          command: cmake --build RELEASE --parallel
+      - run:
+          command: cmake --install RELEASE --strip
+
   tests:
     executor: archexecutor
     steps:
@@ -61,6 +73,15 @@ jobs:
           at: /workspace
       - run:
           command: ctest --test-dir Debug/tests --verbose
+
+  tests-release:
+    executor: archexecutor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /workspace
+      - run:
+          command: ctest --test-dir RELEASE/tests --verbose
 
   update_tag:
     executor: archexecutor
@@ -95,11 +116,6 @@ workflows:
             branches:
               ignore:
                 - main
-      - build-release:
-          filters:
-            branches:
-              only:
-                - main
       - tests:
           requires:
             - build
@@ -107,6 +123,15 @@ workflows:
             branches:
               ignore:
                 - main
+      - build-release
+      - build-release-without-tests:
+          filters:
+            branches:
+              only:
+                - main
+      - tests-release:
+          requires:
+            - build-release
       - update_tag:
           filters:
             branches:
