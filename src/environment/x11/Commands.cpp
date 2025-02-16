@@ -119,4 +119,18 @@ namespace ymwm::environment::commands {
       e.manager().remove_window(ev->wid);
     }
   }
+
+  void AddGroup::execute(Environment& e, const events::Event& event) const {
+    e.group().add();
+  }
+
+  void MoveToNextGroup::execute(Environment& e,
+                                const events::Event& event) const {
+    e.group().next();
+  }
+
+  void MoveToPrevGroup::execute(Environment& e,
+                                const events::Event& event) const {
+    e.group().prev();
+  }
 } // namespace ymwm::environment::commands

@@ -43,6 +43,8 @@ namespace ymwm::config::utils {
         { "Backspace", events::AbstractKeyCode::Backspace },
         {     "Space",     events::AbstractKeyCode::Space },
         {         "~",   events::AbstractKeyCode::Titulus },
+        {         ".",    events::AbstractKeyCode::Period },
+        {         ",",     events::AbstractKeyCode::Comma },
   };
 
   static inline std::optional<unsigned int>

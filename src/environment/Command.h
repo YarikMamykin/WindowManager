@@ -37,6 +37,9 @@ namespace ymwm::environment::commands {
   DEFINE_COMMAND(UpdateWindowName);
   DEFINE_COMMAND_WITH_PARAMS_1(FocusWindow, environment::ID wid);
   DEFINE_COMMAND_WITH_PARAMS_1(RemoveWindow, environment::ID wid);
+  DEFINE_COMMAND(AddGroup);
+  DEFINE_COMMAND(MoveToNextGroup);
+  DEFINE_COMMAND(MoveToPrevGroup);
 
   using Command = std::variant<ExitRequested,
                                RunTerminal,
@@ -58,7 +61,10 @@ namespace ymwm::environment::commands {
                                AddWindow,
                                UpdateWindowName,
                                FocusWindow,
-                               RemoveWindow>;
+                               RemoveWindow,
+                               AddGroup,
+                               MoveToNextGroup,
+                               MoveToPrevGroup>;
 
   template <std::size_t Index =
                 std::variant_size_v<environment::commands::Command> - 1ul>

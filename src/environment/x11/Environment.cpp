@@ -31,7 +31,7 @@ namespace ymwm::environment {
 namespace ymwm::environment {
   Environment::Environment(const events::Map& events_map)
       : m_exit_requested(false)
-      , m_manager(this) {
+      , m_group_manager(this) {
 
     // Bind error handler
     XSetErrorHandler(handle_x_error);
