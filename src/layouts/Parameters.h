@@ -48,6 +48,26 @@ namespace ymwm::layouts {
     }
   }
 
+  template <std::size_t Index = std::variant_size_v<Parameters> - 1ul>
+  static inline constexpr std::string_view
+  validate(std::string_view parameters_type) noexcept {
+    if constexpr (0ul <= Index) {
+      using ParameterType = std::variant_alternative_t<Index, Parameters>;
+      if (parameters_type == ParameterType::type) {
+        return ParameterType::type;
+      }
+
+      if constexpr (0ul == Index) {
+        return std::string_view{};
+      } else {
+        return validate<Index - 1ul>(parameters_type);
+      }
+
+    } else {
+      return std::string_view{};
+    }
+  }
+
   using ListOfParametersTypes =
       std::array<std::string_view, std::variant_size_v<Parameters>>;
 
