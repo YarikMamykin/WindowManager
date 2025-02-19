@@ -28,7 +28,8 @@ namespace ymwm::window {
                                     this,
                                     config::windows::focused_border_width,
                                     config::windows::focused_border_color))
-        , m_layout_manager(m_windows, env) {
+        , m_layout_manager(m_windows, env)
+        , m_active(true) {
       m_windows.reserve(5);
 
       layout().update(layouts::Centered{});
@@ -136,6 +137,7 @@ namespace ymwm::window {
     inline void activate() noexcept {
       layout().update();
       focus().update();
+      m_active = true;
     }
 
     inline void deactivate() noexcept {
@@ -143,7 +145,11 @@ namespace ymwm::window {
         w.x = 0 - w.w * 2;
         m_env->move_and_resize(w);
       }
+
+      m_active = false;
     }
+
+    inline bool active() const noexcept { return m_active; }
 
     inline FocusManager<Environment>& focus() noexcept {
       return m_focus_manager;
@@ -159,5 +165,6 @@ namespace ymwm::window {
     layouts::Layout m_layout;
     FocusManager<Environment> m_focus_manager;
     LayoutManager<Environment> m_layout_manager;
+    bool m_active;
   };
 } // namespace ymwm::window
