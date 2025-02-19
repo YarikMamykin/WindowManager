@@ -58,20 +58,25 @@ namespace ymwm::window {
     }
 
     inline void remove(std::size_t manager_index) noexcept {
-      if (not valid_index(manager_index)) {
+      if (not valid_index(manager_index) or one_manager_present()) {
         return;
       }
 
-      if (m_active_manager == manager_index) {
+      if (m_active_manager == manager_index and m_active_manager > 0ul) {
+        activate(m_active_manager - 1ul);
+        m_managers.erase(std::next(m_managers.begin(), manager_index));
+        return;
+      }
+
+      if (m_active_manager == manager_index and m_active_manager == 0ul) {
         manager().deactivate();
-        m_active_manager = manager_index;
-        manager().activate();
+        m_managers.erase(std::next(m_managers.begin(), manager_index));
+        activate(m_active_manager);
         return;
-      }
-
-      if (m_active_manager < manager_index) {
       }
     }
+
+    inline std::size_t active() const noexcept { return m_active_manager; }
 
     inline ~GroupManager() = default;
 
