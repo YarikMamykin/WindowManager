@@ -198,6 +198,13 @@ namespace ymwm::events {
             .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::MoveToPrevGroup{});
 
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Del,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Ctrl },
+        ymwm::environment::commands::RemoveGroup{});
+
     return bindings;
   }
 
