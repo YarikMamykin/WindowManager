@@ -74,6 +74,11 @@ namespace ymwm::window {
         activate(m_active_manager);
         return;
       }
+
+      if (m_active_manager > manager_index) {
+        --m_active_manager;
+      }
+      m_managers.erase(std::next(m_managers.begin(), manager_index));
     }
 
     inline std::size_t active() const noexcept { return m_active_manager; }
