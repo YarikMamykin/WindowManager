@@ -1,7 +1,7 @@
 #pragma once
 #include "Manager.h"
 
-#include <vector>
+#include <list>
 
 namespace ymwm::window {
 
@@ -10,12 +10,11 @@ namespace ymwm::window {
     inline GroupManager(Environment* env)
         : m_env(env)
         , m_active_manager(0ul) {
-      m_managers.reserve(4);
       m_managers.emplace_back(m_env);
     }
 
     inline Manager<Environment>& manager() noexcept {
-      return m_managers.at(m_active_manager);
+      return *std::next(m_managers.begin(), m_active_manager);
     }
 
     inline void add() noexcept {
@@ -79,6 +78,6 @@ namespace ymwm::window {
 
     Environment* const m_env;
     std::size_t m_active_manager;
-    std::vector<Manager<Environment>> m_managers;
+    std::list<Manager<Environment>> m_managers;
   };
 } // namespace ymwm::window
