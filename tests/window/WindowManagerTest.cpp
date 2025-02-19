@@ -266,6 +266,10 @@ TEST(TestWindowManager, CloseFocusedWindow) {
   EXPECT_CALL(tenv, close_window).WillOnce(testing::SaveArg<0>(&passed_window));
   m.close_focused_window();
 
+  // Expect close_window call for last window in Manager,
+  // as Manager sends `close` to windows left in Manager.
+  EXPECT_CALL(tenv, close_window);
+
   ASSERT_TRUE(m.focus().window());
   ASSERT_THAT(m.windows(),
               testing::ElementsAre(ymwm::window::Window{

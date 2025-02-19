@@ -35,5 +35,6 @@ namespace ymwm::events {
   AbstractKeyCode::Type AbstractKeyCode::Backspace{ XK_BackSpace };
   AbstractKeyCode::Type AbstractKeyCode::Period{ XK_period };
   AbstractKeyCode::Type AbstractKeyCode::Comma{ XK_comma };
+  AbstractKeyCode::Type AbstractKeyCode::Del{ XK_Delete };
 
 } // namespace ymwm::events

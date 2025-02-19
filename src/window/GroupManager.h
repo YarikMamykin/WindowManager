@@ -1,7 +1,7 @@
 #pragma once
 #include "Manager.h"
 
-#include <vector>
+#include <list>
 
 namespace ymwm::window {
 
@@ -10,12 +10,11 @@ namespace ymwm::window {
     inline GroupManager(Environment* env)
         : m_env(env)
         , m_active_manager(0ul) {
-      m_managers.reserve(4);
       m_managers.emplace_back(m_env);
     }
 
     inline Manager<Environment>& manager() noexcept {
-      return m_managers.at(m_active_manager);
+      return *std::next(m_managers.begin(), m_active_manager);
     }
 
     inline void add() noexcept {
@@ -58,6 +57,32 @@ namespace ymwm::window {
       manager().activate();
     }
 
+    inline void remove(std::size_t manager_index) noexcept {
+      if (not valid_index(manager_index) or one_manager_present()) {
+        return;
+      }
+
+      if (m_active_manager == manager_index and m_active_manager > 0ul) {
+        activate(m_active_manager - 1ul);
+        m_managers.erase(std::next(m_managers.begin(), manager_index));
+        return;
+      }
+
+      if (m_active_manager == manager_index and m_active_manager == 0ul) {
+        manager().deactivate();
+        m_managers.erase(std::next(m_managers.begin(), manager_index));
+        activate(m_active_manager);
+        return;
+      }
+
+      if (m_active_manager > manager_index) {
+        --m_active_manager;
+      }
+      m_managers.erase(std::next(m_managers.begin(), manager_index));
+    }
+
+    inline std::size_t active() const noexcept { return m_active_manager; }
+
     inline ~GroupManager() = default;
 
   private:
@@ -79,6 +104,6 @@ namespace ymwm::window {
 
     Environment* const m_env;
     std::size_t m_active_manager;
-    std::vector<Manager<Environment>> m_managers;
+    std::list<Manager<Environment>> m_managers;
   };
 } // namespace ymwm::window

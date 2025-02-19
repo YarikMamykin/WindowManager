@@ -43,6 +43,7 @@ namespace ymwm::config::utils {
         {     "Enter",     events::AbstractKeyCode::Enter },
         { "Backspace", events::AbstractKeyCode::Backspace },
         {     "Space",     events::AbstractKeyCode::Space },
+        {       "Del",       events::AbstractKeyCode::Del },
         {         "~",   events::AbstractKeyCode::Titulus },
         {         ".",    events::AbstractKeyCode::Period },
         {         ",",     events::AbstractKeyCode::Comma },
