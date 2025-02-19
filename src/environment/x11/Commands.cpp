@@ -139,4 +139,8 @@ namespace ymwm::environment::commands {
                                 const events::Event& event) const {
     e.group().prev();
   }
+
+  void RemoveGroup::execute(Environment& e, const events::Event& event) const {
+    e.group().remove(e.group().active());
+  }
 } // namespace ymwm::environment::commands
