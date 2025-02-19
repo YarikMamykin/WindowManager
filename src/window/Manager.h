@@ -153,6 +153,13 @@ namespace ymwm::window {
       return m_layout_manager;
     }
 
+    ~Manager() noexcept {
+      for (const auto& w : m_windows) {
+        // Send `close` event to windows left in group.
+        m_env->close_window(w);
+      }
+    }
+
   private:
     std::vector<Window> m_windows;
     Environment* const m_env;
