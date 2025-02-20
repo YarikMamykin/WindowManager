@@ -83,15 +83,15 @@ namespace ymwm::window {
 
     inline std::size_t active() const noexcept { return m_active_manager; }
 
+    inline bool one_manager_present() const noexcept {
+      return 1ul == m_managers.size();
+    }
+
     inline ~GroupManager() = default;
 
   private:
     inline bool valid_index(std::size_t manager_index) noexcept {
       return manager_index < m_managers.size();
-    }
-
-    inline bool one_manager_present() const noexcept {
-      return 1ul == m_managers.size();
     }
 
     inline bool is_first_active() const noexcept {
