@@ -194,9 +194,23 @@ namespace ymwm::events {
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Period,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Shift },
+        ymwm::environment::commands::MoveFocusedWindowToNextGroup{});
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
             .code = ymwm::events::AbstractKeyCode::Comma,
             .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::MoveToPrevGroup{});
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Comma,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Shift },
+        ymwm::environment::commands::MoveFocusedWindowToPreviousGroup{});
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
