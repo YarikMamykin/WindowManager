@@ -50,9 +50,47 @@ namespace ymwm::environment::commands {
     e.manager().move_focused_window_forward();
   }
 
+  void MoveFocusedWindowToNextGroup::execute(Environment& e,
+                                             const events::Event&) const {
+    if (e.group().one_manager_present()) {
+      return;
+    }
+
+    auto w = e.group().manager().focus().window();
+    if (not w) {
+      return;
+    }
+
+    auto window_copy = window::Window{ w->get() };
+
+    e.group().manager().remove_window(w->get().id);
+
+    e.group().next();
+    e.group().manager().add_window(window_copy);
+  }
+
   void MoveFocusedWindowBackward::execute(Environment& e,
                                           const events::Event&) const {
     e.manager().move_focused_window_backward();
+  }
+
+  void MoveFocusedWindowToPreviousGroup::execute(Environment& e,
+                                                 const events::Event&) const {
+    if (e.group().one_manager_present()) {
+      return;
+    }
+
+    auto w = e.group().manager().focus().window();
+    if (not w) {
+      return;
+    }
+
+    auto window_copy = window::Window{ w->get() };
+
+    e.group().manager().remove_window(w->get().id);
+
+    e.group().prev();
+    e.group().manager().add_window(window_copy);
   }
 
   void ChangeLayout::execute(Environment& e, const events::Event&) const {

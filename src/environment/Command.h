@@ -24,7 +24,9 @@ namespace ymwm::environment::commands {
   DEFINE_COMMAND(FocusNextWindow)
   DEFINE_COMMAND(FocusPrevWindow)
   DEFINE_COMMAND(MoveFocusedWindowForward)
+  DEFINE_COMMAND(MoveFocusedWindowToNextGroup)
   DEFINE_COMMAND(MoveFocusedWindowBackward)
+  DEFINE_COMMAND(MoveFocusedWindowToPreviousGroup)
   DEFINE_COMMAND(ChangeLayout)
   DEFINE_COMMAND_WITH_PARAMS_1(SetLayout, std::string_view layout);
   DEFINE_COMMAND_WITH_PARAMS_1(IncreaseMainWindowRatio, int diff{ 10 });
@@ -50,7 +52,9 @@ namespace ymwm::environment::commands {
                                FocusNextWindow,
                                FocusPrevWindow,
                                MoveFocusedWindowForward,
+                               MoveFocusedWindowToNextGroup,
                                MoveFocusedWindowBackward,
+                               MoveFocusedWindowToPreviousGroup,
                                ChangeLayout,
                                SetLayout,
                                IncreaseMainWindowRatio,
