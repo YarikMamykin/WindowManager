@@ -18,7 +18,8 @@ namespace ymwm::window {
     }
 
     inline void add() noexcept {
-      m_managers.emplace_back(m_env);
+      m_managers.emplace(std::next(m_managers.begin(), m_active_manager + 1ul),
+                         m_env);
       next();
     }
 
