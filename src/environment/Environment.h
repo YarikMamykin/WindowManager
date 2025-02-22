@@ -34,6 +34,7 @@ namespace ymwm::environment {
     ymwm::window::GroupManager<Environment>& group() noexcept;
     std::tuple<int, int> screen_width_and_height() noexcept;
     void next_keyboard_layout() noexcept;
+    void screenshot() noexcept;
 
   private:
     std::unique_ptr<Handlers> m_handlers;

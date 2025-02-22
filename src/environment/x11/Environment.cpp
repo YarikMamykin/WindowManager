@@ -1,6 +1,7 @@
 #include "environment/Environment.h"
 
 #include "Handlers.h"
+#include "ScreenshotImageHandler.h"
 #include "XClientKeyGrabber.h"
 #include "common/Color.h"
 #include "config/Window.h"
@@ -232,5 +233,14 @@ namespace ymwm::environment {
     }
     XkbLockGroup(
         m_handlers->display, XkbUseCoreKbd, m_handlers->current_layout);
+  }
+
+  void Environment::screenshot() noexcept {
+    auto [sw, sh] = screen_width_and_height();
+    ScreenshotImageHandler(m_handlers->display,
+                           m_handlers->screen,
+                           m_handlers->root_window,
+                           sw,
+                           sh);
   }
 } // namespace ymwm::environment
