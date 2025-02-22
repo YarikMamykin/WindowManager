@@ -23,4 +23,8 @@ namespace ymwm::environment {
   ymwm::window::GroupManager<Environment>& Environment::group() noexcept {
     return m_group_manager;
   }
+
+  ScreenshotHandler& Environment::screenshot() noexcept {
+    return m_screenshot_handler;
+  }
 } // namespace ymwm::environment
