@@ -58,3 +58,4 @@ key-bindings:
 misc:
   languages: us,ru,ua
   background_image: /tmp/some.png
+  screenshots_folder: /home/user/Pictures
