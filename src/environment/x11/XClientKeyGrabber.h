@@ -1,6 +1,7 @@
 #pragma once
 #include "environment/x11/Handlers.h"
 #include "events/AbstractKeyPress.h"
+#include "events/AbstractMousePress.h"
 
 #include <iostream>
 
@@ -22,6 +23,23 @@ namespace ymwm::environment {
                true,
                GrabModeAsync,
                GrabModeAsync);
+    }
+
+    template <>
+    inline void operator()(const events::AbstractMousePress& event) {
+      std::cout << "Grabbing buttons: " << std::hex << event.mcode << " "
+                << event.mask << "\n";
+
+      XGrabButton(handlers->display,
+                  event.mcode,
+                  event.mask,
+                  handlers->root_window,
+                  false,
+                  ButtonPressMask | ButtonReleaseMask,
+                  GrabModeAsync,
+                  GrabModeSync,
+                  None,
+                  None);
     }
   };
 } // namespace ymwm::environment
