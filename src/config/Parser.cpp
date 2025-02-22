@@ -40,6 +40,10 @@ namespace ymwm::config {
       config::misc::background_image_path =
           background_image_path.as<std::string>();
     }
+
+    if (auto screenshots_folder = misc["screenshots_folder"]) {
+      config::misc::screenshots_folder = screenshots_folder.as<std::string>();
+    }
   }
 
   void Parser::parse_window_config(const YAML::Node& windows) const {
@@ -322,6 +326,7 @@ namespace ymwm::config {
     YAML::Node misc;
     misc["languages"] = misc::language_layout;
     misc["background_image"] = misc::background_image_path.string();
+    misc["screenshots_folder"] = misc::screenshots_folder.string();
 
     config["key-bindings"] = key_bindings;
     config["layouts"] = layouts;
