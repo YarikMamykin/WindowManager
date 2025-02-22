@@ -2,6 +2,7 @@
 
 #include "config/Misc.h"
 
+#include <Imlib2.h>
 #include <filesystem>
 
 namespace ymwm::environment {
@@ -28,7 +29,7 @@ namespace ymwm::environment {
     auto img_width = imlib_image_get_width();
     auto img_height = imlib_image_get_height();
 
-    image = imlib_create_cropped_scaled_image(
+    Imlib_Image image = imlib_create_cropped_scaled_image(
         0, 0, img_width, img_height, screen_width, screen_height);
     imlib_free_image();
 
@@ -41,6 +42,7 @@ namespace ymwm::environment {
                            DefaultDepth(display, screen));
     imlib_context_set_drawable(pixmap);
     imlib_render_image_on_drawable(0, 0);
+    imlib_free_image();
 
     // Create a graphics context
     gc = XCreateGC(display, root_window, 0, nullptr);
@@ -56,11 +58,6 @@ namespace ymwm::environment {
   }
 
   BackgroundImageHandler::~BackgroundImageHandler() noexcept {
-    if (not image) {
-      return;
-    }
-
-    imlib_free_image();
     XFreePixmap(display, pixmap);
     XFreeGC(display, gc);
   }

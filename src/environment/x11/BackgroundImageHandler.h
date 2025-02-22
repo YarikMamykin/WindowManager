@@ -2,7 +2,6 @@
 
 #include "XHeaders.h"
 
-#include <Imlib2.h>
 namespace ymwm::environment {
   struct BackgroundImageHandler {
     BackgroundImageHandler(Display* display,
@@ -13,7 +12,6 @@ namespace ymwm::environment {
     ~BackgroundImageHandler() noexcept;
 
   private:
-    Imlib_Image image{ nullptr };
     Pixmap pixmap;
     GC gc;
     Display* display;
