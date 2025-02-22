@@ -1,7 +1,6 @@
 #include "environment/Environment.h"
 
 #include "Handlers.h"
-#include "ScreenshotImageHandler.h"
 #include "XClientKeyGrabber.h"
 #include "common/Color.h"
 #include "config/Window.h"
@@ -9,6 +8,7 @@
 #include "events/AbstractKeyCode.h"
 #include "events/AbstractKeyMask.h"
 #include "events/AbstractKeyPress.h"
+#include "events/AbstractMousePress.h"
 #include "events/MouseOverWindow.h"
 #include "events/WindowAdded.h"
 #include "events/WindowNameUpdated.h"
@@ -68,6 +68,9 @@ namespace ymwm::environment {
     // Grab keys by events
     XUngrabKey(
         m_handlers->display, AnyKey, AnyModifier, m_handlers->root_window);
+    XUngrabButton(
+        m_handlers->display, AnyButton, AnyModifier, m_handlers->root_window);
+
     XClientKeyGrabber visitor{ .handlers = m_handlers.get() };
     for (const auto& [event, _] : events_map) {
       std::visit(visitor, event);
@@ -93,6 +96,8 @@ namespace ymwm::environment {
   Environment::~Environment() {
     XUngrabKey(
         m_handlers->display, AnyKey, AnyModifier, m_handlers->root_window);
+    XUngrabButton(
+        m_handlers->display, AnyButton, AnyModifier, m_handlers->root_window);
   }
 
   events::Event Environment::event() const noexcept {
@@ -154,8 +159,14 @@ namespace ymwm::environment {
       return events::WindowRemoved{ .wid = unmapped_window };
       break;
     }
-    case DestroyNotify: {
-      break;
+    case ButtonPress: {
+      return events::AbstractMousePress{
+        .mask = static_cast<ymwm::events::AbstractKeyMask::Type>(
+            event.xbutton.state),
+        .mcode = static_cast<ymwm::events::AbstractMousePress::Type>(
+            event.xbutton.button),
+        .coords = { event.xbutton.x_root, event.xbutton.y_root }
+      };
     }
     }
 
