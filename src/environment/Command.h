@@ -43,6 +43,7 @@ namespace ymwm::environment::commands {
   DEFINE_COMMAND(MoveToNextGroup);
   DEFINE_COMMAND(MoveToPrevGroup);
   DEFINE_COMMAND(RemoveGroup);
+  DEFINE_COMMAND(TakeScreenshot);
 
   using Command = std::variant<ExitRequested,
                                RunTerminal,
@@ -70,6 +71,7 @@ namespace ymwm::environment::commands {
                                AddGroup,
                                MoveToNextGroup,
                                MoveToPrevGroup,
-                               RemoveGroup>;
+                               RemoveGroup,
+                               TakeScreenshot>;
 
 } // namespace ymwm::environment::commands

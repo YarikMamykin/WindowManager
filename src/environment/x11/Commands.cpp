@@ -181,4 +181,9 @@ namespace ymwm::environment::commands {
   void RemoveGroup::execute(Environment& e, const events::Event& event) const {
     e.group().remove(e.group().active());
   }
+
+  void TakeScreenshot::execute(Environment& e,
+                               const events::Event& event) const {
+    e.screenshot();
+  }
 } // namespace ymwm::environment::commands
