@@ -219,6 +219,13 @@ namespace ymwm::events {
                     ymwm::events::AbstractKeyMask::Ctrl },
         ymwm::environment::commands::RemoveGroup{});
 
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::S,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Shift },
+        ymwm::environment::commands::TakeScreenshot{});
+
     return bindings;
   }
 
