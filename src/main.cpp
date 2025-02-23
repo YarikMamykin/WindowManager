@@ -1,23 +1,14 @@
+#include "args/Parser.h"
 #include "config/Parser.h"
-#include "environment/Command.h"
 #include "environment/Environment.h"
-#include "events/Map.h"
 
-#include <argparse/argparse.hpp>
 #include <stdexcept>
-#include <variant>
 
-struct ParsedArgs {
-  std::filesystem::path generated_default_config_path;
-  std::filesystem::path config_path;
-};
-
-ParsedArgs parse_args(int argc, char** argv);
 ymwm::events::Map parse_config(std::filesystem::path&& config_path);
 
 int main(int argc, char** argv) {
 
-  auto parsed_args = parse_args(argc, argv);
+  auto parsed_args = ymwm::args::parse(argc, argv);
   if (not parsed_args.generated_default_config_path.empty()) {
     ymwm::config::Parser::default_config_to_yaml(
         std::move(parsed_args.generated_default_config_path));
@@ -40,29 +31,6 @@ int main(int argc, char** argv) {
   }
 
   return 0;
-}
-
-ParsedArgs parse_args(int argc, char** argv) {
-#ifndef VERSION
-#define VERSION "0.1.0"
-#endif
-
-  argparse::ArgumentParser arguments_parser("WindowManager", VERSION);
-
-  arguments_parser.add_argument("--config", "-c")
-      .help("Configuration file path.")
-      .default_value(std::string());
-  arguments_parser.add_argument("--generate-default-config-only", "-gdco")
-      .help("File path where to generate default config.")
-      .default_value(std::string());
-
-  arguments_parser.parse_args(argc, argv);
-
-  return ParsedArgs{
-    .generated_default_config_path =
-        arguments_parser.get<std::string>("--generate-default-config-only"),
-    .config_path = arguments_parser.get<std::string>("--config")
-  };
 }
 
 ymwm::events::Map parse_config(std::filesystem::path&& config_path) {
