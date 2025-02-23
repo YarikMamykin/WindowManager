@@ -1,6 +1,9 @@
 #include "Handlers.h"
 #include "common/Color.h"
 
+#include <array>
+#include <format>
+#include <iostream>
 #include <memory>
 #include <string>
 
@@ -71,5 +74,22 @@ namespace ymwm::environment {
     }
 
     return wname;
+  }
+
+  bool register_colors(const std::array<ymwm::common::Color, 3ul>& colors,
+                       Handlers& handlers) {
+    for (const auto& c : colors) {
+      handlers.colors.insert({ c, xcolor_from_color(c) });
+      if (not XAllocColor(
+              handlers.display, handlers.colormap, &handlers.colors.at(c))) {
+        std::cerr << std::format("Failed to allocate color: {} {} {}\n",
+                                 handlers.colors.at(c).red,
+                                 handlers.colors.at(c).green,
+                                 handlers.colors.at(c).blue);
+        return false;
+      }
+    }
+
+    return true;
   }
 } // namespace ymwm::environment

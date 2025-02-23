@@ -3,30 +3,14 @@
 #include "Handlers.h"
 #include "XClientKeyGrabber.h"
 #include "common/Color.h"
-#include "config/Window.h"
-#include "environment/x11/AtomID.h"
-#include "events/AbstractKeyCode.h"
-#include "events/AbstractKeyMask.h"
-#include "events/AbstractKeyPress.h"
-#include "events/AbstractMousePress.h"
-#include "events/MouseOverWindow.h"
-#include "events/WindowAdded.h"
-#include "events/WindowNameUpdated.h"
-#include "events/WindowRemoved.h"
-#include "layouts/Parameters.h"
-
-#include <format>
-#include <iostream>
 
 namespace ymwm::environment {
   int handle_x_error(Display* display, XErrorEvent* error);
   int handle_x_io_error(Display* display);
-} // namespace ymwm::environment
-
-namespace ymwm::environment {
   XColor xcolor_from_color(const common::Color& c) noexcept;
-  std::u8string get_window_name(ymwm::environment::Handlers& handlers,
-                                Window w) noexcept;
+  ymwm::events::Event x11_to_abstract_event(XEvent& event, Handlers& handlers);
+  bool register_colors(const std::array<common::Color, 3ul>& colors,
+                       Handlers& handlers);
 } // namespace ymwm::environment
 
 namespace ymwm::environment {
@@ -44,25 +28,14 @@ namespace ymwm::environment {
       return;
     }
 
-    auto [sw, sh] = screen_width_and_height();
-    std::cout << std::format("SCREEN SIZE: {} {}\n", sw, sh);
-
-    for (const auto& c : {
-             ymwm::config::windows::regular_border_color,
-             ymwm::config::windows::focused_border_color,
-             common::Color{ 0x0, 0x0, 0xff }
-    }) {
-      m_handlers->colors.insert({ c, xcolor_from_color(c) });
-      if (not XAllocColor(m_handlers->display,
-                          m_handlers->colormap,
-                          &m_handlers->colors.at(c))) {
-        std::cerr << std::format("Failed to allocate color: {} {} {}\n",
-                                 m_handlers->colors.at(c).red,
-                                 m_handlers->colors.at(c).green,
-                                 m_handlers->colors.at(c).blue);
-        m_exit_requested = true;
-        return;
-      }
+    auto colors = std::array<common::Color, 3ul>{
+      ymwm::config::windows::regular_border_color,
+      ymwm::config::windows::focused_border_color,
+      common::Color{ 0x0, 0x0, 0xff }
+    };
+    m_exit_requested = not register_colors(colors, *m_handlers);
+    if (m_exit_requested) {
+      return;
     }
 
     // Grab keys by events
@@ -104,76 +77,7 @@ namespace ymwm::environment {
     XEvent event;
     XSync(m_handlers->display, false);
     XNextEvent(m_handlers->display, &event);
-    switch (event.type) {
-    case KeyPress:
-      return events::AbstractKeyPress{
-        .code = static_cast<ymwm::events::AbstractKeyCode::Type>(
-            XLookupKeysym(&event.xkey, 0)),
-        .mask =
-            static_cast<ymwm::events::AbstractKeyCode::Type>(event.xkey.state)
-      };
-    case PropertyNotify: {
-      const auto property_atom_changed = event.xproperty.atom;
-      Window w = event.xproperty.window;
-      if ((XA_WM_NAME == property_atom_changed or
-           m_handlers->atoms.at(AtomID::NetWMName) == property_atom_changed) and
-          event.xproperty.state != PropertyDelete) {
-        return events::WindowNameUpdated{ .wid = w,
-                                          .wname =
-                                              get_window_name(*m_handlers, w) };
-      }
-      break;
-    }
-    case EnterNotify: {
-      if (NotifyNormal == event.xcrossing.mode and
-          NotifyInferior != event.xcrossing.detail) {
-        return events::MouseOverWindow{ .wid = event.xcrossing.window };
-      }
-      break;
-    }
-    case MapRequest: {
-      XWindowAttributes wa;
-      auto w = event.xmaprequest.window;
-      if (XGetWindowAttributes(m_handlers->display, w, &wa)) {
-        // Add input mask to track property changes.
-        XSelectInput(m_handlers->display,
-                     w,
-                     EnterWindowMask | FocusChangeMask | PropertyChangeMask |
-                         StructureNotifyMask);
-        return events::WindowAdded{
-          .w = { .id = w,
-                .x = wa.x,
-                .y = wa.y,
-                .w = wa.width,
-                .h = wa.height,
-                .border_width = ymwm::config::windows::regular_border_width,
-                .border_color = ymwm::config::windows::regular_border_color,
-                .name = get_window_name(*m_handlers, w) }
-        };
-      }
-
-      break;
-    }
-    case UnmapNotify: {
-      auto unmapped_window = event.xunmap.window;
-      return events::WindowRemoved{ .wid = unmapped_window };
-      break;
-    }
-    case ButtonPress: {
-      return events::AbstractMousePress{
-        .mask = static_cast<ymwm::events::AbstractKeyMask::Type>(
-            event.xbutton.state),
-        .mcode = static_cast<ymwm::events::AbstractMousePress::Type>(
-            event.xbutton.button),
-        .coords = { event.xbutton.x_root, event.xbutton.y_root }
-      };
-    }
-    }
-
-    return ymwm::events::AbstractKeyPress{
-      .code = ymwm::events::AbstractKeyCode::Unknown,
-      .mask = ymwm::events::AbstractKeyMask::NONE
-    };
+    return x11_to_abstract_event(event, *m_handlers);
   }
 
   Handlers& Environment::handlers() noexcept { return *m_handlers; }
