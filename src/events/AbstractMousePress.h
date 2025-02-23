@@ -13,6 +13,6 @@ namespace ymwm::events {
     constexpr bool operator==(const AbstractMousePress& other) const noexcept {
       return mask == other.mask and mcode == other.mcode;
     }
-    static inline constexpr std::string_view type{ "mousepress" };
+    static inline constexpr std::string_view type{ "mouse" };
   };
 } // namespace ymwm::events
