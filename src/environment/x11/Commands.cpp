@@ -1,6 +1,7 @@
 #include "common/VariantInterfaceHelpers.h"
 #include "environment/Command.h"
 #include "environment/Environment.h"
+#include "events/AbstractMousePress.h"
 #include "events/Event.h"
 #include "events/MouseOverWindow.h"
 #include "events/WindowRemoved.h"
@@ -8,6 +9,7 @@
 #include "layouts/Parameters.h"
 
 #include <cstdlib>
+#include <iostream>
 #include <string>
 #include <thread>
 #include <variant>
@@ -180,5 +182,21 @@ namespace ymwm::environment::commands {
 
   void RemoveGroup::execute(Environment& e, const events::Event& event) const {
     e.group().remove(e.group().active());
+  }
+
+  void TakeScreenshot::execute(Environment& e,
+                               const events::Event& event) const {
+    const std::array<int, 2ul> start_coords{ 0, 0 };
+    auto [sw, sh] = e.screen_width_and_height();
+    const std::array<int, 2ul> end_coords{ sw, sh };
+    e.screenshot().add(start_coords).add(end_coords).make(e);
+  }
+
+  void SaveScreenshotCoords::execute(Environment& e,
+                                     const events::Event& event) const {
+    if (auto mouse_press_event =
+            std::get_if<events::AbstractMousePress>(&event)) {
+      e.screenshot().add(mouse_press_event->coords).make(e);
+    }
   }
 } // namespace ymwm::environment::commands

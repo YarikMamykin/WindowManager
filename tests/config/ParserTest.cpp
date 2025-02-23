@@ -6,6 +6,8 @@
 #include "environment/Command.h"
 #include "events/AbstractKeyCode.h"
 #include "events/AbstractKeyMask.h"
+#include "events/AbstractMouseCode.h"
+#include "events/AbstractMousePress.h"
 #include "events/Map.h"
 
 #include <algorithm>
@@ -222,6 +224,7 @@ TEST(TestConfig, AllValidConfig) {
   EXPECT_EQ(90, ymwm::config::layouts::centered::window_width_ratio);
   EXPECT_EQ("us,ru,ua", ymwm::config::misc::language_layout);
   EXPECT_EQ("/tmp/some.png", ymwm::config::misc::background_image_path);
+  EXPECT_EQ("/home/user/Pictures", ymwm::config::misc::screenshots_folder);
   ymwm::events::Map events_map;
   EXPECT_NO_THROW(events_map = parser.event_map());
   auto event1 = ymwm::events::AbstractKeyPress{
@@ -233,8 +236,13 @@ TEST(TestConfig, AllValidConfig) {
       ymwm::events::AbstractKeyPress{ .code = ymwm::events::AbstractKeyCode::B,
                                       .mask =
                                           ymwm::events::AbstractKeyMask::Ctrl };
+  auto event3 = ymwm::events::AbstractMousePress{
+    .mask = ymwm::events::AbstractKeyMask::Shift,
+    .mcode = ymwm::events::AbstractMouseCode::Left
+  };
   ASSERT_TRUE(events_map.contains(event1));
   ASSERT_TRUE(events_map.contains(event2));
+  ASSERT_TRUE(events_map.contains(event3));
   ASSERT_TRUE(std::holds_alternative<ymwm::environment::commands::RunTerminal>(
       events_map.at(event1)));
   EXPECT_EQ(
@@ -244,8 +252,13 @@ TEST(TestConfig, AllValidConfig) {
   EXPECT_TRUE(
       std::holds_alternative<ymwm::environment::commands::ExitRequested>(
           events_map.at(event2)));
+  EXPECT_TRUE(
+      std::holds_alternative<ymwm::environment::commands::TakeScreenshot>(
+          events_map.at(event3)));
   for (const auto& [k, v] : ymwm::events::default_event_map()) {
     if (not std::holds_alternative<ymwm::environment::commands::ExitRequested>(
+            v) and
+        not std::holds_alternative<ymwm::environment::commands::TakeScreenshot>(
             v)) {
       ASSERT_TRUE(events_map.contains(k));
       ASSERT_EQ(v.index(), events_map.at(k).index());
@@ -308,6 +321,7 @@ TEST(TestConfig, GenerateConfigToFile) {
   ymwm::config::windows::focused_border_width = 2;
   ymwm::config::misc::language_layout = "ru,fr,de";
   ymwm::config::misc::background_image_path = "/tmp/someimg.png";
+  ymwm::config::misc::screenshots_folder = "/home/user/folder";
 
   const std::filesystem::path test_config_path =
       std::filesystem::temp_directory_path() / "test-config.yaml";
@@ -343,6 +357,7 @@ TEST(TestConfig, GenerateConfigToFile) {
   EXPECT_EQ(0xee, ymwm::config::windows::focused_border_color.blue);
   EXPECT_EQ("ru,fr,de", ymwm::config::misc::language_layout);
   EXPECT_EQ("/tmp/someimg.png", ymwm::config::misc::background_image_path);
+  EXPECT_EQ("/home/user/folder", ymwm::config::misc::screenshots_folder);
 
   ASSERT_EQ(parsed_event_map.size(), default_event_map.size());
 

@@ -5,6 +5,8 @@
 #include "common/Direction.h"
 #include "environment/Command.h"
 #include "events/AbstractKeyPress.h"
+#include "events/AbstractMouseCode.h"
+#include "events/AbstractMousePress.h"
 #include "events/MouseOverWindow.h"
 #include "events/WindowAdded.h"
 #include "events/WindowNameUpdated.h"
@@ -218,6 +220,20 @@ namespace ymwm::events {
             .mask = ymwm::events::AbstractKeyMask::Alt |
                     ymwm::events::AbstractKeyMask::Ctrl },
         ymwm::environment::commands::RemoveGroup{});
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::S,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Shift },
+        ymwm::environment::commands::TakeScreenshot{});
+
+    bindings.emplace(
+        ymwm::events::AbstractMousePress{
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Shift,
+            .mcode = ymwm::events::AbstractMouseCode::Left },
+        ymwm::environment::commands::SaveScreenshotCoords{});
 
     return bindings;
   }

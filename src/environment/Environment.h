@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Command.h"
+#include "environment/ScreenshotHandler.h"
 #include "events/Event.h"
 #include "events/Map.h"
 #include "window/GroupManager.h"
@@ -34,10 +35,12 @@ namespace ymwm::environment {
     ymwm::window::GroupManager<Environment>& group() noexcept;
     std::tuple<int, int> screen_width_and_height() noexcept;
     void next_keyboard_layout() noexcept;
+    ScreenshotHandler& screenshot() noexcept;
 
   private:
     std::unique_ptr<Handlers> m_handlers;
     bool m_exit_requested;
     ymwm::window::GroupManager<Environment> m_group_manager;
+    ScreenshotHandler m_screenshot_handler;
   };
 } // namespace ymwm::environment

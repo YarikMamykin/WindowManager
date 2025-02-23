@@ -62,6 +62,59 @@ namespace YAML {
 
 namespace YAML {
   template <>
+  struct convert<ymwm::events::AbstractMousePress> {
+    static bool decode(const Node& node,
+                       ymwm::events::AbstractMousePress& event) {
+      if (!node.IsMap()) {
+        return false;
+      }
+
+      // Extract values from YAML node
+      auto button_code = ymwm::config::utils::key_symbol_to_code(
+          node["button"].as<std::string>());
+      if (not button_code) {
+        return false;
+      }
+      event.mcode = *button_code;
+
+      // Mask may be unspecified
+      if (YAML::Node masks = node["masks"]) {
+        if (not masks.IsSequence()) {
+          return false;
+        }
+        event.mask = ymwm::config::utils::compose_mask(masks);
+      }
+
+      return true;
+    }
+
+    static Node encode(const ymwm::events::AbstractMousePress& event) {
+      Node node;
+
+      node["type"] = event.type;
+
+      for (const auto& [symbol, code] :
+           ymwm::config::utils::symbol_to_code_table) {
+        if (code == event.mcode) {
+          node["button"] = symbol;
+          break;
+        }
+      }
+
+      for (const auto& [symbol, mask] :
+           ymwm::config::utils::mask_symbol_to_code_table) {
+        if (event.mask & mask) {
+          node["masks"].push_back(symbol);
+        }
+      }
+
+      return node;
+    }
+  };
+} // namespace YAML
+
+namespace YAML {
+  template <>
   struct convert<ymwm::common::Color> {
     static bool decode(const Node& node, ymwm::common::Color& color) {
 

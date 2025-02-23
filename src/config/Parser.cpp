@@ -9,6 +9,7 @@
 #include "config/Window.h"
 #include "config/YamlToCommand.h"
 #include "environment/Command.h"
+#include "events/AbstractMousePress.h"
 #include "events/Map.h"
 
 #include <algorithm>
@@ -39,6 +40,10 @@ namespace ymwm::config {
     if (auto background_image_path = misc["background_image"]) {
       config::misc::background_image_path =
           background_image_path.as<std::string>();
+    }
+
+    if (auto screenshots_folder = misc["screenshots_folder"]) {
+      config::misc::screenshots_folder = screenshots_folder.as<std::string>();
     }
   }
 
@@ -181,6 +186,27 @@ namespace ymwm::config {
     }
   }
 
+  events::Event Parser::event_from_node(const YAML::Node& event_node) const {
+    YAML::Node type = event_node["type"];
+    if (not type) {
+      throw ParsingError("Type of event must be specified\n");
+    }
+
+    if (auto type_value = type.as<std::string>();
+        events::AbstractKeyPress::type == type_value) {
+
+      return event_node.as<events::AbstractKeyPress>();
+    }
+
+    if (auto type_value = type.as<std::string>();
+        events::AbstractMousePress::type == type_value) {
+
+      return event_node.as<events::AbstractMousePress>();
+    }
+
+    throw ParsingError("Unknown binding event type");
+  }
+
   events::Map Parser::event_map_from_yaml(const YAML::Node& key_bindings) {
     events::Map event_map = events::default_event_map();
 
@@ -198,48 +224,37 @@ namespace ymwm::config {
     }
 
     for (const auto& binding : key_bindings) {
-      YAML::Node type = binding["type"];
-      if (not type) {
-        throw ParsingError("Type of key binding must be specified\n");
+      auto event = event_from_node(binding);
+
+      auto cmd_node = binding["cmd"];
+      if (not cmd_node) {
+        throw ParsingError("Command is not specified for key binding");
       }
 
-      if (auto type_value = type.as<std::string>();
-          events::AbstractKeyPress::type == type_value) {
+      auto cmd = YamlToCommand::convert(cmd_node);
+      if (not cmd) {
+        throw ParsingError("Unknown command specified");
+      }
 
-        ymwm::events::Event key_press_event =
-            binding.as<events::AbstractKeyPress>();
+      auto [_, no_duplicate] = cmds_created.insert(*cmd);
+      event_map[event] = *cmd;
 
-        auto cmd_node = binding["cmd"];
-        if (not cmd_node) {
-          throw ParsingError("Command is not specified for key binding");
-        }
+      if (no_duplicate) {
+        continue;
+      }
 
-        auto cmd = YamlToCommand::convert(cmd_node);
-        if (not cmd) {
-          throw ParsingError("Unknown command specified");
-        }
-
-        auto [_, no_duplicate] = cmds_created.insert(*cmd);
-        event_map[key_press_event] = *cmd;
-
-        if (no_duplicate) {
-          continue;
-        }
-
-        // If duplicated command spotted,
-        // remove all previous occasions except last one,
-        // which should override the value.
-        if (auto found_event_to_cmd = std::find_if(
-                event_map.begin(),
-                event_map.end(),
-                [&cmd, &key_press_event](const auto& mapping) -> bool {
-                  return cmd == mapping.second and
-                         key_press_event != mapping.first;
-                });
-            event_map.end() != found_event_to_cmd) {
-          m_events_removed.push_back(found_event_to_cmd->first);
-          event_map.erase(found_event_to_cmd);
-        }
+      // If duplicated command spotted,
+      // remove all previous occasions except last one,
+      // which should override the value.
+      if (auto found_event_to_cmd = std::find_if(
+              event_map.begin(),
+              event_map.end(),
+              [&cmd, &event](const auto& mapping) -> bool {
+                return cmd == mapping.second and event != mapping.first;
+              });
+          event_map.end() != found_event_to_cmd) {
+        m_events_removed.push_back(found_event_to_cmd->first);
+        event_map.erase(found_event_to_cmd);
       }
     }
 
@@ -322,6 +337,7 @@ namespace ymwm::config {
     YAML::Node misc;
     misc["languages"] = misc::language_layout;
     misc["background_image"] = misc::background_image_path.string();
+    misc["screenshots_folder"] = misc::screenshots_folder.string();
 
     config["key-bindings"] = key_bindings;
     config["layouts"] = layouts;

@@ -24,12 +24,15 @@ namespace ymwm::environment {
     atoms.at(AtomID::Utf8String) = XInternAtom(display, "UTF8_STRING", False);
     current_layout = 0;
     max_layouts = get_number_of_layouts();
-    background_image = std::make_unique<BackgroundImageHandler>(
-        display,
-        screen,
-        root_window,
-        XDisplayWidth(display, screen),
-        XDisplayHeight(display, screen));
+    if (not ymwm::config::misc::background_image_path.empty() and
+        std::filesystem::exists(ymwm::config::misc::background_image_path)) {
+      background_image = std::make_unique<BackgroundImageHandler>(
+          display,
+          screen,
+          root_window,
+          XDisplayWidth(display, screen),
+          XDisplayHeight(display, screen));
+    }
   }
 
   Handlers::~Handlers() {
