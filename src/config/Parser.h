@@ -28,6 +28,7 @@ namespace ymwm::config {
     void parse_layouts_config(const YAML::Node& layouts) const;
     void parse_window_config(const YAML::Node& window) const;
     void parse_misc_config(const YAML::Node& misc) const;
+    events::Event event_from_node(const YAML::Node& event_node) const;
 
     events::Map m_event_map;
     std::list<events::Event> m_events_removed;
