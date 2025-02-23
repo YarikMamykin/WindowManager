@@ -55,6 +55,13 @@ key-bindings:
     cmd:
       name: ExitRequested
 
+  - type: mouse
+    button: LMB
+    masks:
+      - Shift
+    cmd:
+      name: TakeScreenshot
+
 misc:
   languages: us,ru,ua
   background_image: /tmp/some.png

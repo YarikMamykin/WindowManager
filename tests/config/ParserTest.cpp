@@ -6,6 +6,8 @@
 #include "environment/Command.h"
 #include "events/AbstractKeyCode.h"
 #include "events/AbstractKeyMask.h"
+#include "events/AbstractMouseCode.h"
+#include "events/AbstractMousePress.h"
 #include "events/Map.h"
 
 #include <algorithm>
@@ -234,8 +236,13 @@ TEST(TestConfig, AllValidConfig) {
       ymwm::events::AbstractKeyPress{ .code = ymwm::events::AbstractKeyCode::B,
                                       .mask =
                                           ymwm::events::AbstractKeyMask::Ctrl };
+  auto event3 = ymwm::events::AbstractMousePress{
+    .mask = ymwm::events::AbstractKeyMask::Shift,
+    .mcode = ymwm::events::AbstractMouseCode::Left
+  };
   ASSERT_TRUE(events_map.contains(event1));
   ASSERT_TRUE(events_map.contains(event2));
+  ASSERT_TRUE(events_map.contains(event3));
   ASSERT_TRUE(std::holds_alternative<ymwm::environment::commands::RunTerminal>(
       events_map.at(event1)));
   EXPECT_EQ(
@@ -245,8 +252,13 @@ TEST(TestConfig, AllValidConfig) {
   EXPECT_TRUE(
       std::holds_alternative<ymwm::environment::commands::ExitRequested>(
           events_map.at(event2)));
+  EXPECT_TRUE(
+      std::holds_alternative<ymwm::environment::commands::TakeScreenshot>(
+          events_map.at(event3)));
   for (const auto& [k, v] : ymwm::events::default_event_map()) {
     if (not std::holds_alternative<ymwm::environment::commands::ExitRequested>(
+            v) and
+        not std::holds_alternative<ymwm::environment::commands::TakeScreenshot>(
             v)) {
       ASSERT_TRUE(events_map.contains(k));
       ASSERT_EQ(v.index(), events_map.at(k).index());
