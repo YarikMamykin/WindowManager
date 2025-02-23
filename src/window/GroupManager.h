@@ -88,6 +88,10 @@ namespace ymwm::window {
       return 1ul == m_managers.size();
     }
 
+    inline bool is_last_active() const noexcept {
+      return (m_managers.size() - 1ul) == m_active_manager;
+    }
+
     inline ~GroupManager() = default;
 
   private:
@@ -97,10 +101,6 @@ namespace ymwm::window {
 
     inline bool is_first_active() const noexcept {
       return 0ul == m_active_manager;
-    }
-
-    inline bool is_last_active() const noexcept {
-      return (m_managers.size() - 1ul) == m_active_manager;
     }
 
     Environment* const m_env;
