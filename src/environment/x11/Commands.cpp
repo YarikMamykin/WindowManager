@@ -54,10 +54,6 @@ namespace ymwm::environment::commands {
 
   void MoveFocusedWindowToNextGroup::execute(Environment& e,
                                              const events::Event&) const {
-    if (e.group().one_manager_present()) {
-      return;
-    }
-
     auto w = e.group().manager().focus().window();
     if (not w) {
       return;
@@ -67,7 +63,12 @@ namespace ymwm::environment::commands {
 
     e.group().manager().remove_window(w->get().id);
 
-    e.group().next();
+    if (e.group().is_last_active()) {
+      e.group().add();
+    } else {
+      e.group().next();
+    }
+
     e.group().manager().add_window(window_copy);
   }
 
