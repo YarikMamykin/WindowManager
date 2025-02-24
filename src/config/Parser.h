@@ -4,7 +4,6 @@
 
 #include <filesystem>
 #include <format>
-#include <list>
 #include <stdexcept>
 #include <string_view>
 
@@ -19,7 +18,6 @@ namespace ymwm::config {
     Parser(std::filesystem::path&& config_path);
 
     [[nodiscard]] events::Map event_map() const;
-    [[nodiscard]] std::list<events::Event> events_removed() const;
 
     static void default_config_to_yaml(std::filesystem::path&& config_path);
 
@@ -31,7 +29,6 @@ namespace ymwm::config {
     events::Event event_from_node(const YAML::Node& event_node) const;
 
     events::Map m_event_map;
-    std::list<events::Event> m_events_removed;
   };
 
   struct ParsingError : std::runtime_error {
