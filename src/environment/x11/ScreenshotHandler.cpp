@@ -3,8 +3,10 @@
 #include "Handlers.h"
 #include "config/Misc.h"
 #include "environment/Environment.h"
+#include "environment/x11/AtomID.h"
 
 #include <Imlib2.h>
+#include <cstring>
 #include <iostream>
 
 namespace {
@@ -105,6 +107,8 @@ namespace ymwm::environment {
 
     imlib_image_set_format("png");
 
+    reset();
+
     auto now = std::chrono::system_clock::now();
     std::time_t now_time_t = std::chrono::system_clock::to_time_t(now);
     std::tm now_tm = *std::localtime(&now_time_t);
@@ -112,13 +116,45 @@ namespace ymwm::environment {
     filename << "screenshot-" << std::put_time(&now_tm, "%Y-%m-%d-%H:%M:%S")
              << ".png";
 
-    auto screenshot_path =
-        ymwm::config::misc::screenshots_folder / filename.str();
+    m_screenshot_path = ymwm::config::misc::screenshots_folder / filename.str();
 
-    imlib_save_image(screenshot_path.c_str());
+    imlib_save_image(m_screenshot_path.c_str());
+
+    // Need this path update, so to conform to URI.
+    m_screenshot_path = "file://" + m_screenshot_path.string();
+
+    std::size_t image_size = image->width * image->height;
+    m_screenshot.clear();
+    m_screenshot.reserve(image_size);
+    std::memcpy(m_screenshot.data(), imlib_data, image_size);
+
+    // Notify X11 that clipboard is occupied.
+    XSetSelectionOwner(display,
+                       e.handlers().atoms.at(AtomID::Clipboard),
+                       root_window,
+                       CurrentTime);
 
     imlib_free_image();
 
     m_start_coords = m_end_coords = std::nullopt;
+  }
+
+  bool ScreenshotHandler::has_screenshot() const noexcept {
+    return not m_screenshot.empty() and not m_screenshot_path.empty();
+  }
+
+  const std::vector<std::uint32_t>&
+  ScreenshotHandler::screenshot() const noexcept {
+    return m_screenshot;
+  }
+
+  const std::filesystem::path&
+  ScreenshotHandler::screenshot_path() const noexcept {
+    return m_screenshot_path;
+  }
+
+  void ScreenshotHandler::reset() noexcept {
+    m_screenshot.clear();
+    m_screenshot_path.clear();
   }
 } // namespace ymwm::environment
