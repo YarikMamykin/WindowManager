@@ -235,6 +235,18 @@ namespace ymwm::events {
             .mcode = ymwm::events::AbstractMouseCode::Left },
         ymwm::environment::commands::SaveScreenshotCoords{});
 
+    bindings.emplace(
+        ymwm::events::AbstractMousePress{
+            .mask = ymwm::events::AbstractKeyMask::Alt,
+            .mcode = ymwm::events::AbstractMouseCode::WheelDown },
+        ymwm::environment::commands::FocusNextWindow{});
+
+    bindings.emplace(
+        ymwm::events::AbstractMousePress{
+            .mask = ymwm::events::AbstractKeyMask::Alt,
+            .mcode = ymwm::events::AbstractMouseCode::WheelUp },
+        ymwm::environment::commands::FocusPrevWindow{});
+
     return bindings;
   }
 
