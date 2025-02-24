@@ -1,5 +1,6 @@
 #pragma once
 #include "events/AbstractKeyPress.h"
+#include "events/AbstractMousePress.h"
 
 #include <optional>
 #include <yaml-cpp/yaml.h>
@@ -14,6 +15,12 @@ namespace ymwm::config {
 
     inline std::optional<YAML::Node>
     operator()(const ymwm::events::AbstractKeyPress& event) const noexcept {
+      YAML::Node node{ event };
+      return node;
+    }
+
+    inline std::optional<YAML::Node>
+    operator()(const ymwm::events::AbstractMousePress& event) const noexcept {
       YAML::Node node{ event };
       return node;
     }
