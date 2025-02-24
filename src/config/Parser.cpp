@@ -8,9 +8,11 @@
 #include "config/Misc.h"
 #include "config/Window.h"
 #include "config/YamlToCommand.h"
+#include "environment/Command.h"
 #include "events/AbstractMousePress.h"
 #include "events/Map.h"
 
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <yaml-cpp/exceptions.h>
@@ -208,6 +210,11 @@ namespace ymwm::config {
   events::Map Parser::event_map_from_yaml(const YAML::Node& key_bindings) {
     events::Map event_map = events::default_event_map();
 
+    std::set<environment::commands::Command> cmds_created;
+    for (const auto& event_to_cmd : event_map) {
+      cmds_created.insert(event_to_cmd.second);
+    }
+
     if (not key_bindings) {
       return event_map;
     }
@@ -229,13 +236,35 @@ namespace ymwm::config {
         throw ParsingError("Unknown command specified");
       }
 
+      auto [_, no_duplicate] = cmds_created.insert(*cmd);
       event_map[event] = *cmd;
+
+      if (no_duplicate) {
+        continue;
+      }
+
+      // If duplicated command spotted,
+      // remove all previous occasions except last one,
+      // which should override the value.
+      if (auto found_event_to_cmd = std::find_if(
+              event_map.begin(),
+              event_map.end(),
+              [&cmd, &event](const auto& mapping) -> bool {
+                return cmd == mapping.second and event != mapping.first;
+              });
+          event_map.end() != found_event_to_cmd) {
+        m_events_removed.push_back(found_event_to_cmd->first);
+        event_map.erase(found_event_to_cmd);
+      }
     }
 
     return event_map;
   }
 
   [[nodiscard]] events::Map Parser::event_map() const { return m_event_map; }
+  [[nodiscard]] std::list<events::Event> Parser::events_removed() const {
+    return m_events_removed;
+  }
 
   void Parser::default_config_to_yaml(std::filesystem::path&& config_path) {
     using namespace config::layouts;

@@ -1,0 +1,26 @@
+key-bindings:
+  - type: press
+    key: A
+    masks:
+      - Ctrl
+      - Shift
+    cmd:
+      name: RunTerminal
+      args:
+        path: /bin/sh
+
+  - type: press
+    key: B
+    masks:
+      - Ctrl
+    cmd:
+      name: RunTerminal
+      args:
+        path: /bin/sh
+
+  - type: press
+    key: B
+    masks:
+      - Alt
+    cmd:
+      name: ExitRequested

@@ -157,6 +157,47 @@ TEST(TestLayoutsConfig, EachWindowConfig) {
   EXPECT_EQ(38, ymwm::config::windows::regular_border_color.blue);
 }
 
+TEST(TestEventMap, RemoveDuplicatedCommadsFromParsedEventMap) {
+  ymwm::config::Parser parser{ "key-bindings-with-repeated-cmds.yaml" };
+  auto events_map = parser.event_map();
+
+  auto expected_event1 =
+      ymwm::events::AbstractKeyPress{ .code = ymwm::events::AbstractKeyCode::B,
+                                      .mask =
+                                          ymwm::events::AbstractKeyMask::Ctrl };
+
+  ymwm::environment::commands::Command expected_cmd1 =
+      ymwm::environment::commands::RunTerminal{ .path = { "/bin/sh" } };
+  ASSERT_TRUE(events_map.contains(expected_event1));
+  ASSERT_EQ(expected_cmd1, events_map.at(expected_event1));
+
+  auto expected_event2 =
+      ymwm::events::AbstractKeyPress{ .code = ymwm::events::AbstractKeyCode::B,
+                                      .mask =
+                                          ymwm::events::AbstractKeyMask::Alt };
+
+  ymwm::environment::commands::Command expected_cmd2 =
+      ymwm::environment::commands::ExitRequested{};
+  ASSERT_TRUE(events_map.contains(expected_event2));
+  ASSERT_EQ(expected_cmd2, events_map.at(expected_event2));
+
+  auto events_removed = parser.events_removed();
+  ASSERT_EQ(2ul, events_removed.size());
+  ymwm::events::Event expected_removed_event = ymwm::events::AbstractKeyPress{
+    .code = ymwm::events::AbstractKeyCode::A,
+    .mask = ymwm::events::AbstractKeyMask::Ctrl |
+            ymwm::events::AbstractKeyMask::Shift
+  };
+  ASSERT_EQ(expected_removed_event, events_removed.front());
+
+  expected_removed_event = ymwm::events::AbstractKeyPress{
+    .code = ymwm::events::AbstractKeyCode::Q,
+    .mask = ymwm::events::AbstractKeyMask::Alt |
+            ymwm::events::AbstractKeyMask::Shift
+  };
+  ASSERT_EQ(expected_removed_event, events_removed.back());
+}
+
 TEST(TestConfig, AllValidConfig) {
   ymwm::config::Parser parser{ "all-config.yaml" };
   EXPECT_EQ(10, ymwm::config::windows::focused_border_width);
