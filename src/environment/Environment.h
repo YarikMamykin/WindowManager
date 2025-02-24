@@ -18,7 +18,7 @@ namespace ymwm::environment {
     Environment(const events::Map& events_map);
     ~Environment();
 
-    events::Event event() const noexcept;
+    events::Event event() noexcept;
     void execute(const commands::Command& cmd,
                  [[maybe_unused]] const events::Event& event);
     bool exit_requested() const noexcept;

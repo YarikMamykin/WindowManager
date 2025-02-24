@@ -8,7 +8,8 @@ namespace ymwm::environment {
   int handle_x_error(Display* display, XErrorEvent* error);
   int handle_x_io_error(Display* display);
   XColor xcolor_from_color(const common::Color& c) noexcept;
-  ymwm::events::Event x11_to_abstract_event(XEvent& event, Handlers& handlers);
+  ymwm::events::Event
+  x11_to_abstract_event(XEvent& event, Handlers& handlers, Environment& e);
   bool register_colors(const std::array<common::Color, 3ul>& colors,
                        Handlers& handlers);
 } // namespace ymwm::environment
@@ -73,11 +74,11 @@ namespace ymwm::environment {
         m_handlers->display, AnyButton, AnyModifier, m_handlers->root_window);
   }
 
-  events::Event Environment::event() const noexcept {
+  events::Event Environment::event() noexcept {
     XEvent event;
     XSync(m_handlers->display, false);
     XNextEvent(m_handlers->display, &event);
-    return x11_to_abstract_event(event, *m_handlers);
+    return x11_to_abstract_event(event, *m_handlers, *this);
   }
 
   Handlers& Environment::handlers() noexcept { return *m_handlers; }
