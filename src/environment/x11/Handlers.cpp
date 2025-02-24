@@ -22,6 +22,13 @@ namespace ymwm::environment {
     colors.reserve(1);
     atoms.at(AtomID::NetWMName) = XInternAtom(display, "_NET_WM_NAME", False);
     atoms.at(AtomID::Utf8String) = XInternAtom(display, "UTF8_STRING", False);
+    atoms.at(AtomID::Clipboard) = XInternAtom(display, "CLIPBOARD", False);
+    atoms.at(AtomID::Targets) = XInternAtom(display, "TARGETS", False);
+    atoms.at(AtomID::ScreenshotImage) =
+        XInternAtom(display, "image/png", False);
+    atoms.at(AtomID::ScreenshotPathsList) =
+        XInternAtom(display, "text/uri-list", False);
+    atoms.at(AtomID::ScreenshotPath) = XInternAtom(display, "text/uri", False);
     current_layout = 0;
     max_layouts = get_number_of_layouts();
     if (not ymwm::config::misc::background_image_path.empty() and
