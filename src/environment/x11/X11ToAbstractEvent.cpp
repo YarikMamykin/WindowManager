@@ -1,6 +1,7 @@
 #include "AtomID.h"
 #include "Handlers.h"
 #include "config/Window.h"
+#include "environment/Environment.h"
 #include "events/AbstractKeyCode.h"
 #include "events/AbstractKeyMask.h"
 #include "events/AbstractUnknownEvent.h"
@@ -16,11 +17,16 @@ namespace ymwm::environment {
   ymwm::events::Event map_notify(XEvent& event, Handlers& handlers);
   ymwm::events::Event unmap_notify(XEvent& event, Handlers& handlers);
   ymwm::events::Event button_press(XEvent& event, Handlers& handlers);
+  ymwm::events::Event
+  selection_request(XEvent& event, Handlers& handlers, Environment& e);
+  ymwm::events::Event
+  selection_clear(XEvent& event, Handlers& handlers, Environment& e);
 } // namespace ymwm::environment
 
 namespace ymwm::environment {
 
-  ymwm::events::Event x11_to_abstract_event(XEvent& event, Handlers& handlers) {
+  ymwm::events::Event
+  x11_to_abstract_event(XEvent& event, Handlers& handlers, Environment& e) {
     switch (event.type) {
     case KeyPress:
       return key_press(event, handlers);
@@ -34,6 +40,10 @@ namespace ymwm::environment {
       return unmap_notify(event, handlers);
     case ButtonPress:
       return button_press(event, handlers);
+    case SelectionRequest:
+      return selection_request(event, handlers, e);
+    case SelectionClear:
+      return selection_clear(event, handlers, e);
     }
 
     return ymwm::events::AbstractUnknownEvent{};
@@ -109,5 +119,88 @@ namespace ymwm::environment {
           event.xbutton.button),
       .coords = { event.xbutton.x_root, event.xbutton.y_root }
     };
+  }
+
+  ymwm::events::Event
+  selection_request(XEvent& event, Handlers& handlers, Environment& e) {
+    XSelectionRequestEvent* req = &event.xselectionrequest;
+    XSelectionEvent notify = { 0 };
+
+    notify.type = SelectionNotify;
+    notify.display = req->display;
+    notify.requestor = req->requestor;
+    notify.selection = req->selection;
+    notify.target = req->target;
+    notify.time = req->time;
+    notify.property = req->property;
+
+    if (req->selection == handlers.atoms.at(AtomID::Clipboard)) {
+      if (req->target == handlers.atoms.at(AtomID::Targets)) {
+        // Respond with supported targets: image/png and text/uri-list
+        std::array<Atom, 3ul> supported{
+          handlers.atoms.at(AtomID::ScreenshotImage),
+          handlers.atoms.at(AtomID::ScreenshotPathsList),
+          handlers.atoms.at(AtomID::ScreenshotPath)
+        };
+        XChangeProperty(handlers.display,
+                        req->requestor,
+                        req->property,
+                        XA_ATOM,
+                        32,
+                        PropModeReplace,
+                        reinterpret_cast<unsigned char*>(supported.data()),
+                        supported.size());
+      } else if (req->target == handlers.atoms.at(AtomID::ScreenshotImage)) {
+        // Provide the PNG data
+        XChangeProperty(handlers.display,
+                        req->requestor,
+                        req->property,
+                        handlers.atoms.at(AtomID::ScreenshotImage),
+                        8,
+                        PropModeReplace,
+                        reinterpret_cast<const unsigned char*>(
+                            e.screenshot().screenshot().data()),
+                        e.screenshot().screenshot().size() *
+                            (sizeof(std::uint32_t) / sizeof(unsigned char)));
+      } else if (req->target ==
+                 handlers.atoms.at(AtomID::ScreenshotPathsList)) {
+        // Provide the file URL
+        auto paths_list = e.screenshot().screenshot_path().string() + "\n";
+        XChangeProperty(
+            handlers.display,
+            req->requestor,
+            req->property,
+            XA_STRING,
+            8,
+            PropModeReplace,
+            reinterpret_cast<const unsigned char*>(paths_list.c_str()),
+            paths_list.size());
+      } else if (req->target == handlers.atoms.at(AtomID::ScreenshotPath)) {
+        auto p = e.screenshot().screenshot_path().string();
+        XChangeProperty(handlers.display,
+                        req->requestor,
+                        req->property,
+                        XA_STRING,
+                        8,
+                        PropModeReplace,
+                        reinterpret_cast<const unsigned char*>(p.c_str()),
+                        p.size());
+      } else {
+        // Unsupported target
+        notify.property = None;
+      }
+
+      // Send the notification
+      XSendEvent(handlers.display, req->requestor, False, 0, (XEvent*)&notify);
+      XFlush(handlers.display);
+    }
+
+    return events::AbstractUnknownEvent{};
+  }
+
+  ymwm::events::Event
+  selection_clear(XEvent& event, Handlers& handlers, Environment& e) {
+    e.screenshot().reset();
+    return events::AbstractUnknownEvent{};
   }
 } // namespace ymwm::environment
