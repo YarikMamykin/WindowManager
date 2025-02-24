@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
+#include <variant>
 #include <yaml-cpp/exceptions.h>
 #include <yaml-cpp/yaml.h>
 
@@ -239,7 +240,11 @@ namespace ymwm::config {
       auto [_, no_duplicate] = cmds_created.insert(*cmd);
       event_map[event] = *cmd;
 
-      if (no_duplicate) {
+      if (no_duplicate or
+          (std::holds_alternative<environment::commands::FocusNextWindow>(
+               *cmd) or
+           std::holds_alternative<environment::commands::FocusPrevWindow>(
+               *cmd))) {
         continue;
       }
 
