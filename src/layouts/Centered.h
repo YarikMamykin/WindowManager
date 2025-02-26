@@ -13,11 +13,16 @@ namespace ymwm::layouts {
     int window_h{ 0 };
     int window_x{ 0 };
     int window_y{ 0 };
+    ymwm::config::layouts::centered::WindowWidthRatioType window_width_ratio{
+      ymwm::config::layouts::centered::window_width_ratio
+    };
 
     Centered() noexcept;
-    Centered(config::layouts::Margin screen_margins,
-             int screen_width,
-             int screen_height) noexcept;
+    Centered(
+        config::layouts::Margin screen_margins,
+        int screen_width,
+        int screen_height,
+        ymwm::config::layouts::centered::WindowWidthRatioType ratio) noexcept;
   };
 
 } // namespace ymwm::layouts

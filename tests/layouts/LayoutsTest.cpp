@@ -75,9 +75,11 @@ TEST(TestLayouts, CenteredLayout) {
   basic_parameters.screen_margins.bottom = 10u;
   basic_parameters.number_of_windows = 4ul;
 
-  auto parameters = ymwm::layouts::Centered(basic_parameters.screen_margins,
-                                            basic_parameters.screen_width,
-                                            basic_parameters.screen_height);
+  auto parameters = ymwm::layouts::Centered(
+      basic_parameters.screen_margins,
+      basic_parameters.screen_width,
+      basic_parameters.screen_height,
+      ymwm::config::layouts::centered::window_width_ratio);
 
   std::vector<ymwm::window::Window> test_windows(
       basic_parameters.number_of_windows,
@@ -127,9 +129,12 @@ TEST(TestLayouts, CenteredLayoutWithScreenMargins) {
   basic_parameters.screen_margins.bottom = 1u;
   basic_parameters.number_of_windows = 4ul;
 
-  auto parameters = ymwm::layouts::Centered{ basic_parameters.screen_margins,
-                                             basic_parameters.screen_width,
-                                             basic_parameters.screen_height };
+  auto parameters = ymwm::layouts::Centered{
+    basic_parameters.screen_margins,
+    basic_parameters.screen_width,
+    basic_parameters.screen_height,
+    ymwm::config::layouts::centered::window_width_ratio
+  };
 
   std::vector<ymwm::window::Window> test_windows(
       basic_parameters.number_of_windows,
@@ -333,11 +338,12 @@ TEST(TestLayouts, StackVerticalRight) {
   basic_parameters.screen_margins.bottom = 10u;
   basic_parameters.number_of_windows = 7ul;
 
-  auto parameters =
-      ymwm::layouts::StackVerticalRight(basic_parameters.screen_margins,
-                                        basic_parameters.screen_width,
-                                        basic_parameters.screen_height,
-                                        basic_parameters.number_of_windows);
+  auto parameters = ymwm::layouts::StackVerticalRight(
+      basic_parameters.screen_margins,
+      basic_parameters.screen_width,
+      basic_parameters.screen_height,
+      basic_parameters.number_of_windows,
+      ymwm::config::layouts::stack_vertical::main_window_ratio);
 
   std::vector<ymwm::window::Window> test_windows(
       basic_parameters.number_of_windows,
@@ -430,11 +436,12 @@ TEST(TestLayouts, StackVerticalLeft) {
   basic_parameters.screen_margins.bottom = 10u;
   basic_parameters.number_of_windows = 7ul;
 
-  auto parameters =
-      ymwm::layouts::StackVerticalLeft(basic_parameters.screen_margins,
-                                       basic_parameters.screen_width,
-                                       basic_parameters.screen_height,
-                                       basic_parameters.number_of_windows);
+  auto parameters = ymwm::layouts::StackVerticalLeft(
+      basic_parameters.screen_margins,
+      basic_parameters.screen_width,
+      basic_parameters.screen_height,
+      basic_parameters.number_of_windows,
+      ymwm::config::layouts::stack_vertical::main_window_ratio);
 
   std::vector<ymwm::window::Window> test_windows(
       basic_parameters.number_of_windows,
@@ -676,11 +683,12 @@ TEST(TestLayouts, StackHorizontalTop) {
   basic_parameters.screen_margins.bottom = 10u;
   basic_parameters.number_of_windows = 4ul;
 
-  auto parameters =
-      ymwm::layouts::StackHorizontalTop(basic_parameters.screen_margins,
-                                        basic_parameters.screen_width,
-                                        basic_parameters.screen_height,
-                                        basic_parameters.number_of_windows);
+  auto parameters = ymwm::layouts::StackHorizontalTop(
+      basic_parameters.screen_margins,
+      basic_parameters.screen_width,
+      basic_parameters.screen_height,
+      basic_parameters.number_of_windows,
+      ymwm::config::layouts::stack_horizontal::main_window_ratio);
 
   std::vector<ymwm::window::Window> test_windows(
       basic_parameters.number_of_windows,
@@ -754,11 +762,12 @@ TEST(TestLayouts, StackHorizontalBottom) {
   basic_parameters.screen_margins.bottom = 10u;
   basic_parameters.number_of_windows = 4ul;
 
-  auto parameters =
-      ymwm::layouts::StackHorizontalBottom(basic_parameters.screen_margins,
-                                           basic_parameters.screen_width,
-                                           basic_parameters.screen_height,
-                                           basic_parameters.number_of_windows);
+  auto parameters = ymwm::layouts::StackHorizontalBottom(
+      basic_parameters.screen_margins,
+      basic_parameters.screen_width,
+      basic_parameters.screen_height,
+      basic_parameters.number_of_windows,
+      ymwm::config::layouts::stack_horizontal::main_window_ratio);
 
   std::vector<ymwm::window::Window> test_windows(
       basic_parameters.number_of_windows,
@@ -832,11 +841,12 @@ TEST(TestLayouts, StackVerticalDouble) {
   basic_parameters.screen_margins.bottom = 10u;
   basic_parameters.number_of_windows = 5ul;
 
-  auto parameters =
-      ymwm::layouts::StackVerticalDouble(basic_parameters.screen_margins,
-                                         basic_parameters.screen_width,
-                                         basic_parameters.screen_height,
-                                         basic_parameters.number_of_windows);
+  auto parameters = ymwm::layouts::StackVerticalDouble(
+      basic_parameters.screen_margins,
+      basic_parameters.screen_width,
+      basic_parameters.screen_height,
+      basic_parameters.number_of_windows,
+      ymwm::config::layouts::stack_vertical::main_window_ratio);
 
   std::vector<ymwm::window::Window> test_windows(
       basic_parameters.number_of_windows,
@@ -916,11 +926,12 @@ TEST(TestLayouts, StackHorizontalDouble) {
   basic_parameters.screen_margins.bottom = 10u;
   basic_parameters.number_of_windows = 5ul;
 
-  auto parameters =
-      ymwm::layouts::StackHorizontalDouble(basic_parameters.screen_margins,
-                                           basic_parameters.screen_width,
-                                           basic_parameters.screen_height,
-                                           basic_parameters.number_of_windows);
+  auto parameters = ymwm::layouts::StackHorizontalDouble(
+      basic_parameters.screen_margins,
+      basic_parameters.screen_width,
+      basic_parameters.screen_height,
+      basic_parameters.number_of_windows,
+      ymwm::config::layouts::stack_horizontal::main_window_ratio);
 
   std::vector<ymwm::window::Window> test_windows(
       basic_parameters.number_of_windows,
@@ -1000,11 +1011,12 @@ TEST(TestLayouts, StackVerticalRightLayout_MainWindowOnly) {
   basic_parameters.screen_margins.bottom = 10u;
   basic_parameters.number_of_windows = 1ul;
 
-  auto parameters =
-      ymwm::layouts::StackVerticalRight(basic_parameters.screen_margins,
-                                        basic_parameters.screen_width,
-                                        basic_parameters.screen_height,
-                                        basic_parameters.number_of_windows);
+  auto parameters = ymwm::layouts::StackVerticalRight(
+      basic_parameters.screen_margins,
+      basic_parameters.screen_width,
+      basic_parameters.screen_height,
+      basic_parameters.number_of_windows,
+      ymwm::config::layouts::stack_vertical::main_window_ratio);
 
   std::vector<ymwm::window::Window> test_windows(
       basic_parameters.number_of_windows,
@@ -1056,11 +1068,12 @@ TEST(TestLayouts, StackVerticalLeftLayout_MainWindowOnly) {
   basic_parameters.screen_margins.bottom = 10u;
   basic_parameters.number_of_windows = 1ul;
 
-  auto parameters =
-      ymwm::layouts::StackVerticalLeft(basic_parameters.screen_margins,
-                                       basic_parameters.screen_width,
-                                       basic_parameters.screen_height,
-                                       basic_parameters.number_of_windows);
+  auto parameters = ymwm::layouts::StackVerticalLeft(
+      basic_parameters.screen_margins,
+      basic_parameters.screen_width,
+      basic_parameters.screen_height,
+      basic_parameters.number_of_windows,
+      ymwm::config::layouts::stack_vertical::main_window_ratio);
 
   std::vector<ymwm::window::Window> test_windows(
       basic_parameters.number_of_windows,
@@ -1112,11 +1125,12 @@ TEST(TestLayouts, StackHorizontalTopLayout_MainWindowOnly) {
   basic_parameters.screen_margins.bottom = 10u;
   basic_parameters.number_of_windows = 1ul;
 
-  auto parameters =
-      ymwm::layouts::StackHorizontalTop(basic_parameters.screen_margins,
-                                        basic_parameters.screen_width,
-                                        basic_parameters.screen_height,
-                                        basic_parameters.number_of_windows);
+  auto parameters = ymwm::layouts::StackHorizontalTop(
+      basic_parameters.screen_margins,
+      basic_parameters.screen_width,
+      basic_parameters.screen_height,
+      basic_parameters.number_of_windows,
+      ymwm::config::layouts::stack_horizontal::main_window_ratio);
 
   std::vector<ymwm::window::Window> test_windows(
       basic_parameters.number_of_windows,
@@ -1168,11 +1182,12 @@ TEST(TestLayouts, StackHorizontalBottomLayout_MainWindowOnly) {
   basic_parameters.screen_margins.bottom = 10u;
   basic_parameters.number_of_windows = 1ul;
 
-  auto parameters =
-      ymwm::layouts::StackHorizontalBottom(basic_parameters.screen_margins,
-                                           basic_parameters.screen_width,
-                                           basic_parameters.screen_height,
-                                           basic_parameters.number_of_windows);
+  auto parameters = ymwm::layouts::StackHorizontalBottom(
+      basic_parameters.screen_margins,
+      basic_parameters.screen_width,
+      basic_parameters.screen_height,
+      basic_parameters.number_of_windows,
+      ymwm::config::layouts::stack_horizontal::main_window_ratio);
 
   std::vector<ymwm::window::Window> test_windows(
       basic_parameters.number_of_windows,
@@ -1224,11 +1239,12 @@ TEST(TestLayouts, StackVerticalDoubleLayout_MainWindowOnly) {
   basic_parameters.screen_margins.bottom = 10u;
   basic_parameters.number_of_windows = 1ul;
 
-  auto parameters =
-      ymwm::layouts::StackVerticalDouble(basic_parameters.screen_margins,
-                                         basic_parameters.screen_width,
-                                         basic_parameters.screen_height,
-                                         basic_parameters.number_of_windows);
+  auto parameters = ymwm::layouts::StackVerticalDouble(
+      basic_parameters.screen_margins,
+      basic_parameters.screen_width,
+      basic_parameters.screen_height,
+      basic_parameters.number_of_windows,
+      ymwm::config::layouts::stack_vertical::main_window_ratio);
 
   std::vector<ymwm::window::Window> test_windows(
       basic_parameters.number_of_windows,
@@ -1280,11 +1296,12 @@ TEST(TestLayouts, StackHorizontalDoubleLayout_MainWindowOnly) {
   basic_parameters.screen_margins.bottom = 10u;
   basic_parameters.number_of_windows = 1ul;
 
-  auto parameters =
-      ymwm::layouts::StackHorizontalDouble(basic_parameters.screen_margins,
-                                           basic_parameters.screen_width,
-                                           basic_parameters.screen_height,
-                                           basic_parameters.number_of_windows);
+  auto parameters = ymwm::layouts::StackHorizontalDouble(
+      basic_parameters.screen_margins,
+      basic_parameters.screen_width,
+      basic_parameters.screen_height,
+      basic_parameters.number_of_windows,
+      ymwm::config::layouts::stack_horizontal::main_window_ratio);
 
   std::vector<ymwm::window::Window> test_windows(
       basic_parameters.number_of_windows,

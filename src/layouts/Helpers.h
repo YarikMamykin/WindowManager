@@ -29,4 +29,41 @@ namespace ymwm::layouts {
   static inline constexpr bool is_stack(const Parameters& parameters) noexcept {
     return is_stack_horizontal(parameters) or is_stack_vertical(parameters);
   }
+
+  static inline void update_main_window_ratio(Parameters& parameters,
+                                              int diff) noexcept {
+    if (auto* p = std::get_if<StackVerticalLeft>(&parameters)) {
+      p->main_window_ratio = p->main_window_ratio + diff;
+      return;
+    }
+
+    if (auto* p = std::get_if<StackVerticalRight>(&parameters)) {
+      p->main_window_ratio = p->main_window_ratio + diff;
+      return;
+    }
+
+    if (auto* p = std::get_if<StackVerticalDouble>(&parameters)) {
+      p->main_window_ratio = p->main_window_ratio + diff;
+      return;
+    }
+
+    if (auto* p = std::get_if<StackHorizontalTop>(&parameters)) {
+      p->main_window_ratio = p->main_window_ratio + diff;
+      return;
+    }
+
+    if (auto* p = std::get_if<StackHorizontalBottom>(&parameters)) {
+      p->main_window_ratio = p->main_window_ratio + diff;
+      return;
+    }
+
+    if (auto* p = std::get_if<StackHorizontalDouble>(&parameters)) {
+      p->main_window_ratio = p->main_window_ratio + diff;
+      return;
+    }
+
+    if (auto* p = std::get_if<Centered>(&parameters)) {
+      p->window_width_ratio = p->window_width_ratio + diff;
+    }
+  }
 } // namespace ymwm::layouts

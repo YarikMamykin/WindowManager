@@ -19,11 +19,17 @@ namespace ymwm::layouts {
     std::size_t last_iteration;
     int main_window_width;
     int main_window_height;
+    ymwm::config::layouts::stack_vertical::MainWindowRatioType
+        main_window_ratio{
+          ymwm::config::layouts::stack_vertical::main_window_ratio
+        };
 
     StackVerticalLeft() noexcept;
     StackVerticalLeft(config::layouts::Margin screen_margins,
                       int screen_width,
                       int screen_height,
-                      std::size_t number_of_windows) noexcept;
+                      std::size_t number_of_windows,
+                      ymwm::config::layouts::stack_vertical::MainWindowRatioType
+                          ratio) noexcept;
   };
 } // namespace ymwm::layouts

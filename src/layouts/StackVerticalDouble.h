@@ -22,11 +22,18 @@ namespace ymwm::layouts {
     int main_window_w;
     int main_window_h;
     int main_window_x;
+    ymwm::config::layouts::stack_vertical::MainWindowRatioType
+        main_window_ratio{
+          ymwm::config::layouts::stack_vertical::main_window_ratio
+        };
 
     StackVerticalDouble() noexcept;
-    StackVerticalDouble(config::layouts::Margin screen_margins,
-                        int screen_width,
-                        int screen_height,
-                        std::size_t number_of_windows) noexcept;
+    StackVerticalDouble(
+        config::layouts::Margin screen_margins,
+        int screen_width,
+        int screen_height,
+        std::size_t number_of_windows,
+        ymwm::config::layouts::stack_vertical::MainWindowRatioType
+            ratio) noexcept;
   };
 } // namespace ymwm::layouts

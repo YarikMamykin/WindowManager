@@ -11,7 +11,10 @@ namespace ymwm::layouts {
       config::layouts::Margin screen_margins,
       int screen_width,
       int screen_height,
-      std::size_t number_of_windows) noexcept {
+      std::size_t number_of_windows,
+      ymwm::config::layouts::stack_horizontal::MainWindowRatioType
+          ratio) noexcept {
+    main_window_ratio = ratio;
     namespace cfg = ymwm::config::layouts::stack_horizontal;
 
     number_of_stack_windows = number_of_windows - 1ul;
@@ -31,9 +34,8 @@ namespace ymwm::layouts {
         screen_height - screen_margins.top - screen_margins.bottom -
         (2 * cfg::stack_window_margin) - (3 * two_borders);
 
-    stack_window_h = (height_without_margins_borders *
-                      (100 - cfg::main_window_ratio) / 100) /
-                     2;
+    stack_window_h =
+        (height_without_margins_borders * (100 - main_window_ratio) / 100) / 2;
 
     int stack_windows_width_without_margins_and_borders =
         width_without_margins - (number_of_windows_per_stack * two_borders) -
@@ -47,7 +49,7 @@ namespace ymwm::layouts {
     main_window_w = width_without_margins - two_borders;
     main_window_h =
         number_of_stack_windows > 0ul
-            ? height_without_margins_borders * cfg::main_window_ratio / 100
+            ? height_without_margins_borders * main_window_ratio / 100
             : (screen_height - screen_margins.top - screen_margins.bottom -
                two_borders);
     main_window_y =
@@ -75,7 +77,8 @@ namespace ymwm::layouts {
                  stack_window_h,
                  main_window_w,
                  main_window_h,
-                 main_window_y] = parameters;
+                 main_window_y,
+                 main_window_ratio] = parameters;
 
     namespace cfg = ymwm::config::layouts::stack_vertical;
 
@@ -114,6 +117,7 @@ namespace ymwm::layouts {
         layouts::StackHorizontalDouble(basic_parameters.screen_margins,
                                        basic_parameters.screen_width,
                                        basic_parameters.screen_height,
-                                       basic_parameters.number_of_windows);
+                                       basic_parameters.number_of_windows,
+                                       parameters.main_window_ratio);
   }
 } // namespace ymwm::layouts
