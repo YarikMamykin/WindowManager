@@ -5,11 +5,14 @@
 namespace ymwm::args {
 
   ParsedArgs parse(int argc, char** argv) {
+#ifndef NAME
+#define NAME "YMWM"
+#endif
 #ifndef VERSION
 #define VERSION "0.1.0"
 #endif
 
-    argparse::ArgumentParser arguments_parser("WindowManager", VERSION);
+    argparse::ArgumentParser arguments_parser(NAME, VERSION);
 
     arguments_parser.add_argument("--config", "-c")
         .help("Configuration file path.")
