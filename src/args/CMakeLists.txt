@@ -13,5 +13,6 @@ add_dependencies(args
 )
 target_compile_definitions(args
  PRIVATE
+ NAME="${PROJECT_NAME}"
  VERSION="${PROJECT_VERSION}"
 )
