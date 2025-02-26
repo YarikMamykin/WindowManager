@@ -51,28 +51,8 @@ namespace ymwm::window {
     }
 
     inline void update_main_window_ratio(int diff) {
-      if (layouts::is_stack_vertical(m_layout_parameters)) {
-        namespace cfg = ymwm::config::layouts::stack_vertical;
-        cfg::main_window_ratio =
-            cfg::MainWindowRatioType{ cfg::main_window_ratio + diff };
-        update();
-        return;
-      };
-
-      if (layouts::is_stack_horizontal(m_layout_parameters)) {
-        namespace cfg = ymwm::config::layouts::stack_horizontal;
-        cfg::main_window_ratio =
-            cfg::MainWindowRatioType{ cfg::main_window_ratio + diff };
-        update();
-        return;
-      };
-
-      if (layouts::is<layouts::Centered>(m_layout_parameters)) {
-        namespace cfg = ymwm::config::layouts::centered;
-        cfg::window_width_ratio =
-            cfg::WindowWidthRatioType{ cfg::window_width_ratio + diff };
-        update();
-      }
+      layouts::update_main_window_ratio(m_layout_parameters, diff);
+      update();
     }
 
     inline std::string_view current() const noexcept {
