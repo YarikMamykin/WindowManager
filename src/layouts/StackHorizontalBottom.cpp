@@ -11,7 +11,10 @@ namespace ymwm::layouts {
       config::layouts::Margin screen_margins,
       int screen_width,
       int screen_height,
-      std::size_t number_of_windows) noexcept {
+      std::size_t number_of_windows,
+      ymwm::config::layouts::stack_horizontal::MainWindowRatioType
+          ratio) noexcept {
+    main_window_ratio = ratio;
     namespace cfg = ymwm::config::layouts::stack_horizontal;
 
     last_iteration = number_of_windows - 1ul;
@@ -24,12 +27,12 @@ namespace ymwm::layouts {
         screen_width - screen_margins.left - screen_margins.right - two_borders;
     main_window_height =
         number_of_stack_windows > 0ul
-            ? height_without_margins_and_borders * cfg::main_window_ratio / 100
+            ? height_without_margins_and_borders * main_window_ratio / 100
             : (screen_height - screen_margins.top - screen_margins.bottom -
                two_borders);
 
-    stack_window_h = height_without_margins_and_borders *
-                     (100 - cfg::main_window_ratio) / 100;
+    stack_window_h =
+        height_without_margins_and_borders * (100 - main_window_ratio) / 100;
     if (number_of_stack_windows > 0ul) {
       stack_window_w =
           (screen_width - screen_margins.left - screen_margins.right -
@@ -52,7 +55,8 @@ namespace ymwm::layouts {
                  stack_window_h,
                  stack_window_w,
                  main_window_width,
-                 main_window_height] = parameters;
+                 main_window_height,
+                 main_window_ratio] = parameters;
 
     namespace cfg = ymwm::config::layouts::stack_horizontal;
 
@@ -89,6 +93,7 @@ namespace ymwm::layouts {
         layouts::StackHorizontalBottom(basic_parameters.screen_margins,
                                        basic_parameters.screen_width,
                                        basic_parameters.screen_height,
-                                       basic_parameters.number_of_windows);
+                                       basic_parameters.number_of_windows,
+                                       parameters.main_window_ratio);
   }
 } // namespace ymwm::layouts
