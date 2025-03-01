@@ -6,6 +6,8 @@ Besides that, YMWM is implemented in the way that it is easy to implement new fe
 
 Currently YMWM supports only X11 implementation, based on Xlib. The Wayland is planned to be done in future.
 
+![Demo](./assets/demo.gif)
+
 ## Table of Contents
 
 - [Key features](#key-features)
