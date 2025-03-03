@@ -43,7 +43,6 @@ namespace ymwm::window {
                                w.w,
                                reinterpret_cast<const char*>(w.name.data()));
       m_windows.push_back(w);
-      focus().last_window();
       layout().update();
     }
 
