@@ -11,6 +11,7 @@ namespace ymwm::environment {
 
   struct EnvironmentInterface {
     virtual void update_window(const window::Window& w) noexcept = 0;
+    virtual void open_window(const window::Window& w) noexcept = 0;
     virtual void focus_window(const window::Window& w) noexcept = 0;
     virtual void reset_focus() noexcept = 0;
     virtual void update_window_border(const window::Window& w) noexcept = 0;
@@ -27,6 +28,10 @@ namespace ymwm::environment {
                 (noexcept, override));
     MOCK_METHOD(void,
                 focus_window,
+                (const window::Window& w),
+                (noexcept, override));
+    MOCK_METHOD(void,
+                open_window,
                 (const window::Window& w),
                 (noexcept, override));
     MOCK_METHOD(void, reset_focus, (), (noexcept, override));

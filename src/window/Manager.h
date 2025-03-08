@@ -46,6 +46,12 @@ namespace ymwm::window {
       layout().update();
       if (1ul == m_windows.size()) {
         focus().last_window();
+      } else {
+        Window wcopy = w;
+        wcopy.border_color = config::windows::regular_border_color;
+        wcopy.border_width = config::windows::regular_border_width;
+        m_env->open_window(w);
+        m_env->update_window_border(wcopy);
       }
     }
 

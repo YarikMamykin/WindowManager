@@ -76,7 +76,7 @@ TEST(TestWindowManager, SetLayoutSeveralWindows_WindowResizeCalled) {
 
   EXPECT_CALL(tenv, screen_width_and_height).Times(1);
   EXPECT_CALL(tenv, move_and_resize).Times(2);
-  EXPECT_CALL(tenv, update_window_border).Times(0);
+  EXPECT_CALL(tenv, update_window_border).Times(1);
   EXPECT_CALL(tenv, focus_window).Times(0);
   m.add_window(ymwm::window::Window{ .id = 2 });
 }
@@ -111,7 +111,7 @@ TEST(TestWindowManager, AddRemoveWindows_LayoutAppliedAfterEachAction) {
 
   EXPECT_CALL(tenv, screen_width_and_height);
   EXPECT_CALL(tenv, move_and_resize).Times(2);
-  EXPECT_CALL(tenv, update_window_border).Times(2);
+  EXPECT_CALL(tenv, update_window_border).Times(3);
   EXPECT_CALL(tenv, focus_window).Times(0);
   m.add_window(ymwm::window::Window{ .id = 2 });
 

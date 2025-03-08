@@ -105,6 +105,11 @@ namespace ymwm::environment {
     XMoveResizeWindow(m_handlers->display, w.id, w.x, w.y, w.w, w.h);
   }
 
+  void Environment::open_window(const window::Window& w) noexcept {
+    XRaiseWindow(m_handlers->display, w.id);
+    XMapWindow(m_handlers->display, w.id);
+  }
+
   void Environment::focus_window(const window::Window& w) noexcept {
     XRaiseWindow(m_handlers->display, w.id);
     XMapWindow(m_handlers->display, w.id);
