@@ -64,10 +64,10 @@ TEST(TestWindowManager, SetLayoutSeveralWindows_WindowResizeCalled) {
   EXPECT_CALL(tenv, move_and_resize)
       .WillOnce(testing::SaveArg<0>(windows_in_params.data()));
   EXPECT_CALL(tenv, update_window_border)
-      .Times(2)
+      .Times(4)
       .WillRepeatedly(testing::SaveArg<0>(windows_in_params.data() + 1ul));
   EXPECT_CALL(tenv, focus_window)
-      .WillOnce(testing::SaveArg<0>(windows_in_params.data() + 2ul));
+      .WillRepeatedly(testing::SaveArg<0>(windows_in_params.data() + 2ul));
   m.add_window(ymwm::window::Window{ .id = 1 });
 
   for (const auto& w : windows_in_params) {
@@ -76,8 +76,8 @@ TEST(TestWindowManager, SetLayoutSeveralWindows_WindowResizeCalled) {
 
   EXPECT_CALL(tenv, screen_width_and_height).Times(1);
   EXPECT_CALL(tenv, move_and_resize).Times(2);
-  EXPECT_CALL(tenv, update_window_border).Times(1);
-  EXPECT_CALL(tenv, focus_window).Times(0);
+  EXPECT_CALL(tenv, update_window_border).Times(4);
+  EXPECT_CALL(tenv, focus_window).Times(2);
   m.add_window(ymwm::window::Window{ .id = 2 });
 }
 
@@ -95,8 +95,8 @@ TEST(TestWindowManager, AddRemoveWindows_LayoutAppliedAfterEachAction) {
 
   EXPECT_CALL(tenv, screen_width_and_height);
   EXPECT_CALL(tenv, move_and_resize);
-  EXPECT_CALL(tenv, update_window_border).Times(2);
-  EXPECT_CALL(tenv, focus_window);
+  EXPECT_CALL(tenv, update_window_border).Times(4);
+  EXPECT_CALL(tenv, focus_window).Times(2);
   m.add_window(ymwm::window::Window{ .id = 1 });
   EXPECT_THAT(m.windows(),
               testing::ElementsAre(ymwm::window::Window{
@@ -111,8 +111,8 @@ TEST(TestWindowManager, AddRemoveWindows_LayoutAppliedAfterEachAction) {
 
   EXPECT_CALL(tenv, screen_width_and_height);
   EXPECT_CALL(tenv, move_and_resize).Times(2);
-  EXPECT_CALL(tenv, update_window_border).Times(3);
-  EXPECT_CALL(tenv, focus_window).Times(0);
+  EXPECT_CALL(tenv, update_window_border).Times(6);
+  EXPECT_CALL(tenv, focus_window).Times(2);
   m.add_window(ymwm::window::Window{ .id = 2 });
 
   EXPECT_THAT(
@@ -203,7 +203,7 @@ TEST(TestWindowManager, ResetFocusIfWindowsAreRemoved) {
   ymwm::window::Manager m{ &tenv };
   m.layout().update(ymwm::layouts::Centered{});
 
-  EXPECT_CALL(tenv, update_window_border).Times(2);
+  EXPECT_CALL(tenv, update_window_border).Times(4);
   EXPECT_CALL(tenv, move_and_resize);
   m.add_window(ymwm::window::Window{ .id = 1 });
   EXPECT_THAT(m.windows(),
@@ -234,7 +234,7 @@ TEST(TestWindowManager, CloseFocusedWindow) {
   ymwm::window::Manager m{ &tenv };
   m.layout().update(ymwm::layouts::Centered{});
 
-  EXPECT_CALL(tenv, update_window_border).Times(2);
+  EXPECT_CALL(tenv, update_window_border).Times(4);
   EXPECT_CALL(tenv, move_and_resize);
   m.add_window(ymwm::window::Window{ .id = 1 });
   EXPECT_THAT(m.windows(),
