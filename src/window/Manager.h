@@ -44,6 +44,9 @@ namespace ymwm::window {
                                reinterpret_cast<const char*>(w.name.data()));
       m_windows.push_back(w);
       layout().update();
+      if (1ul == m_windows.size()) {
+        focus().last_window();
+      }
     }
 
     inline void remove_window(environment::ID id) noexcept {
