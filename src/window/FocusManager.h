@@ -81,6 +81,13 @@ namespace ymwm::window {
       update_index(std::distance(m_windows.cbegin(), found_window));
     }
 
+    inline void window_by_index(std::size_t index) noexcept {
+      if (m_windows.empty()) {
+        return;
+      }
+      update_index(index);
+    }
+
     inline void next_window() noexcept {
       if (m_windows.empty()) {
         m_env->reset_focus();
