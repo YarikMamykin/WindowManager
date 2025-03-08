@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(YMWM VERSION 1.0.4 LANGUAGES CXX)
+project(YMWM VERSION 1.0.5 LANGUAGES CXX)
 
 set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)
