@@ -122,11 +122,10 @@ namespace ymwm::environment::commands {
     e.manager().swap_focused_window_with_top();
   }
 
-  void MoveFocusOnGrid::execute(Environment& e, const events::Event&) const {
-    if (auto parameters = e.manager().layout().parameters<layouts::Grid>()) {
-      e.manager().focus().move_on_grid(
-          direction, parameters->grid_size, e.manager().windows().size());
-    }
+  void MoveFocus::execute(Environment& e, const events::Event&) const {
+    e.manager().focus().move(direction,
+                             e.manager().layout().parameters(),
+                             e.manager().windows().size());
   }
 
   void RotateStackLayout::execute(Environment& e, const events::Event&) const {

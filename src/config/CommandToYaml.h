@@ -72,7 +72,7 @@ namespace ymwm::config {
     template <>
     inline void serialize_args(
         YAML::Node& node,
-        const environment::commands::MoveFocusOnGrid& command) const noexcept {
+        const environment::commands::MoveFocus& command) const noexcept {
       node["args"]["direction"] = command.direction;
     }
   };
