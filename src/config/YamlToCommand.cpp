@@ -63,7 +63,7 @@ namespace ymwm::config {
 
   template <>
   void YamlToCommand::FillCmdArgs::operator()(
-      environment::commands::MoveFocusOnGrid& command) const {
+      environment::commands::MoveFocus& command) const {
     if (auto direction = cmd_args["direction"]) {
       command.direction = direction.as<ymwm::common::Direction>();
     }

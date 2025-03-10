@@ -142,31 +142,28 @@ namespace ymwm::events {
             .code = ymwm::events::AbstractKeyCode::J,
             .mask = ymwm::events::AbstractKeyMask::Alt |
                     ymwm::events::AbstractKeyMask::Ctrl },
-        ymwm::environment::commands::MoveFocusOnGrid{
-            common::Direction::Down });
+        ymwm::environment::commands::MoveFocus{ common::Direction::Down });
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
             .code = ymwm::events::AbstractKeyCode::K,
             .mask = ymwm::events::AbstractKeyMask::Alt |
                     ymwm::events::AbstractKeyMask::Ctrl },
-        ymwm::environment::commands::MoveFocusOnGrid{ common::Direction::Up });
+        ymwm::environment::commands::MoveFocus{ common::Direction::Up });
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
             .code = ymwm::events::AbstractKeyCode::H,
             .mask = ymwm::events::AbstractKeyMask::Alt |
                     ymwm::events::AbstractKeyMask::Ctrl },
-        ymwm::environment::commands::MoveFocusOnGrid{
-            common::Direction::Left });
+        ymwm::environment::commands::MoveFocus{ common::Direction::Left });
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
             .code = ymwm::events::AbstractKeyCode::L,
             .mask = ymwm::events::AbstractKeyMask::Alt |
                     ymwm::events::AbstractKeyMask::Ctrl },
-        ymwm::environment::commands::MoveFocusOnGrid{
-            common::Direction::Right });
+        ymwm::environment::commands::MoveFocus{ common::Direction::Right });
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
