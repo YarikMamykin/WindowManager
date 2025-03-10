@@ -36,5 +36,9 @@ namespace ymwm::events {
   AbstractKeyCode::Type AbstractKeyCode::Period{ XK_period };
   AbstractKeyCode::Type AbstractKeyCode::Comma{ XK_comma };
   AbstractKeyCode::Type AbstractKeyCode::Del{ XK_Delete };
+  AbstractKeyCode::Type AbstractKeyCode::Home{ XK_Home };
+  AbstractKeyCode::Type AbstractKeyCode::End{ XK_End };
+  AbstractKeyCode::Type AbstractKeyCode::PgUp{ XK_Page_Up };
+  AbstractKeyCode::Type AbstractKeyCode::PgDn{ XK_Page_Down };
 
 } // namespace ymwm::events
