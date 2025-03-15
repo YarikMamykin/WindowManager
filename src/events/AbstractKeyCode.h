@@ -39,5 +39,9 @@ namespace ymwm::events {
     static Type Period;
     static Type Comma;
     static Type Del;
+    static Type Home;
+    static Type End;
+    static Type PgUp;
+    static Type PgDn;
   };
 } // namespace ymwm::events
