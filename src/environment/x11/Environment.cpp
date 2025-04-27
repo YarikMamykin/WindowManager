@@ -89,6 +89,7 @@ namespace ymwm::environment {
     XSetWindowBorderWidth(m_handlers->display, w.id, w.border_width);
     XSetWindowBorder(
         m_handlers->display, w.id, m_handlers->colors.at(w.border_color).pixel);
+    x_send_expose_event(*m_handlers, w.id);
   }
 
   void Environment::update_window_border(const window::Window& w) noexcept {
@@ -109,6 +110,7 @@ namespace ymwm::environment {
   void Environment::focus_window(const window::Window& w) noexcept {
     XRaiseWindow(m_handlers->display, w.id);
     XSetInputFocus(m_handlers->display, w.id, RevertToPointerRoot, CurrentTime);
+    x_send_expose_event(*m_handlers, w.id);
   }
 
   void Environment::reset_focus() noexcept {

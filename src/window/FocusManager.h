@@ -138,6 +138,8 @@ namespace ymwm::window {
           parameters);
     }
 
+    inline void reset() noexcept { m_env->reset_focus(); }
+
   private:
     inline void verify_index() noexcept {
       if (m_focused_window_index >= m_windows.size() and

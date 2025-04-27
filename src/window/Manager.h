@@ -44,9 +44,18 @@ namespace ymwm::window {
                                reinterpret_cast<const char*>(w.name.data()));
       m_windows.push_back(w);
       layout().update();
-      auto current_focused_window = focus().window_index();
-      focus().last_window();
-      focus().window_by_index(current_focused_window);
+
+      const auto& last_added_window = m_windows.at(m_windows.size() - 1ul);
+
+      if (1ul == m_windows.size()) {
+        m_env->open_window(last_added_window);
+        focus().last_window();
+        return;
+      }
+
+      m_env->open_window(last_added_window);
+      m_env->update_window(last_added_window);
+      focus().window_by_index(focus().window_index());
     }
 
     inline void remove_window(environment::ID id) noexcept {
