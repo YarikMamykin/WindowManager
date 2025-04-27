@@ -106,13 +106,11 @@ namespace ymwm::environment {
   }
 
   void Environment::open_window(const window::Window& w) noexcept {
-    XRaiseWindow(m_handlers->display, w.id);
     XMapWindow(m_handlers->display, w.id);
   }
 
   void Environment::focus_window(const window::Window& w) noexcept {
     XRaiseWindow(m_handlers->display, w.id);
-    XMapWindow(m_handlers->display, w.id);
     XSetInputFocus(m_handlers->display, w.id, RevertToPointerRoot, CurrentTime);
   }
 
