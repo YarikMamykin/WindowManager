@@ -1,5 +1,6 @@
 #include "Handlers.h"
 #include "common/Color.h"
+#include "environment/ID.h"
 
 #include <array>
 #include <format>
@@ -91,5 +92,13 @@ namespace ymwm::environment {
     }
 
     return true;
+  }
+
+  void x_send_expose_event(Handlers& handlers, ID window_id) noexcept {
+    XEvent expose_event;
+    expose_event.type = Expose;
+    expose_event.xexpose.window = window_id;
+    expose_event.xexpose.count = 0;
+    XSendEvent(handlers.display, window_id, False, ExposureMask, &expose_event);
   }
 } // namespace ymwm::environment

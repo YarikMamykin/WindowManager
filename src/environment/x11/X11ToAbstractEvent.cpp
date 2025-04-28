@@ -16,6 +16,7 @@ namespace ymwm::environment {
   ymwm::events::Event enter_notify(XEvent& event, Handlers& handlers);
   ymwm::events::Event map_notify(XEvent& event, Handlers& handlers);
   ymwm::events::Event unmap_notify(XEvent& event, Handlers& handlers);
+  ymwm::events::Event destroy_notify(XEvent& event, Handlers& handlers);
   ymwm::events::Event button_press(XEvent& event, Handlers& handlers);
   ymwm::events::Event
   selection_request(XEvent& event, Handlers& handlers, Environment& e);
@@ -38,6 +39,8 @@ namespace ymwm::environment {
       return map_notify(event, handlers);
     case UnmapNotify:
       return unmap_notify(event, handlers);
+    case DestroyNotify:
+      return destroy_notify(event, handlers);
     case ButtonPress:
       return button_press(event, handlers);
     case SelectionRequest:
@@ -85,28 +88,34 @@ namespace ymwm::environment {
   ymwm::events::Event map_notify(XEvent& event, Handlers& handlers) {
     XWindowAttributes wa;
     auto w = event.xmaprequest.window;
-    if (XGetWindowAttributes(handlers.display, w, &wa)) {
-      // Add input mask to track property changes.
-      XSelectInput(handlers.display,
-                   w,
-                   EnterWindowMask | FocusChangeMask | PropertyChangeMask |
-                       StructureNotifyMask);
-      return events::WindowAdded{
-        .w = { .id = w,
-              .x = wa.x,
-              .y = wa.y,
-              .w = wa.width,
-              .h = wa.height,
-              .border_width = ymwm::config::windows::regular_border_width,
-              .border_color = ymwm::config::windows::regular_border_color,
-              .name = get_window_name(handlers, w) }
-      };
+    if (!XGetWindowAttributes(handlers.display, w, &wa) or
+        wa.override_redirect) {
+      return events::AbstractUnknownEvent{};
     }
 
-    return events::AbstractUnknownEvent{};
+    // Add input mask to track property changes.
+    XSelectInput(handlers.display,
+                 w,
+                 EnterWindowMask | FocusChangeMask | PropertyChangeMask |
+                     StructureNotifyMask);
+    return events::WindowAdded{
+      .w = { .id = w,
+            .x = wa.x,
+            .y = wa.y,
+            .w = wa.width,
+            .h = wa.height,
+            .border_width = ymwm::config::windows::regular_border_width,
+            .border_color = ymwm::config::windows::regular_border_color,
+            .name = get_window_name(handlers, w) }
+    };
   }
 
   ymwm::events::Event unmap_notify(XEvent& event, Handlers& handlers) {
+    auto unmapped_window = event.xunmap.window;
+    return events::WindowRemoved{ .wid = unmapped_window };
+  }
+
+  ymwm::events::Event destroy_notify(XEvent& event, Handlers& handlers) {
     auto unmapped_window = event.xunmap.window;
     return events::WindowRemoved{ .wid = unmapped_window };
   }

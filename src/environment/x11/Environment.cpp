@@ -12,6 +12,7 @@ namespace ymwm::environment {
   x11_to_abstract_event(XEvent& event, Handlers& handlers, Environment& e);
   bool register_colors(const std::array<common::Color, 3ul>& colors,
                        Handlers& handlers);
+  void x_send_expose_event(Handlers& handlers, ID window_id) noexcept;
 } // namespace ymwm::environment
 
 namespace ymwm::environment {
@@ -88,17 +89,14 @@ namespace ymwm::environment {
     XSetWindowBorderWidth(m_handlers->display, w.id, w.border_width);
     XSetWindowBorder(
         m_handlers->display, w.id, m_handlers->colors.at(w.border_color).pixel);
+    x_send_expose_event(*m_handlers, w.id);
   }
 
   void Environment::update_window_border(const window::Window& w) noexcept {
     XSetWindowBorderWidth(m_handlers->display, w.id, w.border_width);
     XSetWindowBorder(
         m_handlers->display, w.id, m_handlers->colors.at(w.border_color).pixel);
-    XEvent expose_event;
-    expose_event.type = Expose;
-    expose_event.xexpose.window = w.id;
-    expose_event.xexpose.count = 0;
-    XSendEvent(m_handlers->display, w.id, False, ExposureMask, &expose_event);
+    x_send_expose_event(*m_handlers, w.id);
   }
 
   void Environment::move_and_resize(const window::Window& w) noexcept {
@@ -106,14 +104,13 @@ namespace ymwm::environment {
   }
 
   void Environment::open_window(const window::Window& w) noexcept {
-    XRaiseWindow(m_handlers->display, w.id);
     XMapWindow(m_handlers->display, w.id);
   }
 
   void Environment::focus_window(const window::Window& w) noexcept {
     XRaiseWindow(m_handlers->display, w.id);
-    XMapWindow(m_handlers->display, w.id);
     XSetInputFocus(m_handlers->display, w.id, RevertToPointerRoot, CurrentTime);
+    x_send_expose_event(*m_handlers, w.id);
   }
 
   void Environment::reset_focus() noexcept {
@@ -128,11 +125,7 @@ namespace ymwm::environment {
         m_handlers->display, w.id, m_handlers->colors.at(w.border_color).pixel);
 
     // Sending expose event is required for redraw!
-    XEvent expose_event;
-    expose_event.type = Expose;
-    expose_event.xexpose.window = w.id;
-    expose_event.xexpose.count = 0;
-    XSendEvent(m_handlers->display, w.id, False, ExposureMask, &expose_event);
+    x_send_expose_event(*m_handlers, w.id);
   }
 
   void Environment::close_window(const window::Window& w) noexcept {
