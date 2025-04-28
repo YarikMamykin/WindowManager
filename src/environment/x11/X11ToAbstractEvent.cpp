@@ -16,6 +16,7 @@ namespace ymwm::environment {
   ymwm::events::Event enter_notify(XEvent& event, Handlers& handlers);
   ymwm::events::Event map_notify(XEvent& event, Handlers& handlers);
   ymwm::events::Event unmap_notify(XEvent& event, Handlers& handlers);
+  ymwm::events::Event destroy_notify(XEvent& event, Handlers& handlers);
   ymwm::events::Event button_press(XEvent& event, Handlers& handlers);
   ymwm::events::Event
   selection_request(XEvent& event, Handlers& handlers, Environment& e);
@@ -38,6 +39,8 @@ namespace ymwm::environment {
       return map_notify(event, handlers);
     case UnmapNotify:
       return unmap_notify(event, handlers);
+    case DestroyNotify:
+      return destroy_notify(event, handlers);
     case ButtonPress:
       return button_press(event, handlers);
     case SelectionRequest:
@@ -108,6 +111,11 @@ namespace ymwm::environment {
   }
 
   ymwm::events::Event unmap_notify(XEvent& event, Handlers& handlers) {
+    auto unmapped_window = event.xunmap.window;
+    return events::WindowRemoved{ .wid = unmapped_window };
+  }
+
+  ymwm::events::Event destroy_notify(XEvent& event, Handlers& handlers) {
     auto unmapped_window = event.xunmap.window;
     return events::WindowRemoved{ .wid = unmapped_window };
   }
