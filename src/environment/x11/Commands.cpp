@@ -160,9 +160,6 @@ namespace ymwm::environment::commands {
   void RemoveWindow::execute(Environment& e, const events::Event& event) const {
     if (const auto* ev = std::get_if<events::WindowRemoved>(&event)) {
       e.manager().remove_window(ev->wid);
-      if (e.manager().windows().empty()) {
-        e.group().remove(e.group().active());
-      }
     }
   }
 
