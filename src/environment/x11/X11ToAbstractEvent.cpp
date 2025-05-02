@@ -82,7 +82,8 @@ namespace ymwm::environment {
   ymwm::events::Event enter_notify(XEvent& event, Handlers& handlers) {
 
     if (NotifyNormal == event.xcrossing.mode and
-        NotifyInferior != event.xcrossing.detail) {
+        NotifyInferior != event.xcrossing.detail and
+        config::windows::autofocus_on_mousehover) {
       return events::MouseOverWindow{ .wid = event.xcrossing.window };
     }
 

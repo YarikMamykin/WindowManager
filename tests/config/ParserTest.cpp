@@ -225,6 +225,7 @@ TEST(TestConfig, AllValidConfig) {
   EXPECT_EQ("us,ru,ua", ymwm::config::misc::language_layout);
   EXPECT_EQ("/tmp/some.png", ymwm::config::misc::background_image_path);
   EXPECT_EQ("/home/user/Pictures", ymwm::config::misc::screenshots_folder);
+  EXPECT_FALSE(ymwm::config::windows::autofocus_on_mousehover);
   ymwm::events::Map events_map;
   EXPECT_NO_THROW(events_map = parser.event_map());
   auto event1 = ymwm::events::AbstractKeyPress{
@@ -322,6 +323,7 @@ TEST(TestConfig, GenerateConfigToFile) {
   ymwm::config::misc::language_layout = "ru,fr,de";
   ymwm::config::misc::background_image_path = "/tmp/someimg.png";
   ymwm::config::misc::screenshots_folder = "/home/user/folder";
+  ymwm::config::windows::autofocus_on_mousehover = false;
 
   const std::filesystem::path test_config_path =
       std::filesystem::temp_directory_path() / "test-config.yaml";
@@ -358,6 +360,7 @@ TEST(TestConfig, GenerateConfigToFile) {
   EXPECT_EQ("ru,fr,de", ymwm::config::misc::language_layout);
   EXPECT_EQ("/tmp/someimg.png", ymwm::config::misc::background_image_path);
   EXPECT_EQ("/home/user/folder", ymwm::config::misc::screenshots_folder);
+  EXPECT_FALSE(ymwm::config::windows::autofocus_on_mousehover);
 
   ASSERT_EQ(parsed_event_map.size(), default_event_map.size());
 

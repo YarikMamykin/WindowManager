@@ -7,4 +7,5 @@ namespace ymwm::config::windows {
   inline ymwm::common::Color focused_border_color{ 0x0, 0xff, 0x0 };
   constinit inline int regular_border_width{ 2 };
   constinit inline int focused_border_width{ 5 };
+  constinit inline bool autofocus_on_mousehover{ true };
 } // namespace ymwm::config::windows
