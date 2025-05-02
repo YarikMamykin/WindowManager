@@ -21,6 +21,8 @@ namespace ymwm::environment {
         display, root_window, DefaultVisual(display, screen), AllocNone);
     colors.reserve(1);
     atoms.at(AtomID::NetWMName) = XInternAtom(display, "_NET_WM_NAME", False);
+    atoms.at(AtomID::NetActiveWindow) =
+        XInternAtom(display, "_NET_ACTIVE_WINDOW", False);
     atoms.at(AtomID::Utf8String) = XInternAtom(display, "UTF8_STRING", False);
     atoms.at(AtomID::Clipboard) = XInternAtom(display, "CLIPBOARD", False);
     atoms.at(AtomID::Targets) = XInternAtom(display, "TARGETS", False);

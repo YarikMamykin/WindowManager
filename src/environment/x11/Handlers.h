@@ -17,7 +17,7 @@ namespace ymwm::environment {
     Colormap colormap;
     std::unique_ptr<BackgroundImageHandler> background_image;
     std::unordered_map<common::Color, XColor, common::ColorHash> colors;
-    std::array<Atom, 7ul> atoms;
+    std::array<Atom, 8ul> atoms;
     int current_layout;
     int max_layouts;
 

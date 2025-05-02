@@ -8,6 +8,7 @@ namespace ymwm::environment {
     Targets,
     ScreenshotImage,
     ScreenshotPathsList,
-    ScreenshotPath
+    ScreenshotPath,
+    NetActiveWindow
   };
 }
