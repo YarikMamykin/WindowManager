@@ -19,6 +19,8 @@ namespace ymwm::environment {
   ymwm::events::Event destroy_notify(XEvent& event, Handlers& handlers);
   ymwm::events::Event button_press(XEvent& event, Handlers& handlers);
   ymwm::events::Event
+  focus_in(XEvent& event, Handlers& handlers, Environment& e);
+  ymwm::events::Event
   selection_request(XEvent& event, Handlers& handlers, Environment& e);
   ymwm::events::Event
   selection_clear(XEvent& event, Handlers& handlers, Environment& e);
@@ -47,6 +49,8 @@ namespace ymwm::environment {
       return selection_request(event, handlers, e);
     case SelectionClear:
       return selection_clear(event, handlers, e);
+    case FocusIn:
+      return focus_in(event, handlers, e);
     }
 
     return ymwm::events::AbstractUnknownEvent{};
@@ -78,7 +82,8 @@ namespace ymwm::environment {
   ymwm::events::Event enter_notify(XEvent& event, Handlers& handlers) {
 
     if (NotifyNormal == event.xcrossing.mode and
-        NotifyInferior != event.xcrossing.detail) {
+        NotifyInferior != event.xcrossing.detail and
+        config::windows::autofocus_on_mousehover) {
       return events::MouseOverWindow{ .wid = event.xcrossing.window };
     }
 
@@ -210,6 +215,15 @@ namespace ymwm::environment {
   ymwm::events::Event
   selection_clear(XEvent& event, Handlers& handlers, Environment& e) {
     e.screenshot().reset();
+    return events::AbstractUnknownEvent{};
+  }
+
+  ymwm::events::Event
+  focus_in(XEvent& event, Handlers& handlers, Environment& e) {
+    const auto current_focused_window = e.group().manager().focus().window();
+    if (event.xfocus.window != current_focused_window->get().w) {
+      e.focus_window(current_focused_window->get());
+    }
     return events::AbstractUnknownEvent{};
   }
 } // namespace ymwm::environment

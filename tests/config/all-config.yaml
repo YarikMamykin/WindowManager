@@ -22,6 +22,7 @@ layouts:
     window-width-ratio: 90
 
 windows:
+  autofocus_on_mousehover: false
   focused:
     border:
       width: 10

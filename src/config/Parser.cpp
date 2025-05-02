@@ -53,6 +53,11 @@ namespace ymwm::config {
       return;
     }
 
+    if (auto autofocus_on_mousehover = windows["autofocus_on_mousehover"]) {
+      ymwm::config::windows::autofocus_on_mousehover =
+          autofocus_on_mousehover.as<bool>();
+    }
+
     if (auto focused = windows["focused"]) {
       if (auto border = focused["border"]) {
 
@@ -320,6 +325,7 @@ namespace ymwm::config {
 
     // Create the "windows" node
     YAML::Node windows;
+    windows["autofocus_on_mousehover"] = autofocus_on_mousehover;
     windows["regular"]["border"]["width"] = regular_border_width;
     windows["regular"]["border"]["color"] = regular_border_color;
 

@@ -3,6 +3,7 @@
 #include "Handlers.h"
 #include "XClientKeyGrabber.h"
 #include "common/Color.h"
+#include "environment/x11/AtomID.h"
 
 namespace ymwm::environment {
   int handle_x_error(Display* display, XErrorEvent* error);
@@ -110,6 +111,14 @@ namespace ymwm::environment {
   void Environment::focus_window(const window::Window& w) noexcept {
     XRaiseWindow(m_handlers->display, w.id);
     XSetInputFocus(m_handlers->display, w.id, RevertToPointerRoot, CurrentTime);
+    XChangeProperty(m_handlers->display,
+                    m_handlers->root_window,
+                    m_handlers->atoms.at(AtomID::NetActiveWindow),
+                    XA_WINDOW,
+                    32,
+                    PropModeReplace,
+                    (unsigned char*)&(w.id),
+                    1);
     x_send_expose_event(*m_handlers, w.id);
   }
 
@@ -118,6 +127,9 @@ namespace ymwm::environment {
                    m_handlers->root_window,
                    RevertToPointerRoot,
                    CurrentTime);
+    XDeleteProperty(m_handlers->display,
+                    m_handlers->root_window,
+                    m_handlers->atoms.at(AtomID::NetActiveWindow));
   }
 
   void Environment::change_border_color(const window::Window& w) noexcept {
