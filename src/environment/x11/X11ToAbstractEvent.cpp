@@ -221,7 +221,8 @@ namespace ymwm::environment {
   ymwm::events::Event
   focus_in(XEvent& event, Handlers& handlers, Environment& e) {
     const auto current_focused_window = e.group().manager().focus().window();
-    if (event.xfocus.window != current_focused_window->get().w) {
+    if (current_focused_window.has_value() and
+        event.xfocus.window != current_focused_window->get().w) {
       e.focus_window(current_focused_window->get());
     }
     return events::AbstractUnknownEvent{};
