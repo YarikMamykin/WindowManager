@@ -7,6 +7,7 @@ endif()
 add_subdirectory(common)
 add_subdirectory(config)
 add_subdirectory(socket)
+add_subdirectory(notifications)
 add_subdirectory(events)
 add_subdirectory(layouts)
 add_subdirectory(environment)
@@ -24,6 +25,7 @@ add_dependencies(${PROJECT_NAME}
 	common
 	config
 	args
+	notifications
 	socket
 )
 target_link_libraries(${PROJECT_NAME}
@@ -34,6 +36,7 @@ target_link_libraries(${PROJECT_NAME}
 	common
 	config
 	args
+	notifications
 	socket
 )
 target_compile_options(${PROJECT_NAME}
