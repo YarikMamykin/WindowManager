@@ -30,14 +30,14 @@ jobs:
     steps:
       - checkout
       - run:
-          command: cmake -S . -B Debug -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=TRUE -DCMAKE_INSTALL_PREFIX=Debug
+          command: cmake -S . -B DEBUG -DCMAKE_BUILD_TYPE=DEBUG -DBUILD_TESTS=TRUE -DCMAKE_INSTALL_PREFIX=DEBUG
       - run:
-          command: cmake --build Debug --parallel
+          command: cmake --build DEBUG --parallel
 
       - persist_to_workspace:
           root: /workspace
           paths:
-            - Debug/*
+            - DEBUG/*
   build-release:
     executor: archexecutor
     steps:
@@ -72,7 +72,7 @@ jobs:
       - attach_workspace:
           at: /workspace
       - run:
-          command: ctest --test-dir Debug/tests --verbose
+          command: ctest --test-dir DEBUG/tests --verbose
 
   tests-release:
     executor: archexecutor
