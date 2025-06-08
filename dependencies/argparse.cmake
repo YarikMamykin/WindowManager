@@ -1,21 +1,27 @@
+include(ExternalProject)
+
 set(ARGPARSE_DIR ${CMAKE_BINARY_DIR}/argparse)
-set(ARGPARSE_INCLUDE_DIR ${ARGPARSE_DIR}/include)
+set(ARGPARSE_INSTALL_DIR ${CMAKE_BINARY_DIR}/libs/argparse)
 set(ARGPARSE_REPO https://github.com/p-ranav/argparse.git)
 
-add_custom_command(OUTPUT ${ARGPARSE_DIR}
-	COMMAND git clone ${ARGPARSE_REPO}
-	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+ExternalProject_Add(argparse_lib
+    GIT_REPOSITORY ${ARGPARSE_REPO}
+    GIT_TAG master
+    PREFIX ${ARGPARSE_DIR}
+    BINARY_DIR ${ARGPARSE_DIR}/build
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${ARGPARSE_INSTALL_DIR}
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+        -DARGPARSE_BUILD_SAMPLES=OFF
+        -DARGPARSE_BUILD_TESTS=OFF
+    BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --parallel
+    INSTALL_COMMAND ${CMAKE_COMMAND} --install <BINARY_DIR>
 )
 
-add_custom_command(OUTPUT ${ARGPARSE_INCLUDE_DIR}
-	COMMAND cmake -S . -B ${CMAKE_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} -DARGPARSE_BUILD_SAMPLES=OFF -DARGPARSE_BUILD_TESTS=OFF
-	COMMAND cmake --build ${CMAKE_BUILD_TYPE} --parallel
-	COMMAND cmake --install ${CMAKE_BUILD_TYPE}
-	DEPENDS ${ARGPARSE_DIR}
-	WORKING_DIRECTORY ${ARGPARSE_DIR}
-)
+# Get the install directory for headers
+set(ARGPARSE_INCLUDE_DIR ${ARGPARSE_INSTALL_DIR}/include)
 
-add_custom_target(argparse_lib 
-	DEPENDS ${ARGPARSE_DIR}
-	DEPENDS ${ARGPARSE_INCLUDE_DIR}
-)
+# Create an imported target for easier linking
+add_library(argparse INTERFACE IMPORTED)
+add_dependencies(argparse argparse_lib)
+target_include_directories(argparse INTERFACE ${ARGPARSE_INCLUDE_DIR})
