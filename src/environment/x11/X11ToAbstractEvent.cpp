@@ -121,8 +121,8 @@ namespace ymwm::environment {
   }
 
   ymwm::events::Event destroy_notify(XEvent& event, Handlers& handlers) {
-    auto unmapped_window = event.xunmap.window;
-    return events::WindowRemoved{ .wid = unmapped_window };
+    auto destroyed_window = event.xdestroywindow.window;
+    return events::WindowRemoved{ .wid = destroyed_window };
   }
 
   ymwm::events::Event button_press(XEvent& event, Handlers& handlers) {
