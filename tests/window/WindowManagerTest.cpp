@@ -712,6 +712,26 @@ TEST(TestFocusManager, DontFocusNonExistingWindow) {
   m.focus().window(1);
 }
 
+TEST(TestGroupManager, RemoveWindowIfNotInActiveGroup) {
+  ymwm::environment::TestEnvironment tenv;
+  ON_CALL(tenv, screen_width_and_height)
+      .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
+
+  ymwm::window::GroupManager m{ &tenv };
+
+  m.manager().add_window({ .id = 1 });
+  m.add();
+  m.manager().add_window({ .id = 2 });
+
+  EXPECT_TRUE(m.is_last_active());
+  m.remove_window(1);
+  m.prev();
+  EXPECT_TRUE(m.manager().windows().empty());
+  m.next();
+  ASSERT_EQ(1ul, m.manager().windows().size());
+  EXPECT_EQ(2, m.manager().windows().at(0).id);
+}
+
 TEST(TestGroupManager, TryMovingToNextGroupWhenOnlyOneExists) {
   ymwm::environment::TestEnvironment tenv;
   ON_CALL(tenv, screen_width_and_height)
