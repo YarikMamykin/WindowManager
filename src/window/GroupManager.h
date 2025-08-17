@@ -1,5 +1,6 @@
 #pragma once
 #include "Manager.h"
+#include "environment/ID.h"
 
 #include <list>
 
@@ -80,6 +81,12 @@ namespace ymwm::window {
         --m_active_manager;
       }
       m_managers.erase(std::next(m_managers.begin(), manager_index));
+    }
+
+    inline void remove_window(environment::ID wid) noexcept {
+      for (auto& m : m_managers) {
+        m.remove_window(wid);
+      }
     }
 
     inline std::size_t active() const noexcept { return m_active_manager; }
