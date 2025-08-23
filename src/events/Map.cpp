@@ -105,6 +105,13 @@ namespace ymwm::events {
 
     bindings.emplace(
         ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Enter,
+            .mask = ymwm::events::AbstractKeyMask::Alt |
+                    ymwm::events::AbstractKeyMask::Shift },
+        ymwm::environment::commands::SwapFocusedWindowWithLast{});
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
             .code = ymwm::events::AbstractKeyCode::G,
             .mask = ymwm::events::AbstractKeyMask::Alt },
         ymwm::environment::commands::SetLayout{ ymwm::layouts::Grid::type });
