@@ -122,6 +122,11 @@ namespace ymwm::environment::commands {
     e.manager().swap_focused_window_with_top();
   }
 
+  void SwapFocusedWindowWithLast::execute(Environment& e,
+                                          const events::Event&) const {
+    e.manager().swap_focused_window_with_last();
+  }
+
   void MoveFocus::execute(Environment& e, const events::Event&) const {
     e.manager().focus().move(direction,
                              e.manager().layout().parameters(),

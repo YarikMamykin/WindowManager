@@ -32,6 +32,7 @@ namespace ymwm::environment::commands {
   DEFINE_COMMAND_WITH_PARAMS_1(IncreaseMainWindowRatio, int diff{ 10 });
   DEFINE_COMMAND_WITH_PARAMS_1(DecreaseMainWindowRatio, int diff{ 10 });
   DEFINE_COMMAND(SwapFocusedWindowOnTop)
+  DEFINE_COMMAND(SwapFocusedWindowWithLast)
   DEFINE_COMMAND_WITH_PARAMS_1(MoveFocus, common::Direction direction);
   DEFINE_COMMAND(RotateStackLayout)
   DEFINE_COMMAND(NextLanguageLayout);
@@ -62,6 +63,7 @@ namespace ymwm::environment::commands {
                                IncreaseMainWindowRatio,
                                DecreaseMainWindowRatio,
                                SwapFocusedWindowOnTop,
+                               SwapFocusedWindowWithLast,
                                MoveFocus,
                                RotateStackLayout,
                                NextLanguageLayout,

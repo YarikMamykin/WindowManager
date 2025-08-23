@@ -144,6 +144,17 @@ namespace ymwm::window {
       focus().first_window();
     }
 
+    inline void swap_focused_window_with_last() noexcept {
+      if (focus().is_last_window()) {
+        return;
+      }
+
+      std::swap(m_windows.at(focus().window_index()),
+                m_windows.at(m_windows.size() - 1ul));
+      layout().update();
+      focus().last_window();
+    }
+
     inline void activate() noexcept {
       layout().update();
       focus().update();
