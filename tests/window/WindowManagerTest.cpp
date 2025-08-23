@@ -501,6 +501,83 @@ TEST(TestWindowManager, SwapFocusedWindowWithTopOne) {
               .border_color = regular_color }));
 }
 
+TEST(TestWindowManager, SwapFocusedWindowWithLastOne) {
+  ymwm::config::windows::regular_border_width = 0;
+  ymwm::config::windows::focused_border_width = 2;
+
+  ymwm::environment::TestEnvironment tenv;
+  ON_CALL(tenv, screen_width_and_height)
+      .WillByDefault(testing::Return(std::make_tuple(1000, 1000)));
+
+  ymwm::window::Manager m{ &tenv };
+  m.layout().update(ymwm::layouts::Centered{});
+
+  m.add_window(ymwm::window::Window{ .id = 1 });
+  m.add_window(ymwm::window::Window{ .id = 2 });
+  m.add_window(ymwm::window::Window{ .id = 3 });
+  EXPECT_THAT(
+      m.windows(),
+      testing::ElementsAre(
+          ymwm::window::Window{
+              .id = 1,
+              .x = 0,
+              .y = 0,
+              .w = 1000 - (2 * ymwm::config::windows::focused_border_width),
+              .h = 1000 - (2 * ymwm::config::windows::focused_border_width),
+              .border_width = ymwm::config::windows::focused_border_width,
+              .border_color = focused_color },
+          ymwm::window::Window{
+              .id = 2,
+              .x = 0,
+              .y = 0,
+              .w = 1000 - (2 * ymwm::config::windows::focused_border_width),
+              .h = 1000 - (2 * ymwm::config::windows::focused_border_width),
+              .border_width = ymwm::config::windows::regular_border_width,
+              .border_color = regular_color },
+          ymwm::window::Window{
+              .id = 3,
+              .x = 0,
+              .y = 0,
+              .w = 1000 - (2 * ymwm::config::windows::focused_border_width),
+              .h = 1000 - (2 * ymwm::config::windows::focused_border_width),
+              .border_width = ymwm::config::windows::regular_border_width,
+              .border_color = regular_color }));
+  ASSERT_TRUE(m.focus().window());
+  ASSERT_EQ(1, m.focus().window()->get().id);
+
+  EXPECT_CALL(tenv, move_and_resize).Times(3);
+  EXPECT_CALL(tenv, update_window_border).Times(2);
+  m.swap_focused_window_with_last();
+  EXPECT_THAT(
+      m.windows(),
+      testing::ElementsAre(
+          ymwm::window::Window{
+              .id = 3,
+              .x = 0,
+              .y = 0,
+              .w = 1000 - (2 * ymwm::config::windows::focused_border_width),
+              .h = 1000 - (2 * ymwm::config::windows::focused_border_width),
+              .border_width = ymwm::config::windows::regular_border_width,
+              .border_color = ymwm::config::windows::regular_border_color },
+          ymwm::window::Window{
+              .id = 2,
+              .x = 0,
+              .y = 0,
+              .w = 1000 - (2 * ymwm::config::windows::focused_border_width),
+              .h = 1000 - (2 * ymwm::config::windows::focused_border_width),
+              .border_width = ymwm::config::windows::regular_border_width,
+              .border_color = ymwm::config::windows::regular_border_color },
+          ymwm::window::Window{
+              .id = 1,
+              .x = 0,
+              .y = 0,
+              .w = 1000 - (2 * ymwm::config::windows::focused_border_width),
+              .h = 1000 - (2 * ymwm::config::windows::focused_border_width),
+              .border_width = ymwm::config::windows::focused_border_width,
+              .border_color = ymwm::config::windows::focused_border_color }));
+  EXPECT_EQ(1, m.focus().window()->get().id);
+}
+
 TEST(TestWindowManager, TestFocusWindowById) {
   ymwm::environment::TestEnvironment tenv;
   ON_CALL(tenv, screen_width_and_height)
