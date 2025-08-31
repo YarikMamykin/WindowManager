@@ -44,4 +44,5 @@ namespace ymwm::config {
         : std::runtime_error(std::format("Cannot open file: {}", err)) {}
   };
 
+  ymwm::events::Map parse_config(std::filesystem::path&& config_path);
 } // namespace ymwm::config
