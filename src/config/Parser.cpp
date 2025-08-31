@@ -15,6 +15,8 @@
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
+#include <stdexcept>
 #include <variant>
 #include <yaml-cpp/exceptions.h>
 #include <yaml-cpp/yaml.h>
@@ -357,5 +359,17 @@ namespace ymwm::config {
 
     fout << config;
     fout.close();
+  }
+
+  ymwm::events::Map parse_config(std::filesystem::path&& config_path) {
+    try {
+      return ymwm::config::Parser(std::move(config_path)).event_map();
+    } catch (const std::runtime_error& err) {
+      // No need to fail start, just use default
+      // values if failed to parse.
+      std::cout << err.what() << std::endl;
+    }
+
+    return ymwm::events::default_event_map();
   }
 } // namespace ymwm::config

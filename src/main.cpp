@@ -2,10 +2,6 @@
 #include "config/Parser.h"
 #include "environment/Environment.h"
 
-#include <stdexcept>
-
-ymwm::events::Map parse_config(std::filesystem::path&& config_path);
-
 int main(int argc, char** argv) {
 
   auto parsed_args = ymwm::args::parse(argc, argv);
@@ -15,7 +11,8 @@ int main(int argc, char** argv) {
     return 0;
   }
 
-  auto events_map = parse_config(std::move(parsed_args.config_path));
+  auto events_map =
+      ymwm::config::parse_config(std::move(parsed_args.config_path));
 
   ymwm::environment::Environment env{ events_map };
   if (env.exit_requested()) {
@@ -31,16 +28,4 @@ int main(int argc, char** argv) {
   }
 
   return 0;
-}
-
-ymwm::events::Map parse_config(std::filesystem::path&& config_path) {
-  try {
-    return ymwm::config::Parser(std::move(config_path)).event_map();
-  } catch (const std::runtime_error& err) {
-    // No need to fail start, just use default
-    // values if failed to parse.
-    std::cout << err.what() << std::endl;
-  }
-
-  return ymwm::events::default_event_map();
 }
