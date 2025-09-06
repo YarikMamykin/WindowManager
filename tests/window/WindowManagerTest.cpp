@@ -416,11 +416,11 @@ TEST(TestWindowManager, AddWindow_CurrentWindowIsFocusedEachTime) {
 
   m.focus().prev_window();
   ASSERT_TRUE(m.focus().window());
-  EXPECT_EQ(3, m.focus().window()->get().id);
+  EXPECT_EQ(2, m.focus().window()->get().id);
 
   m.add_window(ymwm::window::Window{ .id = 4 });
   ASSERT_TRUE(m.focus().window());
-  EXPECT_EQ(3, m.focus().window()->get().id);
+  EXPECT_EQ(2, m.focus().window()->get().id);
 }
 
 TEST(TestWindowManager, SwapFocusedWindowWithTopOne) {
@@ -449,7 +449,7 @@ TEST(TestWindowManager, SwapFocusedWindowWithTopOne) {
               .border_width = ymwm::config::windows::focused_border_width,
               .border_color = focused_color },
           ymwm::window::Window{
-              .id = 2,
+              .id = 3,
               .x = 0,
               .y = 0,
               .w = 1000 - (2 * ymwm::config::windows::focused_border_width),
@@ -457,7 +457,7 @@ TEST(TestWindowManager, SwapFocusedWindowWithTopOne) {
               .border_width = ymwm::config::windows::regular_border_width,
               .border_color = regular_color },
           ymwm::window::Window{
-              .id = 3,
+              .id = 2,
               .x = 0,
               .y = 0,
               .w = 1000 - (2 * ymwm::config::windows::focused_border_width),
@@ -467,7 +467,7 @@ TEST(TestWindowManager, SwapFocusedWindowWithTopOne) {
   ASSERT_TRUE(m.focus().window());
   ASSERT_EQ(1, m.focus().window()->get().id);
   m.focus().last_window();
-  ASSERT_EQ(3, m.focus().window()->get().id);
+  ASSERT_EQ(2, m.focus().window()->get().id);
 
   EXPECT_CALL(tenv, move_and_resize).Times(3);
   EXPECT_CALL(tenv, update_window_border).Times(2);
@@ -476,7 +476,7 @@ TEST(TestWindowManager, SwapFocusedWindowWithTopOne) {
       m.windows(),
       testing::ElementsAre(
           ymwm::window::Window{
-              .id = 3,
+              .id = 2,
               .x = 0,
               .y = 0,
               .w = 1000 - (2 * ymwm::config::windows::focused_border_width),
@@ -484,7 +484,7 @@ TEST(TestWindowManager, SwapFocusedWindowWithTopOne) {
               .border_width = ymwm::config::windows::focused_border_width,
               .border_color = focused_color },
           ymwm::window::Window{
-              .id = 2,
+              .id = 3,
               .x = 0,
               .y = 0,
               .w = 1000 - (2 * ymwm::config::windows::focused_border_width),
@@ -527,7 +527,7 @@ TEST(TestWindowManager, SwapFocusedWindowWithLastOne) {
               .border_width = ymwm::config::windows::focused_border_width,
               .border_color = focused_color },
           ymwm::window::Window{
-              .id = 2,
+              .id = 3,
               .x = 0,
               .y = 0,
               .w = 1000 - (2 * ymwm::config::windows::focused_border_width),
@@ -535,7 +535,7 @@ TEST(TestWindowManager, SwapFocusedWindowWithLastOne) {
               .border_width = ymwm::config::windows::regular_border_width,
               .border_color = regular_color },
           ymwm::window::Window{
-              .id = 3,
+              .id = 2,
               .x = 0,
               .y = 0,
               .w = 1000 - (2 * ymwm::config::windows::focused_border_width),
@@ -552,7 +552,7 @@ TEST(TestWindowManager, SwapFocusedWindowWithLastOne) {
       m.windows(),
       testing::ElementsAre(
           ymwm::window::Window{
-              .id = 3,
+              .id = 2,
               .x = 0,
               .y = 0,
               .w = 1000 - (2 * ymwm::config::windows::focused_border_width),
@@ -560,7 +560,7 @@ TEST(TestWindowManager, SwapFocusedWindowWithLastOne) {
               .border_width = ymwm::config::windows::regular_border_width,
               .border_color = ymwm::config::windows::regular_border_color },
           ymwm::window::Window{
-              .id = 2,
+              .id = 3,
               .x = 0,
               .y = 0,
               .w = 1000 - (2 * ymwm::config::windows::focused_border_width),
@@ -622,7 +622,7 @@ TEST(FocusManager, MoveFocusOnGrid) {
 
   m.focus().last_window();
 
-  ASSERT_EQ(5, m.focus().window()->get().id);
+  ASSERT_EQ(2, m.focus().window()->get().id);
   ASSERT_EQ(5ul, m.windows().size());
   auto params = m.layout().parameters();
   ASSERT_TRUE(std::holds_alternative<ymwm::layouts::Grid>(params));
@@ -630,45 +630,45 @@ TEST(FocusManager, MoveFocusOnGrid) {
   ASSERT_EQ(3ul, grid_params.grid_size);
 
   m.focus().move(ymwm::common::Direction::Left, grid_params, 5ul);
-  ASSERT_EQ(4, m.focus().window()->get().id);
+  ASSERT_EQ(3, m.focus().window()->get().id);
 
   // Verify repeated left move on left-most column has no effect.
   m.focus().move(ymwm::common::Direction::Left, grid_params, 5ul);
-  ASSERT_EQ(4, m.focus().window()->get().id);
+  ASSERT_EQ(3, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Right, grid_params, 5ul);
-  ASSERT_EQ(5, m.focus().window()->get().id);
+  ASSERT_EQ(2, m.focus().window()->get().id);
 
   // Verify repeated right move on right-most column has no effect.
   m.focus().move(ymwm::common::Direction::Right, grid_params, 5ul);
-  ASSERT_EQ(5, m.focus().window()->get().id);
+  ASSERT_EQ(2, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Up, grid_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
+  ASSERT_EQ(5, m.focus().window()->get().id);
 
   // Verify repeated up move on top-most column has no effect.
   m.focus().move(ymwm::common::Direction::Up, grid_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
+  ASSERT_EQ(5, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Right, grid_params, 5ul);
-  ASSERT_EQ(3, m.focus().window()->get().id);
+  ASSERT_EQ(4, m.focus().window()->get().id);
 
   // Verify down move has no effect, if grid is not filled completely.
   m.focus().move(ymwm::common::Direction::Down, grid_params, 5ul);
-  ASSERT_EQ(3, m.focus().window()->get().id);
+  ASSERT_EQ(4, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Left, grid_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
+  ASSERT_EQ(5, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Down, grid_params, 5ul);
-  ASSERT_EQ(5, m.focus().window()->get().id);
+  ASSERT_EQ(2, m.focus().window()->get().id);
 
   // Verify repeated down move has no effect.
   m.focus().move(ymwm::common::Direction::Down, grid_params, 5ul);
-  ASSERT_EQ(5, m.focus().window()->get().id);
+  ASSERT_EQ(2, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Left, grid_params, 5ul);
-  ASSERT_EQ(4, m.focus().window()->get().id);
+  ASSERT_EQ(3, m.focus().window()->get().id);
 
   // Able to go up in left-most column.
   m.focus().move(ymwm::common::Direction::Up, grid_params, 5ul);
@@ -883,37 +883,37 @@ TEST(FocusManager, MoveFocusOnStackVerticalDouble) {
   auto stack_params = std::get<ymwm::layouts::StackVerticalDouble>(params);
 
   m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
-
-  m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
-
-  m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
-  ASSERT_EQ(1, m.focus().window()->get().id);
-
-  m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
-  ASSERT_EQ(3, m.focus().window()->get().id);
-
-  m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
-  ASSERT_EQ(3, m.focus().window()->get().id);
-
-  m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
   ASSERT_EQ(5, m.focus().window()->get().id);
 
-  m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
-  ASSERT_EQ(3, m.focus().window()->get().id);
-
   m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
+  ASSERT_EQ(5, m.focus().window()->get().id);
+
+  m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
   ASSERT_EQ(1, m.focus().window()->get().id);
 
-  m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
-
-  m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
+  m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
   ASSERT_EQ(4, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
+  ASSERT_EQ(4, m.focus().window()->get().id);
+
+  m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
   ASSERT_EQ(2, m.focus().window()->get().id);
+
+  m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
+  ASSERT_EQ(4, m.focus().window()->get().id);
+
+  m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
+  ASSERT_EQ(1, m.focus().window()->get().id);
+
+  m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
+  ASSERT_EQ(5, m.focus().window()->get().id);
+
+  m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
+  ASSERT_EQ(3, m.focus().window()->get().id);
+
+  m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
+  ASSERT_EQ(5, m.focus().window()->get().id);
 }
 
 TEST(FocusManager, MoveFocusOnStackHorizontalDouble) {
@@ -938,31 +938,31 @@ TEST(FocusManager, MoveFocusOnStackHorizontalDouble) {
   auto stack_params = std::get<ymwm::layouts::StackHorizontalDouble>(params);
 
   m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
-
-  m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
-  ASSERT_EQ(1, m.focus().window()->get().id);
-
-  m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
-  ASSERT_EQ(3, m.focus().window()->get().id);
-
-  m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
   ASSERT_EQ(5, m.focus().window()->get().id);
 
+  m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
+  ASSERT_EQ(1, m.focus().window()->get().id);
+
+  m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
+  ASSERT_EQ(4, m.focus().window()->get().id);
+
+  m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
+  ASSERT_EQ(2, m.focus().window()->get().id);
+
   m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
-  ASSERT_EQ(3, m.focus().window()->get().id);
+  ASSERT_EQ(4, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
   ASSERT_EQ(1, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
+  ASSERT_EQ(5, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
-  ASSERT_EQ(4, m.focus().window()->get().id);
+  ASSERT_EQ(3, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
+  ASSERT_EQ(5, m.focus().window()->get().id);
 }
 
 TEST(FocusManager, MoveFocusOnStackHorizontalTop) {
@@ -987,28 +987,28 @@ TEST(FocusManager, MoveFocusOnStackHorizontalTop) {
   auto stack_params = std::get<ymwm::layouts::StackHorizontalTop>(params);
 
   m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
-
-  m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
-  ASSERT_EQ(3, m.focus().window()->get().id);
+  ASSERT_EQ(5, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
   ASSERT_EQ(4, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
-  ASSERT_EQ(5, m.focus().window()->get().id);
+  ASSERT_EQ(3, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
-  ASSERT_EQ(5, m.focus().window()->get().id);
+  ASSERT_EQ(2, m.focus().window()->get().id);
 
-  m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
-  ASSERT_EQ(4, m.focus().window()->get().id);
+  m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
+  ASSERT_EQ(2, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
   ASSERT_EQ(3, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
+  ASSERT_EQ(4, m.focus().window()->get().id);
+
+  m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
+  ASSERT_EQ(5, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
   ASSERT_EQ(1, m.focus().window()->get().id);
@@ -1039,28 +1039,28 @@ TEST(FocusManager, MoveFocusOnStackHorizontalBottom) {
   auto stack_params = std::get<ymwm::layouts::StackHorizontalBottom>(params);
 
   m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
-
-  m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
-  ASSERT_EQ(3, m.focus().window()->get().id);
+  ASSERT_EQ(5, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
   ASSERT_EQ(4, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
-  ASSERT_EQ(5, m.focus().window()->get().id);
+  ASSERT_EQ(3, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
-  ASSERT_EQ(5, m.focus().window()->get().id);
+  ASSERT_EQ(2, m.focus().window()->get().id);
 
-  m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
-  ASSERT_EQ(4, m.focus().window()->get().id);
+  m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
+  ASSERT_EQ(2, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
   ASSERT_EQ(3, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
+  ASSERT_EQ(4, m.focus().window()->get().id);
+
+  m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
+  ASSERT_EQ(5, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
   ASSERT_EQ(1, m.focus().window()->get().id);
@@ -1090,34 +1090,34 @@ TEST(FocusManager, MoveFocusOnStackVerticalLeft) {
   auto stack_params = std::get<ymwm::layouts::StackVerticalLeft>(params);
 
   m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
+  ASSERT_EQ(5, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
-
-  m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
-  ASSERT_EQ(3, m.focus().window()->get().id);
+  ASSERT_EQ(5, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
   ASSERT_EQ(4, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
-  ASSERT_EQ(5, m.focus().window()->get().id);
+  ASSERT_EQ(3, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
-  ASSERT_EQ(5, m.focus().window()->get().id);
+  ASSERT_EQ(2, m.focus().window()->get().id);
 
-  m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
-  ASSERT_EQ(4, m.focus().window()->get().id);
+  m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
+  ASSERT_EQ(2, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
   ASSERT_EQ(3, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
+  ASSERT_EQ(4, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
+  ASSERT_EQ(5, m.focus().window()->get().id);
+
+  m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
+  ASSERT_EQ(5, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
   ASSERT_EQ(1, m.focus().window()->get().id);
@@ -1145,34 +1145,34 @@ TEST(FocusManager, MoveFocusOnStackVerticalRight) {
   auto stack_params = std::get<ymwm::layouts::StackVerticalRight>(params);
 
   m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
+  ASSERT_EQ(5, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Right, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
-
-  m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
-  ASSERT_EQ(3, m.focus().window()->get().id);
+  ASSERT_EQ(5, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
   ASSERT_EQ(4, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
-  ASSERT_EQ(5, m.focus().window()->get().id);
+  ASSERT_EQ(3, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
-  ASSERT_EQ(5, m.focus().window()->get().id);
+  ASSERT_EQ(2, m.focus().window()->get().id);
 
-  m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
-  ASSERT_EQ(4, m.focus().window()->get().id);
+  m.focus().move(ymwm::common::Direction::Down, stack_params, 5ul);
+  ASSERT_EQ(2, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
   ASSERT_EQ(3, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
+  ASSERT_EQ(4, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
-  ASSERT_EQ(2, m.focus().window()->get().id);
+  ASSERT_EQ(5, m.focus().window()->get().id);
+
+  m.focus().move(ymwm::common::Direction::Up, stack_params, 5ul);
+  ASSERT_EQ(5, m.focus().window()->get().id);
 
   m.focus().move(ymwm::common::Direction::Left, stack_params, 5ul);
   ASSERT_EQ(1, m.focus().window()->get().id);
