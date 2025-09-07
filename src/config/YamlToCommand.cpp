@@ -4,6 +4,7 @@
 #include "common/Color.h"
 #include "common/Direction.h"
 #include "common/VariantInterfaceHelpers.h"
+#include "environment/Command.h"
 #include "layouts/Helpers.h"
 #include "layouts/Parameters.h"
 
@@ -66,6 +67,14 @@ namespace ymwm::config {
       environment::commands::MoveFocus& command) const {
     if (auto direction = cmd_args["direction"]) {
       command.direction = direction.as<ymwm::common::Direction>();
+    }
+  }
+
+  template <>
+  void YamlToCommand::FillCmdArgs::operator()(
+      environment::commands::FocusNthWindow& command) const {
+    if (auto window_number = cmd_args["window_number"]) {
+      command.window_number = window_number.as<std::size_t>();
     }
   }
 
