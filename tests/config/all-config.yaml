@@ -63,6 +63,13 @@ key-bindings:
     cmd:
       name: TakeScreenshot
 
+  - type: press
+    key: 0
+    masks:
+      - Alt
+    cmd:
+      name: FocusNthWindow
+
 misc:
   languages: us,ru,ua
   background_image: /tmp/some.png

@@ -162,6 +162,11 @@ namespace ymwm::environment::commands {
     }
   }
 
+  void FocusNthWindow::execute(Environment& e,
+                               const events::Event& event) const {
+    e.manager().focus().window_by_index(window_number);
+  }
+
   void RemoveWindow::execute(Environment& e, const events::Event& event) const {
     if (const auto* ev = std::get_if<events::WindowRemoved>(&event)) {
       e.group().remove_window(ev->wid);

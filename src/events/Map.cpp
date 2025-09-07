@@ -16,6 +16,8 @@
 #include "layouts/StackVerticalDouble.h"
 #include "layouts/StackVerticalLeft.h"
 
+#include <limits>
+
 namespace ymwm::events {
   Map default_event_map() noexcept {
     Map bindings;
@@ -250,6 +252,73 @@ namespace ymwm::events {
             .mask = ymwm::events::AbstractKeyMask::Alt,
             .mcode = ymwm::events::AbstractMouseCode::WheelUp },
         ymwm::environment::commands::FocusPrevWindow{});
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Number_1,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::FocusNthWindow{ .window_number = 0ul });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Number_2,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::FocusNthWindow{ .window_number = 1ul });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Number_3,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::FocusNthWindow{ .window_number = 2ul });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Number_4,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::FocusNthWindow{ .window_number = 3ul });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Number_5,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::FocusNthWindow{ .window_number = 4ul });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Number_6,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::FocusNthWindow{ .window_number = 5ul });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Number_7,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::FocusNthWindow{ .window_number = 6ul });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Number_8,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::FocusNthWindow{ .window_number = 7ul });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Number_8,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::FocusNthWindow{ .window_number = 7ul });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Number_9,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::FocusNthWindow{ .window_number = 8ul });
+
+    bindings.emplace(
+        ymwm::events::AbstractKeyPress{
+            .code = ymwm::events::AbstractKeyCode::Number_0,
+            .mask = ymwm::events::AbstractKeyMask::Alt },
+        ymwm::environment::commands::FocusNthWindow{
+            .window_number = std::numeric_limits<std::size_t>{}.max() });
 
     return bindings;
   }

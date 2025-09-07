@@ -241,6 +241,10 @@ TEST(TestConfig, AllValidConfig) {
     .mask = ymwm::events::AbstractKeyMask::Shift,
     .mcode = ymwm::events::AbstractMouseCode::Left
   };
+  auto event4 = ymwm::events::AbstractKeyPress{
+    .code = ymwm::events::AbstractKeyCode::Number_0,
+    .mask = ymwm::events::AbstractKeyMask::Alt,
+  };
   ASSERT_TRUE(events_map.contains(event1));
   ASSERT_TRUE(events_map.contains(event2));
   ASSERT_TRUE(events_map.contains(event3));
@@ -256,10 +260,15 @@ TEST(TestConfig, AllValidConfig) {
   EXPECT_TRUE(
       std::holds_alternative<ymwm::environment::commands::TakeScreenshot>(
           events_map.at(event3)));
+  EXPECT_TRUE(
+      std::holds_alternative<ymwm::environment::commands::FocusNthWindow>(
+          events_map.at(event4)));
   for (const auto& [k, v] : ymwm::events::default_event_map()) {
     if (not std::holds_alternative<ymwm::environment::commands::ExitRequested>(
             v) and
         not std::holds_alternative<ymwm::environment::commands::TakeScreenshot>(
+            v) and
+        not std::holds_alternative<ymwm::environment::commands::FocusNthWindow>(
             v)) {
       ASSERT_TRUE(events_map.contains(k));
       ASSERT_EQ(v.index(), events_map.at(k).index());

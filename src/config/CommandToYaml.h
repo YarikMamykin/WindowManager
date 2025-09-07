@@ -75,5 +75,12 @@ namespace ymwm::config {
         const environment::commands::MoveFocus& command) const noexcept {
       node["args"]["direction"] = command.direction;
     }
+
+    template <>
+    inline void serialize_args(
+        YAML::Node& node,
+        const environment::commands::FocusNthWindow& command) const noexcept {
+      node["args"]["window_number"] = command.window_number;
+    }
   };
 } // namespace ymwm::config

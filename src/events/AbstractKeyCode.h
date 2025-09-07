@@ -43,5 +43,16 @@ namespace ymwm::events {
     static Type End;
     static Type PgUp;
     static Type PgDn;
+
+    static Type Number_0;
+    static Type Number_1;
+    static Type Number_2;
+    static Type Number_3;
+    static Type Number_4;
+    static Type Number_5;
+    static Type Number_6;
+    static Type Number_7;
+    static Type Number_8;
+    static Type Number_9;
   };
 } // namespace ymwm::events

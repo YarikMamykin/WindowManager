@@ -39,6 +39,7 @@ namespace ymwm::environment::commands {
   DEFINE_COMMAND(AddWindow);
   DEFINE_COMMAND(UpdateWindowName);
   DEFINE_COMMAND_WITH_PARAMS_1(FocusWindow, environment::ID wid);
+  DEFINE_COMMAND_WITH_PARAMS_1(FocusNthWindow, std::size_t window_number);
   DEFINE_COMMAND_WITH_PARAMS_1(RemoveWindow, environment::ID wid);
   DEFINE_COMMAND(AddGroup);
   DEFINE_COMMAND(MoveToNextGroup);
@@ -54,6 +55,7 @@ namespace ymwm::environment::commands {
                                CloseWindow,
                                FocusNextWindow,
                                FocusPrevWindow,
+                               FocusNthWindow,
                                MoveFocusedWindowForward,
                                MoveFocusedWindowToNextGroup,
                                MoveFocusedWindowBackward,
