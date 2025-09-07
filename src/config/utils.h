@@ -57,6 +57,16 @@ namespace ymwm::config::utils {
         {     "Wheel",     events::AbstractMouseCode::Wheel },
         {   "WheelUp",   events::AbstractMouseCode::WheelUp },
         { "WheelDown", events::AbstractMouseCode::WheelDown },
+        {         "0",    events::AbstractKeyCode::Number_0 },
+        {         "1",    events::AbstractKeyCode::Number_1 },
+        {         "2",    events::AbstractKeyCode::Number_2 },
+        {         "3",    events::AbstractKeyCode::Number_3 },
+        {         "4",    events::AbstractKeyCode::Number_4 },
+        {         "5",    events::AbstractKeyCode::Number_5 },
+        {         "6",    events::AbstractKeyCode::Number_6 },
+        {         "7",    events::AbstractKeyCode::Number_7 },
+        {         "8",    events::AbstractKeyCode::Number_8 },
+        {         "9",    events::AbstractKeyCode::Number_9 },
   };
 
   static inline std::optional<unsigned int>

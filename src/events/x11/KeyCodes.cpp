@@ -41,4 +41,15 @@ namespace ymwm::events {
   AbstractKeyCode::Type AbstractKeyCode::PgUp{ XK_Page_Up };
   AbstractKeyCode::Type AbstractKeyCode::PgDn{ XK_Page_Down };
 
+  AbstractKeyCode::Type AbstractKeyCode::Number_0{ XK_0 };
+  AbstractKeyCode::Type AbstractKeyCode::Number_1{ XK_1 };
+  AbstractKeyCode::Type AbstractKeyCode::Number_2{ XK_2 };
+  AbstractKeyCode::Type AbstractKeyCode::Number_3{ XK_3 };
+  AbstractKeyCode::Type AbstractKeyCode::Number_4{ XK_4 };
+  AbstractKeyCode::Type AbstractKeyCode::Number_5{ XK_5 };
+  AbstractKeyCode::Type AbstractKeyCode::Number_6{ XK_6 };
+  AbstractKeyCode::Type AbstractKeyCode::Number_7{ XK_7 };
+  AbstractKeyCode::Type AbstractKeyCode::Number_8{ XK_8 };
+  AbstractKeyCode::Type AbstractKeyCode::Number_9{ XK_9 };
+
 } // namespace ymwm::events
