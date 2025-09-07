@@ -42,16 +42,16 @@ namespace ymwm::window {
                                w.h,
                                w.w,
                                reinterpret_cast<const char*>(w.name.data()));
-      if (0ul == m_windows.size()) {
-        m_windows.push_back(w);
-      } else {
-        auto current_focused_window = focus().window_index();
-        m_windows.insert(
-            std::next(m_windows.begin(), current_focused_window + 1ul), w);
-      }
+      auto current_focused_window = focus().window_index();
+      std::vector<Window>::iterator new_window_position =
+          m_windows.empty()
+              ? m_windows.end()
+              : std::next(m_windows.begin(), current_focused_window + 1ul);
+
+      new_window_position = m_windows.insert(new_window_position, w);
       layout().update();
 
-      const auto& last_added_window = m_windows.at(m_windows.size() - 1ul);
+      const auto& last_added_window = *new_window_position;
 
       if (1ul == m_windows.size()) {
         m_env->open_window(last_added_window);
