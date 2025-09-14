@@ -63,11 +63,7 @@ namespace ymwm::environment::commands {
 
     e.group().manager().remove_window(w->get().id);
 
-    if (e.group().is_last_active()) {
-      e.group().add();
-    } else {
-      e.group().next();
-    }
+    e.group().next();
 
     e.group().manager().add_window(window_copy);
   }
