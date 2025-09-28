@@ -36,7 +36,7 @@ namespace ymwm::window {
 
     inline void add_window(const Window& w) noexcept {
       log::Logger::info(
-          std::format("{} {} {} {} {} {}\n",
+          std::format("{} {} {} {} {} {}",
                       w.id,
                       w.x,
                       w.y,
