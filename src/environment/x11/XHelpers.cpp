@@ -1,10 +1,11 @@
 #include "Handlers.h"
 #include "common/Color.h"
 #include "environment/ID.h"
+#include "environment/x11/AtomID.h"
+#include "log/Logger.h"
 
 #include <array>
 #include <format>
-#include <iostream>
 #include <memory>
 #include <string>
 
@@ -42,11 +43,11 @@ namespace ymwm::environment {
     // Try getting name through UTF8 atom
     int status = XGetWindowProperty(handlers.display,
                                     w,
-                                    handlers.atoms.front(),
+                                    handlers.atoms.at(AtomID::NetWMName),
                                     0,
                                     (~0L),
                                     False,
-                                    handlers.atoms.back(),
+                                    AnyPropertyType,
                                     &actual_type,
                                     &actual_format,
                                     &nitems,
@@ -62,7 +63,7 @@ namespace ymwm::environment {
                                   0,
                                   (~0L),
                                   False,
-                                  XA_STRING,
+                                  AnyPropertyType,
                                   &actual_type,
                                   &actual_format,
                                   &nitems,
@@ -83,10 +84,10 @@ namespace ymwm::environment {
       handlers.colors.insert({ c, xcolor_from_color(c) });
       if (not XAllocColor(
               handlers.display, handlers.colormap, &handlers.colors.at(c))) {
-        std::cerr << std::format("Failed to allocate color: {} {} {}\n",
-                                 handlers.colors.at(c).red,
-                                 handlers.colors.at(c).green,
-                                 handlers.colors.at(c).blue);
+        log::Logger::error(std::format("Failed to allocate color: {} {} {}\n",
+                                       handlers.colors.at(c).red,
+                                       handlers.colors.at(c).green,
+                                       handlers.colors.at(c).blue));
         return false;
       }
     }

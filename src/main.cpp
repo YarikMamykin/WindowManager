@@ -1,6 +1,8 @@
 #include "args/Parser.h"
+#include "config/Misc.h"
 #include "config/Parser.h"
 #include "environment/Environment.h"
+#include "log/Logger.h"
 
 int main(int argc, char** argv) {
 
@@ -9,6 +11,12 @@ int main(int argc, char** argv) {
     ymwm::config::Parser::default_config_to_yaml(
         std::move(parsed_args.generated_default_config_path));
     return 0;
+  }
+
+  auto logger = ymwm::log::Logger::create(ymwm::log::LogLevel::Info,
+                                          ymwm::config::misc::logfile);
+  if (not logger) {
+    return 1;
   }
 
   auto events_map =

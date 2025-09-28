@@ -4,10 +4,10 @@
 #include "config/Misc.h"
 #include "environment/Environment.h"
 #include "environment/x11/AtomID.h"
+#include "log/Logger.h"
 
 #include <Imlib2.h>
 #include <cstring>
-#include <iostream>
 
 namespace {
   int get_shift_from_mask(unsigned long mask) {
@@ -79,7 +79,7 @@ namespace ymwm::environment {
         [](XImage* ptr) { XDestroyImage(ptr); });
 
     if (!image) {
-      std::cerr << "Failed to capture screen\n";
+      log::Logger::error("Failed to capture screen\n");
       return;
     }
 
@@ -89,7 +89,7 @@ namespace ymwm::environment {
 
     Imlib_Image imlib_image = imlib_create_image(image->width, image->height);
     if (!imlib_image) {
-      std::cerr << "Failed to create Imlib2 image\n";
+      log::Logger::error("Failed to create Imlib2 image\n");
       return;
     }
 

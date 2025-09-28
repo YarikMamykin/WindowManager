@@ -9,4 +9,5 @@ namespace ymwm::config::misc {
   inline std::filesystem::path screenshots_folder{
     std::filesystem::temp_directory_path()
   };
+  inline std::filesystem::path logfile{ "/tmp/ymwm.log" };
 } // namespace ymwm::config::misc

@@ -5,9 +5,9 @@
 #include "common/Color.h"
 #include "config/Window.h"
 #include "environment/ID.h"
+#include "log/Logger.h"
 
 #include <format>
-#include <iostream>
 #include <optional>
 #include <vector>
 
@@ -35,13 +35,14 @@ namespace ymwm::window {
     }
 
     inline void add_window(const Window& w) noexcept {
-      std::cout << std::format("{} {} {} {} {} {}\n",
-                               w.id,
-                               w.x,
-                               w.y,
-                               w.h,
-                               w.w,
-                               reinterpret_cast<const char*>(w.name.data()));
+      log::Logger::info(
+          std::format("{} {} {} {} {} {}",
+                      w.id,
+                      w.x,
+                      w.y,
+                      w.h,
+                      w.w,
+                      reinterpret_cast<const char*>(w.name.data())));
       auto current_focused_window = focus().window_index();
       std::vector<Window>::iterator new_window_position =
           m_windows.empty()
@@ -69,7 +70,7 @@ namespace ymwm::window {
           m_windows, [id](const Window& w) -> bool { return id == w.id; });
 
       if (erased_successfully) {
-        std::cout << std::format("Erased {} \n", id);
+        log::Logger::info(std::format("Erased {} \n", id));
         focus().prev_window();
         layout().update();
       }

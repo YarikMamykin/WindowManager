@@ -1,7 +1,8 @@
 #include "Handlers.h"
+#include "log/Logger.h"
 
 #include <array>
-#include <iostream>
+#include <format>
 
 namespace ymwm::environment {
   int handle_x_error(Display* display, XErrorEvent* error) {
@@ -11,10 +12,12 @@ namespace ymwm::environment {
     XGetErrorText(
         display, error->error_code, errorText.data(), errorText.size());
 
-    std::cerr << "X Error: " << errorText.data() << '\n'
-              << "  Major opcode: " << error->request_code << '\n'
-              << "  Minor opcode: " << error->minor_code << '\n'
-              << "  Resource ID: " << error->resourceid << '\n';
+    log::Logger::error(std::format(
+        "X Error: {}\nMajor opcode: {}\nMinor opcode: {}\nResource ID: {}",
+        errorText.data(),
+        error->request_code,
+        error->minor_code,
+        error->resourceid));
 
     // Return 0 to prevent the default error handler from being called
     return 0;
@@ -22,7 +25,7 @@ namespace ymwm::environment {
 
   // Custom IO error handler
   int handle_x_io_error(Display* display) {
-    std::cerr << "Fatal X11 IO Error: Connection to X server lost\n";
+    log::Logger::error("Fatal X11 IO Error: Connection to X server lost\n");
     exit(1);
   }
 } // namespace ymwm::environment

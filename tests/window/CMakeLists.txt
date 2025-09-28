@@ -11,10 +11,12 @@ target_link_libraries(WindowManagerTest
 	${GTEST_LIBRARIES}
 	layouts
 	common
+	log
 )
 add_dependencies(WindowManagerTest
 	googletestlib
 	layouts
 	common
+	log
 )
 add_test(NAME WindowManagerTest COMMAND WindowManagerTest WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
