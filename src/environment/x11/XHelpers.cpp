@@ -1,6 +1,7 @@
 #include "Handlers.h"
 #include "common/Color.h"
 #include "environment/ID.h"
+#include "environment/x11/AtomID.h"
 #include "log/Logger.h"
 
 #include <array>
@@ -42,11 +43,11 @@ namespace ymwm::environment {
     // Try getting name through UTF8 atom
     int status = XGetWindowProperty(handlers.display,
                                     w,
-                                    handlers.atoms.front(),
+                                    handlers.atoms.at(AtomID::NetWMName),
                                     0,
                                     (~0L),
                                     False,
-                                    handlers.atoms.back(),
+                                    AnyPropertyType,
                                     &actual_type,
                                     &actual_format,
                                     &nitems,
@@ -62,7 +63,7 @@ namespace ymwm::environment {
                                   0,
                                   (~0L),
                                   False,
-                                  XA_STRING,
+                                  AnyPropertyType,
                                   &actual_type,
                                   &actual_format,
                                   &nitems,
