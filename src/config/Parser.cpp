@@ -48,6 +48,10 @@ namespace ymwm::config {
     if (auto screenshots_folder = misc["screenshots_folder"]) {
       config::misc::screenshots_folder = screenshots_folder.as<std::string>();
     }
+
+    if (auto logfile = misc["logfile"]) {
+      config::misc::logfile = logfile.as<std::string>();
+    }
   }
 
   void Parser::parse_window_config(const YAML::Node& windows) const {

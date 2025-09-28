@@ -1,3 +1,4 @@
 misc:
   languages: us,ru,ua
   background_image: /tmp/some.png
+  logfile: /tmp/test.log

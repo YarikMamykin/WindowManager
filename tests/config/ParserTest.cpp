@@ -312,6 +312,7 @@ TEST(TestConfig, ParseMisc) {
   ymwm::config::Parser parser{ "misc.yaml" };
   EXPECT_EQ("us,ru,ua", ymwm::config::misc::language_layout);
   EXPECT_EQ("/tmp/some.png", ymwm::config::misc::background_image_path);
+  EXPECT_EQ("/tmp/test.log", ymwm::config::misc::logfile);
 }
 
 TEST(TestConfig, GenerateConfigToFile) {
