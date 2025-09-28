@@ -1,10 +1,10 @@
 #include "Handlers.h"
 #include "common/Color.h"
 #include "environment/ID.h"
+#include "log/Logger.h"
 
 #include <array>
 #include <format>
-#include <iostream>
 #include <memory>
 #include <string>
 
@@ -83,10 +83,10 @@ namespace ymwm::environment {
       handlers.colors.insert({ c, xcolor_from_color(c) });
       if (not XAllocColor(
               handlers.display, handlers.colormap, &handlers.colors.at(c))) {
-        std::cerr << std::format("Failed to allocate color: {} {} {}\n",
-                                 handlers.colors.at(c).red,
-                                 handlers.colors.at(c).green,
-                                 handlers.colors.at(c).blue);
+        log::Logger::error(std::format("Failed to allocate color: {} {} {}\n",
+                                       handlers.colors.at(c).red,
+                                       handlers.colors.at(c).green,
+                                       handlers.colors.at(c).blue));
         return false;
       }
     }

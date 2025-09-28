@@ -11,8 +11,10 @@ target_include_directories(config PRIVATE
 target_link_libraries(config PRIVATE
 	${YAML_LIB}
 	layouts
+	log
 )
 add_dependencies(config
 	yaml_cpp
 	layouts
+	log
 )

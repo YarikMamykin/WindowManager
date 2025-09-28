@@ -4,6 +4,7 @@ if(${NATIVE_ENVIRONMENT} STREQUAL "X11")
 	include(${DEPENDENCIES}/x11.cmake)
 endif()
 
+add_subdirectory(log)
 add_subdirectory(common)
 add_subdirectory(config)
 add_subdirectory(events)
@@ -23,6 +24,7 @@ add_dependencies(${PROJECT_NAME}
 	common
 	config
 	args
+	log
 )
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
@@ -32,6 +34,7 @@ target_link_libraries(${PROJECT_NAME}
 	common
 	config
 	args
+	log
 )
 target_compile_options(${PROJECT_NAME}
 	PRIVATE

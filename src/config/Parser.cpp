@@ -11,11 +11,11 @@
 #include "environment/Command.h"
 #include "events/AbstractMousePress.h"
 #include "events/Map.h"
+#include "log/Logger.h"
 
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
-#include <iostream>
 #include <stdexcept>
 #include <variant>
 #include <yaml-cpp/exceptions.h>
@@ -367,7 +367,7 @@ namespace ymwm::config {
     } catch (const std::runtime_error& err) {
       // No need to fail start, just use default
       // values if failed to parse.
-      std::cout << err.what() << std::endl;
+      log::Logger::error(err.what());
     }
 
     return ymwm::events::default_event_map();

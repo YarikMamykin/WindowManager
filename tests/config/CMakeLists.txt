@@ -12,12 +12,14 @@ target_link_libraries(ConfigTest
 	config
 	events
 	common
+	log
 )
 add_dependencies(ConfigTest
 	googletestlib
 	config
 	events
 	common
+	log
 )
 add_test(NAME ConfigTest COMMAND ConfigTest WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/key-bindings.yaml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)

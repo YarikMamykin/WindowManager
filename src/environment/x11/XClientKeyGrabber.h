@@ -3,8 +3,6 @@
 #include "events/AbstractKeyPress.h"
 #include "events/AbstractMousePress.h"
 
-#include <iostream>
-
 namespace ymwm::environment {
   struct XClientKeyGrabber {
     Handlers* handlers;
@@ -14,8 +12,6 @@ namespace ymwm::environment {
 
     template <>
     inline void operator()(const events::AbstractKeyPress& event) {
-      std::cout << "Grabbing keys: " << std::hex << event.code << " "
-                << event.mask << "\n";
       XGrabKey(handlers->display,
                XKeysymToKeycode(handlers->display, event.code),
                event.mask,
@@ -27,9 +23,6 @@ namespace ymwm::environment {
 
     template <>
     inline void operator()(const events::AbstractMousePress& event) {
-      std::cout << "Grabbing buttons: " << std::hex << event.mcode << " "
-                << event.mask << "\n";
-
       XGrabButton(handlers->display,
                   event.mcode,
                   event.mask,
