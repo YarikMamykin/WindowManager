@@ -1,5 +1,6 @@
 #include "Logger.h"
 
+#include <chrono>
 #include <iostream>
 #include <memory>
 #include <spdlog/sinks/basic_file_sink.h>
@@ -18,14 +19,19 @@ namespace ymwm::log {
 
       std::vector<spdlog::sink_ptr> sinks;
       if (logpath) {
-        sinks.reserve(2);
+        sinks.reserve(3);
         sinks.push_back(
             std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
+        sinks.push_back(
+            std::make_shared<spdlog::sinks::stderr_color_sink_mt>());
         sinks.push_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>(
             *logpath, true));
       } else {
+        sinks.reserve(2);
         sinks.push_back(
             std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
+        sinks.push_back(
+            std::make_shared<spdlog::sinks::stderr_color_sink_mt>());
       }
 
       // Create logger with both sinks
@@ -38,6 +44,8 @@ namespace ymwm::log {
       // Set log level
       spdlog::set_level(log_lvl == LogLevel::Info ? spdlog::level::info
                                                   : spdlog::level::err);
+      // Set flush for each minute
+      spdlog::flush_every(std::chrono::seconds(60));
 
     } catch (const spdlog::spdlog_ex& ex) {
       std::cerr << "Log init failed: " << ex.what() << std::endl;
