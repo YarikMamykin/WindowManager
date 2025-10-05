@@ -6,6 +6,7 @@
 
 #include <array>
 #include <format>
+#include <functional>
 #include <memory>
 #include <string>
 
@@ -101,5 +102,60 @@ namespace ymwm::environment {
     expose_event.xexpose.window = window_id;
     expose_event.xexpose.count = 0;
     XSendEvent(handlers.display, window_id, False, ExposureMask, &expose_event);
+  }
+
+  bool x_send_delete_window_event(Handlers& handlers, ID window_id) noexcept {
+    Atom* protocols = nullptr;
+    std::unique_ptr<Atom, std::function<void(Atom*)>> protocols_wrapper(
+        protocols, [](Atom* a) {
+          if (a) {
+            XFree(a);
+          }
+        });
+
+    int n;
+    if (XGetWMProtocols(handlers.display, window_id, &protocols, &n)) {
+      int supports_delete = 0;
+      for (int i = 0; i < n; i++) {
+        if (protocols[i] == handlers.atoms.at(AtomID::DeleteWindow)) {
+          XEvent event;
+          event.type = ClientMessage;
+          event.xclient.window = window_id;
+          event.xclient.message_type = handlers.atoms.at(AtomID::Protocols);
+          event.xclient.format = 32;
+          event.xclient.data.l[0] = handlers.atoms.at(AtomID::DeleteWindow);
+          event.xclient.data.l[1] = CurrentTime;
+
+          XSendEvent(handlers.display, window_id, False, NoEventMask, &event);
+          XFlush(handlers.display);
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  bool x_window_is_child(Handlers& handlers, ID window_id) noexcept {
+    Window root, parent_ret;
+    Window* children;
+    std::unique_ptr<Window, std::function<void(Window*)>> children_wrapper(
+        children, [](Window* w) {
+          if (w) {
+            XFree(w);
+          }
+        });
+    unsigned int nchildren;
+
+    if (XQueryTree(handlers.display,
+                   window_id,
+                   &root,
+                   &parent_ret,
+                   &children,
+                   &nchildren)) {
+      return root != parent_ret;
+    }
+
+    return false;
   }
 } // namespace ymwm::environment

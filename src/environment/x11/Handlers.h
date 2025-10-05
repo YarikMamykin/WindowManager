@@ -1,6 +1,7 @@
 #pragma once
 #include "BackgroundImageHandler.h"
 #include "common/Color.h"
+#include "environment/x11/AtomID.h"
 
 #include <array>
 #include <cstring>
@@ -17,7 +18,7 @@ namespace ymwm::environment {
     Colormap colormap;
     std::unique_ptr<BackgroundImageHandler> background_image;
     std::unordered_map<common::Color, XColor, common::ColorHash> colors;
-    std::array<Atom, 8ul> atoms;
+    std::array<Atom, AtomIDSize> atoms;
     int current_layout;
     int max_layouts;
 
