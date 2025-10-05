@@ -1,4 +1,5 @@
 #pragma once
+#include <cstddef>
 
 namespace ymwm::environment {
   enum AtomID {
@@ -9,6 +10,10 @@ namespace ymwm::environment {
     ScreenshotImage,
     ScreenshotPathsList,
     ScreenshotPath,
-    NetActiveWindow
+    NetActiveWindow,
+    DeleteWindow,
+    Protocols
   };
-}
+
+  static constexpr inline std::size_t AtomIDSize{ 10 };
+} // namespace ymwm::environment

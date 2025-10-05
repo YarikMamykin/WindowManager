@@ -6,6 +6,7 @@
 #include "environment/x11/XkbComponentNamesRecWrapper.h"
 #include "environment/x11/XkbRF_VarDefsRecWrapper.h"
 
+#include <X11/Xlib.h>
 #include <algorithm>
 
 namespace ymwm::environment {
@@ -31,6 +32,9 @@ namespace ymwm::environment {
     atoms.at(AtomID::ScreenshotPathsList) =
         XInternAtom(display, "text/uri-list", False);
     atoms.at(AtomID::ScreenshotPath) = XInternAtom(display, "text/uri", False);
+    atoms.at(AtomID::DeleteWindow) =
+        XInternAtom(display, "WM_DELETE_WINDOW", False);
+    atoms.at(AtomID::Protocols) = XInternAtom(display, "WM_PROTOCOLS", False);
     current_layout = 0;
     max_layouts = get_number_of_layouts();
     if (not ymwm::config::misc::background_image_path.empty() and

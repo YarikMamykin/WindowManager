@@ -5,6 +5,8 @@
 #include "common/Color.h"
 #include "environment/x11/AtomID.h"
 
+#include <memory>
+
 namespace ymwm::environment {
   int handle_x_error(Display* display, XErrorEvent* error);
   int handle_x_io_error(Display* display);
@@ -14,6 +16,8 @@ namespace ymwm::environment {
   bool register_colors(const std::array<common::Color, 3ul>& colors,
                        Handlers& handlers);
   void x_send_expose_event(Handlers& handlers, ID window_id) noexcept;
+  bool x_send_delete_window_event(Handlers& handlers, ID window_id) noexcept;
+  bool x_window_is_child(Handlers& handlers, ID window_id) noexcept;
 } // namespace ymwm::environment
 
 namespace ymwm::environment {
@@ -142,8 +146,11 @@ namespace ymwm::environment {
 
   void Environment::close_window(const window::Window& w) noexcept {
     auto id = w.id;
-    // XUnmapWindow(m_handlers->display, id);
-    // XDestroyWindow(m_handlers->display, id);
+
+    if (x_send_delete_window_event(*m_handlers, id)) {
+      return;
+    }
+
     XKillClient(m_handlers->display, id);
   }
 
