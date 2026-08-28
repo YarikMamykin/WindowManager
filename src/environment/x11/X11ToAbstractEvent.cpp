@@ -138,27 +138,31 @@ namespace ymwm::environment {
   ymwm::events::Event
   selection_request(XEvent& event, Handlers& handlers, Environment& e) {
     XSelectionRequestEvent* req = &event.xselectionrequest;
-    XSelectionEvent notify = { 0 };
+    XEvent notify;
 
     notify.type = SelectionNotify;
-    notify.display = req->display;
-    notify.requestor = req->requestor;
-    notify.selection = req->selection;
-    notify.target = req->target;
-    notify.time = req->time;
-    notify.property = req->property;
+    notify.xselection.display = req->display;
+    notify.xselection.requestor = req->requestor;
+    notify.xselection.selection = req->selection;
+    notify.xselection.target = req->target;
+    notify.xselection.property = None;
+    notify.xselection.time = req->time;
 
     if (req->selection == handlers.atoms.at(AtomID::Clipboard)) {
+      Atom prop = req->property ? req->property : req->target;
+      notify.xselection.property = prop;
       if (req->target == handlers.atoms.at(AtomID::Targets)) {
         // Respond with supported targets: image/png and text/uri-list
-        std::array<Atom, 3ul> supported{
+        std::array<Atom, 5ul> supported{
+          handlers.atoms.at(AtomID::Utf8String),
+          handlers.atoms.at(AtomID::Timestamp),
           handlers.atoms.at(AtomID::ScreenshotImage),
           handlers.atoms.at(AtomID::ScreenshotPathsList),
-          handlers.atoms.at(AtomID::ScreenshotPath)
+          handlers.atoms.at(AtomID::ScreenshotPath),
         };
         XChangeProperty(handlers.display,
                         req->requestor,
-                        req->property,
+                        prop,
                         XA_ATOM,
                         32,
                         PropModeReplace,
@@ -168,7 +172,7 @@ namespace ymwm::environment {
         // Provide the PNG data
         XChangeProperty(handlers.display,
                         req->requestor,
-                        req->property,
+                        prop,
                         handlers.atoms.at(AtomID::ScreenshotImage),
                         8,
                         PropModeReplace,
@@ -183,7 +187,7 @@ namespace ymwm::environment {
         XChangeProperty(
             handlers.display,
             req->requestor,
-            req->property,
+            prop,
             XA_STRING,
             8,
             PropModeReplace,
@@ -193,19 +197,33 @@ namespace ymwm::environment {
         auto p = e.screenshot().screenshot_path().string();
         XChangeProperty(handlers.display,
                         req->requestor,
-                        req->property,
+                        prop,
                         XA_STRING,
                         8,
                         PropModeReplace,
                         reinterpret_cast<const unsigned char*>(p.c_str()),
                         p.size());
+      } else if (req->target == handlers.atoms.at(AtomID::Timestamp)) {
+        long ts = req->time ? req->time : CurrentTime;
+        XChangeProperty(handlers.display,
+                        req->requestor,
+                        prop,
+                        handlers.atoms.at(AtomID::Timestamp),
+                        64,
+                        PropModeReplace,
+                        (unsigned char*)&ts,
+                        1);
       } else {
         // Unsupported target
-        notify.property = None;
+        notify.xselection.property = None;
       }
 
       // Send the notification
-      XSendEvent(handlers.display, req->requestor, False, 0, (XEvent*)&notify);
+      XSendEvent(handlers.display,
+                 req->requestor,
+                 False,
+                 NoEventMask,
+                 (XEvent*)&notify);
       XFlush(handlers.display);
     }
 
