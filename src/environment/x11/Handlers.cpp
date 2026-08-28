@@ -26,6 +26,7 @@ namespace ymwm::environment {
         XInternAtom(display, "_NET_ACTIVE_WINDOW", False);
     atoms.at(AtomID::Utf8String) = XInternAtom(display, "UTF8_STRING", False);
     atoms.at(AtomID::Clipboard) = XInternAtom(display, "CLIPBOARD", False);
+    atoms.at(AtomID::Timestamp) = XInternAtom(display, "TIMESTAMP", False);
     atoms.at(AtomID::Targets) = XInternAtom(display, "TARGETS", False);
     atoms.at(AtomID::ScreenshotImage) =
         XInternAtom(display, "image/png", False);
