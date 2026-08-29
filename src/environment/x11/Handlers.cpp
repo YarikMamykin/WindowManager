@@ -8,6 +8,7 @@
 
 #include <X11/Xlib.h>
 #include <algorithm>
+#include <cstring>
 
 namespace ymwm::environment {
   Handlers::Handlers() {
@@ -28,8 +29,12 @@ namespace ymwm::environment {
     atoms.at(AtomID::Clipboard) = XInternAtom(display, "CLIPBOARD", False);
     atoms.at(AtomID::Timestamp) = XInternAtom(display, "TIMESTAMP", False);
     atoms.at(AtomID::Targets) = XInternAtom(display, "TARGETS", False);
-    atoms.at(AtomID::ScreenshotImage) =
+    atoms.at(AtomID::ScreenshotPngImage) =
         XInternAtom(display, "image/png", False);
+    atoms.at(AtomID::ScreenshotJpegImage) =
+        XInternAtom(display, "image/jpeg", False);
+    atoms.at(AtomID::ScreenshotAppQtImage) =
+        XInternAtom(display, "application/x-qt-image", False);
     atoms.at(AtomID::ScreenshotPathsList) =
         XInternAtom(display, "text/uri-list", False);
     atoms.at(AtomID::ScreenshotPath) = XInternAtom(display, "text/uri", False);
@@ -37,9 +42,9 @@ namespace ymwm::environment {
         XInternAtom(display, "WM_DELETE_WINDOW", False);
     atoms.at(AtomID::Protocols) = XInternAtom(display, "WM_PROTOCOLS", False);
 
-    screenshot_supported_atoms.at(0) = atoms.at(AtomID::Utf8String);
-    screenshot_supported_atoms.at(1) = atoms.at(AtomID::Timestamp);
-    screenshot_supported_atoms.at(2) = atoms.at(AtomID::ScreenshotImage);
+    screenshot_supported_atoms.at(0) = atoms.at(AtomID::Timestamp);
+    screenshot_supported_atoms.at(1) = atoms.at(AtomID::ScreenshotPngImage);
+    screenshot_supported_atoms.at(2) = atoms.at(AtomID::ScreenshotAppQtImage);
 
     current_layout = 0;
     max_layouts = get_number_of_layouts();

@@ -4,7 +4,6 @@
 #include "environment/x11/AtomID.h"
 
 #include <array>
-#include <cstring>
 #include <memory>
 #include <unordered_map>
 // clang-format on
