@@ -166,13 +166,25 @@ namespace ymwm::environment {
                         reinterpret_cast<unsigned char*>(
                             handlers.screenshot_supported_atoms.data()),
                         handlers.screenshot_supported_atoms.size());
-      } else if (req->target == handlers.atoms.at(AtomID::ScreenshotImage)) {
-        auto data = e.screenshot().data();
+      } else if (req->target == handlers.atoms.at(AtomID::ScreenshotPngImage)) {
+        const auto& data = e.screenshot().data();
         // Provide the PNG data
         XChangeProperty(handlers.display,
                         req->requestor,
                         prop,
-                        handlers.atoms.at(AtomID::ScreenshotImage),
+                        handlers.atoms.at(AtomID::ScreenshotPngImage),
+                        8,
+                        PropModeReplace,
+                        data.data(),
+                        data.size());
+      } else if (req->target ==
+                 handlers.atoms.at(AtomID::ScreenshotAppQtImage)) {
+        const auto& data = e.screenshot().data();
+        // Provide the PNG data
+        XChangeProperty(handlers.display,
+                        req->requestor,
+                        prop,
+                        handlers.atoms.at(AtomID::ScreenshotAppQtImage),
                         8,
                         PropModeReplace,
                         data.data(),

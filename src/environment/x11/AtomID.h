@@ -8,7 +8,8 @@ namespace ymwm::environment {
     Clipboard,
     Timestamp,
     Targets,
-    ScreenshotImage,
+    ScreenshotPngImage,
+    ScreenshotAppQtImage,
     ScreenshotPathsList,
     ScreenshotPath,
     NetActiveWindow,
@@ -16,5 +17,5 @@ namespace ymwm::environment {
     Protocols
   };
 
-  static constexpr inline std::size_t AtomIDSize{ 11 };
+  static constexpr inline std::size_t AtomIDSize{ 12 };
 } // namespace ymwm::environment
