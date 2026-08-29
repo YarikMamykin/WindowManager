@@ -125,7 +125,7 @@ namespace ymwm::environment {
 
     std::size_t image_size = image->width * image->height;
     m_screenshot.clear();
-    m_screenshot.reserve(image_size);
+    m_screenshot.resize(image_size);
     std::memcpy(m_screenshot.data(), imlib_data, image_size);
 
     // Notify X11 that clipboard is occupied.
