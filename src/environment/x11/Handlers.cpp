@@ -36,6 +36,11 @@ namespace ymwm::environment {
     atoms.at(AtomID::DeleteWindow) =
         XInternAtom(display, "WM_DELETE_WINDOW", False);
     atoms.at(AtomID::Protocols) = XInternAtom(display, "WM_PROTOCOLS", False);
+
+    screenshot_supported_atoms.at(0) = atoms.at(AtomID::Utf8String);
+    screenshot_supported_atoms.at(1) = atoms.at(AtomID::Timestamp);
+    screenshot_supported_atoms.at(2) = atoms.at(AtomID::ScreenshotImage);
+
     current_layout = 0;
     max_layouts = get_number_of_layouts();
     if (not ymwm::config::misc::background_image_path.empty() and

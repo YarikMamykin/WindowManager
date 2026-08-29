@@ -24,6 +24,8 @@ namespace ymwm::environment {
   selection_request(XEvent& event, Handlers& handlers, Environment& e);
   ymwm::events::Event
   selection_clear(XEvent& event, Handlers& handlers, Environment& e);
+
+  static constinit std::string_view screenshot_uri_protocol{ "file://" };
 } // namespace ymwm::environment
 
 namespace ymwm::environment {
@@ -149,26 +151,23 @@ namespace ymwm::environment {
     notify.xselection.time = req->time;
 
     if (req->selection == handlers.atoms.at(AtomID::Clipboard)) {
+
       Atom prop = req->property ? req->property : req->target;
       notify.xselection.property = prop;
+
       if (req->target == handlers.atoms.at(AtomID::Targets)) {
-        // Respond with supported targets: image/png and text/uri-list
-        std::array<Atom, 5ul> supported{
-          handlers.atoms.at(AtomID::Utf8String),
-          handlers.atoms.at(AtomID::Timestamp),
-          handlers.atoms.at(AtomID::ScreenshotImage),
-          handlers.atoms.at(AtomID::ScreenshotPathsList),
-          handlers.atoms.at(AtomID::ScreenshotPath),
-        };
+        // Respond with supported targets
         XChangeProperty(handlers.display,
                         req->requestor,
                         prop,
                         XA_ATOM,
                         32,
                         PropModeReplace,
-                        reinterpret_cast<unsigned char*>(supported.data()),
-                        supported.size());
+                        reinterpret_cast<unsigned char*>(
+                            handlers.screenshot_supported_atoms.data()),
+                        handlers.screenshot_supported_atoms.size());
       } else if (req->target == handlers.atoms.at(AtomID::ScreenshotImage)) {
+        auto data = e.screenshot().data();
         // Provide the PNG data
         XChangeProperty(handlers.display,
                         req->requestor,
@@ -176,33 +175,8 @@ namespace ymwm::environment {
                         handlers.atoms.at(AtomID::ScreenshotImage),
                         8,
                         PropModeReplace,
-                        reinterpret_cast<const unsigned char*>(
-                            e.screenshot().screenshot().data()),
-                        e.screenshot().screenshot().size() *
-                            (sizeof(std::uint32_t) / sizeof(unsigned char)));
-      } else if (req->target ==
-                 handlers.atoms.at(AtomID::ScreenshotPathsList)) {
-        // Provide the file URL
-        auto paths_list = e.screenshot().screenshot_path().string() + "\n";
-        XChangeProperty(
-            handlers.display,
-            req->requestor,
-            prop,
-            XA_STRING,
-            8,
-            PropModeReplace,
-            reinterpret_cast<const unsigned char*>(paths_list.c_str()),
-            paths_list.size());
-      } else if (req->target == handlers.atoms.at(AtomID::ScreenshotPath)) {
-        auto p = e.screenshot().screenshot_path().string();
-        XChangeProperty(handlers.display,
-                        req->requestor,
-                        prop,
-                        XA_STRING,
-                        8,
-                        PropModeReplace,
-                        reinterpret_cast<const unsigned char*>(p.c_str()),
-                        p.size());
+                        data.data(),
+                        data.size());
       } else if (req->target == handlers.atoms.at(AtomID::Timestamp)) {
         long ts = req->time ? req->time : CurrentTime;
         XChangeProperty(handlers.display,
@@ -211,7 +185,7 @@ namespace ymwm::environment {
                         handlers.atoms.at(AtomID::Timestamp),
                         64,
                         PropModeReplace,
-                        (unsigned char*)&ts,
+                        reinterpret_cast<unsigned char*>(&ts),
                         1);
       } else {
         // Unsupported target

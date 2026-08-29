@@ -119,22 +119,15 @@ namespace ymwm::environment {
     m_screenshot_path = ymwm::config::misc::screenshots_folder / filename.str();
 
     imlib_save_image(m_screenshot_path.c_str());
+    imlib_free_image();
 
-    // Need this path update, so to conform to URI.
-    m_screenshot_path = "file://" + m_screenshot_path.string();
-
-    std::size_t image_size = image->width * image->height;
-    m_screenshot.clear();
-    m_screenshot.resize(image_size);
-    std::memcpy(m_screenshot.data(), imlib_data, image_size);
+    m_screenshot = screenshot_from_file(m_screenshot_path);
 
     // Notify X11 that clipboard is occupied.
     XSetSelectionOwner(display,
                        e.handlers().atoms.at(AtomID::Clipboard),
                        root_window,
                        CurrentTime);
-
-    imlib_free_image();
 
     m_start_coords = m_end_coords = std::nullopt;
   }
@@ -143,9 +136,29 @@ namespace ymwm::environment {
     return not m_screenshot.empty() and not m_screenshot_path.empty();
   }
 
-  const std::vector<std::uint32_t>&
-  ScreenshotHandler::screenshot() const noexcept {
+  const ScreenshotHandler::ScreenshotData&
+  ScreenshotHandler::data() const noexcept {
     return m_screenshot;
+  }
+
+  std::vector<unsigned char> ScreenshotHandler::screenshot_from_file(
+      const std::filesystem::path& screenshot_path) const noexcept {
+    FILE* f = fopen(screenshot_path.c_str(), "rb");
+    if (!f) {
+      log::Logger::error("Failed to open screenshot file\n");
+      return {};
+    }
+    fseek(f, 0, SEEK_END);
+    long n = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    std::vector<unsigned char> buf;
+    buf.resize(n);
+    if (fread(buf.data(), 1, n, f) != (size_t)n) {
+      log::Logger::error("Failed to read screenshot file\n");
+      exit(1);
+    }
+    fclose(f);
+    return buf;
   }
 
   const std::filesystem::path&
