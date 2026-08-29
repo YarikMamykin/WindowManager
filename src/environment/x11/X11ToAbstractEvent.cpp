@@ -6,6 +6,9 @@
 #include "events/AbstractKeyMask.h"
 #include "events/AbstractUnknownEvent.h"
 #include "events/Event.h"
+#include "log/Logger.h"
+
+#include <string_view>
 
 namespace ymwm::environment {
   std::u8string get_window_name(ymwm::environment::Handlers& handlers,
