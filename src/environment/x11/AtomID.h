@@ -6,6 +6,7 @@ namespace ymwm::environment {
     NetWMName,
     Utf8String,
     Clipboard,
+    Timestamp,
     Targets,
     ScreenshotImage,
     ScreenshotPathsList,
@@ -15,5 +16,5 @@ namespace ymwm::environment {
     Protocols
   };
 
-  static constexpr inline std::size_t AtomIDSize{ 10 };
+  static constexpr inline std::size_t AtomIDSize{ 11 };
 } // namespace ymwm::environment
