@@ -6,7 +6,6 @@
 #include "events/AbstractKeyMask.h"
 #include "events/AbstractUnknownEvent.h"
 #include "events/Event.h"
-#include "log/Logger.h"
 
 #include <string_view>
 
@@ -170,7 +169,7 @@ namespace ymwm::environment {
                             handlers.screenshot_supported_atoms.data()),
                         handlers.screenshot_supported_atoms.size());
       } else if (req->target == handlers.atoms.at(AtomID::ScreenshotPngImage)) {
-        const auto& data = e.screenshot().data();
+        auto&& data = e.screenshot().from_file();
         // Provide the PNG data
         XChangeProperty(handlers.display,
                         req->requestor,
@@ -182,7 +181,7 @@ namespace ymwm::environment {
                         data.size());
       } else if (req->target ==
                  handlers.atoms.at(AtomID::ScreenshotAppQtImage)) {
-        const auto& data = e.screenshot().data();
+        auto&& data = e.screenshot().from_file();
         // Provide the PNG data
         XChangeProperty(handlers.display,
                         req->requestor,
@@ -202,6 +201,18 @@ namespace ymwm::environment {
                         PropModeReplace,
                         reinterpret_cast<unsigned char*>(&ts),
                         1);
+      } else if (req->target == handlers.atoms.at(AtomID::ScreenshotPath)) {
+        // Provide the file URI path
+        auto p = screenshot_uri_protocol.data() +
+                 e.screenshot().screenshot_path().string();
+        XChangeProperty(handlers.display,
+                        req->requestor,
+                        prop,
+                        XA_STRING,
+                        8,
+                        PropModeReplace,
+                        reinterpret_cast<const unsigned char*>(p.c_str()),
+                        p.size());
       } else {
         // Unsupported target
         notify.xselection.property = None;

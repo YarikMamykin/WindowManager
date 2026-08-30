@@ -11,12 +11,11 @@ namespace ymwm::environment {
     ScreenshotPngImage,
     ScreenshotJpegImage,
     ScreenshotAppQtImage,
-    ScreenshotPathsList,
     ScreenshotPath,
     NetActiveWindow,
     DeleteWindow,
     Protocols
   };
 
-  static constexpr inline std::size_t AtomIDSize{ 13 };
+  static constexpr inline std::size_t AtomIDSize{ 12 };
 } // namespace ymwm::environment
