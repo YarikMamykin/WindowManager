@@ -18,7 +18,7 @@ namespace ymwm::environment {
     std::unique_ptr<BackgroundImageHandler> background_image;
     std::unordered_map<common::Color, XColor, common::ColorHash> colors;
     std::array<Atom, AtomIDSize> atoms;
-    std::array<Atom, 3ul> screenshot_supported_atoms;
+    std::array<Atom, 4ul> screenshot_supported_atoms;
     int current_layout;
     int max_layouts;
 

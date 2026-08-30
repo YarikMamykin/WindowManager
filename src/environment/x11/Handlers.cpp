@@ -35,8 +35,6 @@ namespace ymwm::environment {
         XInternAtom(display, "image/jpeg", False);
     atoms.at(AtomID::ScreenshotAppQtImage) =
         XInternAtom(display, "application/x-qt-image", False);
-    atoms.at(AtomID::ScreenshotPathsList) =
-        XInternAtom(display, "text/uri-list", False);
     atoms.at(AtomID::ScreenshotPath) = XInternAtom(display, "text/uri", False);
     atoms.at(AtomID::DeleteWindow) =
         XInternAtom(display, "WM_DELETE_WINDOW", False);
@@ -45,6 +43,7 @@ namespace ymwm::environment {
     screenshot_supported_atoms.at(0) = atoms.at(AtomID::Timestamp);
     screenshot_supported_atoms.at(1) = atoms.at(AtomID::ScreenshotPngImage);
     screenshot_supported_atoms.at(2) = atoms.at(AtomID::ScreenshotAppQtImage);
+    screenshot_supported_atoms.at(3) = atoms.at(AtomID::ScreenshotPath);
 
     current_layout = 0;
     max_layouts = get_number_of_layouts();

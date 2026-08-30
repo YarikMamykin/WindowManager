@@ -17,19 +17,15 @@ namespace ymwm::environment {
     void make(Environment& env) noexcept;
     bool has_screenshot() const noexcept;
 
-    const ScreenshotData& data() const noexcept;
     const std::filesystem::path& screenshot_path() const noexcept;
 
     void reset() noexcept;
 
-  private:
-    std::vector<unsigned char> screenshot_from_file(
-        const std::filesystem::path& screenshot_path) const noexcept;
+    ScreenshotData from_file() const noexcept;
 
   private:
     std::optional<std::array<int, 2ul>> m_start_coords;
     std::optional<std::array<int, 2ul>> m_end_coords;
-    ScreenshotData m_screenshot;
     std::filesystem::path m_screenshot_path;
   };
 } // namespace ymwm::environment

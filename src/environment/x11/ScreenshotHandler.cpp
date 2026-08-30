@@ -121,8 +121,6 @@ namespace ymwm::environment {
     imlib_save_image(m_screenshot_path.c_str());
     imlib_free_image();
 
-    m_screenshot = screenshot_from_file(m_screenshot_path);
-
     // Notify X11 that clipboard is occupied.
     XSetSelectionOwner(display,
                        e.handlers().atoms.at(AtomID::Clipboard),
@@ -133,17 +131,12 @@ namespace ymwm::environment {
   }
 
   bool ScreenshotHandler::has_screenshot() const noexcept {
-    return not m_screenshot.empty() and not m_screenshot_path.empty();
+    return not m_screenshot_path.empty();
   }
 
-  const ScreenshotHandler::ScreenshotData&
-  ScreenshotHandler::data() const noexcept {
-    return m_screenshot;
-  }
-
-  std::vector<unsigned char> ScreenshotHandler::screenshot_from_file(
-      const std::filesystem::path& screenshot_path) const noexcept {
-    FILE* f = fopen(screenshot_path.c_str(), "rb");
+  ScreenshotHandler::ScreenshotData
+  ScreenshotHandler::from_file() const noexcept {
+    FILE* f = fopen(m_screenshot_path.c_str(), "rb");
     if (!f) {
       log::Logger::error("Failed to open screenshot file\n");
       return {};
@@ -151,7 +144,7 @@ namespace ymwm::environment {
     fseek(f, 0, SEEK_END);
     long n = ftell(f);
     fseek(f, 0, SEEK_SET);
-    std::vector<unsigned char> buf;
+    ScreenshotHandler::ScreenshotData buf;
     buf.resize(n);
     if (fread(buf.data(), 1, n, f) != (size_t)n) {
       log::Logger::error("Failed to read screenshot file\n");
@@ -166,8 +159,5 @@ namespace ymwm::environment {
     return m_screenshot_path;
   }
 
-  void ScreenshotHandler::reset() noexcept {
-    m_screenshot.clear();
-    m_screenshot_path.clear();
-  }
+  void ScreenshotHandler::reset() noexcept { m_screenshot_path.clear(); }
 } // namespace ymwm::environment
